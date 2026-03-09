@@ -22,7 +22,7 @@
 		<!-- Wrapper -->
 		<div id="wrapper">
 
-			<!-- Header -->
+			<!-- Header — horizontal sticky nav -->
 			<header id="header">
 				<div class="inner">
 
@@ -34,6 +34,11 @@
 					<!-- Nav -->
 					<nav>
 						<ul>
+							<li class="ps-nav-link"><a href="#features">Features</a></li>
+							<li class="ps-nav-link"><a href="#how-it-works">How It Works</a></li>
+							<li class="ps-nav-link"><a href="#tools">Tools</a></li>
+							<li class="ps-nav-link"><a href="#about">About</a></li>
+							<li><a href="#tools" class="button primary ps-nav-cta">Jump to the Tool &darr;</a></li>
 							<li><a href="#menu">Menu</a></li>
 						</ul>
 					</nav>
@@ -41,34 +46,72 @@
 				</div>
 			</header>
 
-			<!-- Menu -->
+			<!-- Menu (off-canvas) -->
 			<nav id="menu">
 				<h2>Menu</h2>
 				<ul>
 					<li><a href="index.html">Home</a></li>
 					<li><a href="#features">Features</a></li>
 					<li><a href="#how-it-works">How It Works</a></li>
-					<li><a href="#tools">Tools</a></li>
 					<li><a href="#about">About</a></li>
 					<li><a href="#tools">Jump to the Tool &darr;</a></li>
 				</ul>
 			</nav>
 
-			<!-- Main -->
+			<!-- Main — hero only -->
 			<div id="main">
 				<div class="inner">
 
 					<!-- Hero -->
 					<header id="features">
-						<h1>Design.<br />Enhance.<br />Print.</h1>
-						<p>Free browser-based tools to prepare your game mat artwork for professional printing.<br />
+						<h1>Design. Enhance. Print.</h1>
+						<p>Free browser-based tools to prepare your game mat artwork for professional printing.
 						No installs. No account. No cost. Everything runs in your browser.</p>
 						<ul class="actions">
 							<li><a href="#tools" class="button primary">Jump to the Tool &nbsp;&darr;</a></li>
 						</ul>
 					</header>
 
-					<!-- Feature Tiles -->
+				</div>
+			</div>
+
+			<!-- How It Works — before the feature tiles -->
+			<section id="how-it-works" class="ps-steps">
+				<div class="inner">
+					<header class="ps-section-header">
+						<h2>How It Works</h2>
+						<p>Three steps from your artwork to a print-ready file.</p>
+					</header>
+					<div class="ps-steps-grid">
+
+						<div class="ps-step">
+							<div class="ps-step-num">01</div>
+							<span class="icon solid fa-upload ps-step-icon"></span>
+							<h3>Upload Your Art</h3>
+							<p>Drop any image &mdash; JPG, PNG, WEBP, or paste from a URL. The tool auto-fits it to your chosen mat size with full bleed.</p>
+						</div>
+
+						<div class="ps-step">
+							<div class="ps-step-num">02</div>
+							<span class="icon solid fa-sliders-h ps-step-icon"></span>
+							<h3>Customize</h3>
+							<p>Add game zone overlays, enhance colors, upscale with AI, adjust zoom and position &mdash; or keep it simple with Quick Upload.</p>
+						</div>
+
+						<div class="ps-step">
+							<div class="ps-step-num">03</div>
+							<span class="icon solid fa-download ps-step-icon"></span>
+							<h3>Download &amp; Print</h3>
+							<p>Export a 300&nbsp;DPI JPG with proper DPI metadata &mdash; exactly what print-on-demand vendors need to produce a sharp, professional mat.</p>
+						</div>
+
+					</div>
+				</div>
+			</section>
+
+			<!-- Feature Tiles -->
+			<section class="ps-features">
+				<div class="inner">
 					<section class="tiles">
 
 						<!-- 1: Quick Upload -->
@@ -151,9 +194,9 @@
 
 					</section>
 				</div>
-			</div>
+			</section>
 
-			<!-- Tools (Tabbed) — directly below the feature tiles -->
+			<!-- Tools (Tabbed) — 4 tabs matching actual tool -->
 			<section id="tools" class="ps-tools">
 				<div class="inner">
 					<header class="ps-section-header">
@@ -164,32 +207,24 @@
 					<!-- Tab Navigation -->
 					<div class="ps-tab-nav">
 						<button class="ps-tab-btn active" data-tab="quick-upload">&#9889; Quick Upload</button>
-						<button class="ps-tab-btn" data-tab="advanced-editor">&#9998; Advanced Editor</button>
-						<button class="ps-tab-btn" data-tab="batch-enhance">&#128444; Batch Enhance</button>
-						<button class="ps-tab-btn" data-tab="format-converter">&#8635; Format Converter</button>
-						<button class="ps-tab-btn" data-tab="game-overlays">&#127918; Game Overlays</button>
-						<button class="ps-tab-btn" data-tab="dpi-output">&#128208; 300 DPI Output</button>
+						<button class="ps-tab-btn" data-tab="adv-editor">&#9998; Advanced Editor</button>
+						<button class="ps-tab-btn" data-tab="batch">&#128444; Batch Enhance</button>
+						<button class="ps-tab-btn" data-tab="converter">&#8635; Format Converter</button>
 					</div>
 
-					<!-- Tool Descriptions (switch per tab) -->
+					<!-- Tool Descriptions -->
 					<div class="ps-tool-descriptions">
 						<div class="ps-tool-desc-panel active" id="desc-quick-upload">
-							<p>Drop your art and get a print-ready 300&nbsp;DPI JPG in seconds &mdash; auto-fitted to your chosen mat size.</p>
+							<p>Drop your art, auto-fit to mat size, and download a print-ready 300&nbsp;DPI JPG in seconds.</p>
 						</div>
-						<div class="ps-tool-desc-panel" id="desc-advanced-editor">
-							<p>Full Fabric.js canvas with AI upscaling, frame break, game overlays, recolor brush, text, and transform tools.</p>
+						<div class="ps-tool-desc-panel" id="desc-adv-editor">
+							<p>Full canvas editor with AI upscaling, game zone overlays, recolor brush, text layers, and transform tools.</p>
 						</div>
-						<div class="ps-tool-desc-panel" id="desc-batch-enhance">
+						<div class="ps-tool-desc-panel" id="desc-batch">
 							<p>Drop multiple images at once, auto color-correct them all, and download individually or as a single ZIP.</p>
 						</div>
-						<div class="ps-tool-desc-panel" id="desc-format-converter">
+						<div class="ps-tool-desc-panel" id="desc-converter">
 							<p>Convert any image to JPG, PNG, or WEBP &mdash; process a single file or batch-download as a ZIP.</p>
-						</div>
-						<div class="ps-tool-desc-panel" id="desc-game-overlays">
-							<p>Composite pre-made zone layouts for MTG, Pok&eacute;mon, and more directly onto your art at full print resolution.</p>
-						</div>
-						<div class="ps-tool-desc-panel" id="desc-dpi-output">
-							<p>Every export writes proper JFIF DPI metadata at 300&nbsp;DPI &mdash; exactly what professional print vendors require.</p>
 						</div>
 					</div>
 
@@ -204,40 +239,6 @@
 						></iframe>
 					</div>
 
-				</div>
-			</section>
-
-			<!-- How It Works -->
-			<section id="how-it-works" class="ps-steps">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>How It Works</h2>
-						<p>Three steps from your artwork to a print-ready file.</p>
-					</header>
-					<div class="ps-steps-grid">
-
-						<div class="ps-step">
-							<div class="ps-step-num">01</div>
-							<span class="icon solid fa-upload ps-step-icon"></span>
-							<h3>Upload Your Art</h3>
-							<p>Drop any image &mdash; JPG, PNG, WEBP, or paste from a URL. The tool auto-fits it to your chosen mat size with full bleed.</p>
-						</div>
-
-						<div class="ps-step">
-							<div class="ps-step-num">02</div>
-							<span class="icon solid fa-sliders-h ps-step-icon"></span>
-							<h3>Customize</h3>
-							<p>Add game zone overlays, enhance colors, upscale with AI, adjust zoom and position &mdash; or keep it simple with Quick Upload.</p>
-						</div>
-
-						<div class="ps-step">
-							<div class="ps-step-num">03</div>
-							<span class="icon solid fa-download ps-step-icon"></span>
-							<h3>Download &amp; Print</h3>
-							<p>Export a 300&nbsp;DPI JPG with proper DPI metadata &mdash; exactly what print-on-demand vendors need to produce a sharp, professional mat.</p>
-						</div>
-
-					</div>
 				</div>
 			</section>
 
