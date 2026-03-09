@@ -3,21 +3,22 @@
    Override layer for Phantom (HTML5 UP) template
    ============================================================ */
 
-/* ---- Google Font: Outfit ---- */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+/* ---- Google Font: Rubik ---- */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 
 /* ---- CSS Variables ---- */
 :root {
-	--ps-bg:          #0a0a0f;
-	--ps-surface:     #13131a;
-	--ps-surface-2:   #1c1c28;
-	--ps-border:      rgba(240, 240, 245, 0.08);
-	--ps-purple:      #7c6fff;
-	--ps-purple-dark: #6355ee;
-	--ps-teal:        #00d4aa;
-	--ps-teal-dark:   #00b896;
-	--ps-text:        #f0f0f5;
-	--ps-text-muted:  #9090b0;
+	--ps-bg:           #0b0912;
+	--ps-surface:      #110e1c;
+	--ps-surface-2:    #181228;
+	--ps-border:       rgba(220, 200, 255, 0.08);
+	--ps-purple:       #6830bb;
+	--ps-purple-dark:  #521898;
+	--ps-purple-light: #8a52d4;
+	--ps-accent:       #2dd4bf;
+	--ps-accent-dark:  #14b8a4;
+	--ps-text:         #f0eeff;
+	--ps-text-muted:   #9888c0;
 }
 
 /* ============================================================
@@ -27,12 +28,12 @@
 body {
 	background-color: var(--ps-bg) !important;
 	color: var(--ps-text) !important;
-	font-family: 'Outfit', 'Source Sans Pro', Helvetica, sans-serif !important;
+	font-family: 'Rubik', Helvetica, sans-serif !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
 	color: var(--ps-text) !important;
-	font-family: 'Outfit', 'Source Sans Pro', Helvetica, sans-serif !important;
+	font-family: 'Rubik', Helvetica, sans-serif !important;
 	font-weight: 700 !important;
 }
 
@@ -41,13 +42,13 @@ p {
 }
 
 a {
-	color: var(--ps-teal) !important;
-	border-bottom-color: rgba(0, 212, 170, 0.2) !important;
+	color: var(--ps-accent) !important;
+	border-bottom-color: rgba(45, 212, 191, 0.2) !important;
 }
 
 a:hover {
-	color: var(--ps-purple) !important;
-	border-bottom-color: rgba(124, 111, 255, 0.3) !important;
+	color: var(--ps-purple-light) !important;
+	border-bottom-color: rgba(138, 82, 212, 0.3) !important;
 }
 
 /* ============================================================
@@ -55,13 +56,13 @@ a:hover {
    ============================================================ */
 
 #header {
-	background: rgba(10, 10, 15, 0.97) !important;
+	background: rgba(11, 9, 18, 0.97) !important;
 	border-bottom: 1px solid var(--ps-border) !important;
 }
 
 #header .logo .title {
 	color: var(--ps-text) !important;
-	font-family: 'Outfit', sans-serif !important;
+	font-family: 'Rubik', sans-serif !important;
 	font-weight: 700 !important;
 	letter-spacing: 0.02em !important;
 	font-size: 1.05em !important;
@@ -99,7 +100,7 @@ a:hover {
 }
 
 #menu ul li a:hover {
-	color: var(--ps-purple) !important;
+	color: var(--ps-purple-light) !important;
 }
 
 #menu .close:before,
@@ -140,7 +141,7 @@ a:hover {
    ============================================================ */
 
 .button {
-	font-family: 'Outfit', 'Source Sans Pro', sans-serif !important;
+	font-family: 'Rubik', sans-serif !important;
 	font-weight: 600 !important;
 	letter-spacing: 0.04em !important;
 	border-radius: 6px !important;
@@ -161,58 +162,58 @@ a:hover {
 
 .button:not(.primary) {
 	background-color: transparent !important;
-	box-shadow: inset 0 0 0 2px rgba(240, 240, 245, 0.15) !important;
+	box-shadow: inset 0 0 0 2px rgba(220, 200, 255, 0.15) !important;
 	color: var(--ps-text) !important;
 }
 
 .button:not(.primary):hover {
-	box-shadow: inset 0 0 0 2px var(--ps-teal) !important;
-	color: var(--ps-teal) !important;
+	box-shadow: inset 0 0 0 2px var(--ps-accent) !important;
+	color: var(--ps-accent) !important;
 }
 
 /* ============================================================
-   TILES — Color overrides (Dark Studio palette)
+   TILES — Color overrides (Purple brand palette)
    ============================================================ */
 
-/* style1 → Electric Purple */
+/* style1 → Brand Purple */
 .tiles article.style1 > .image:before {
-	background-color: #5b4fcf !important;
+	background-color: #6830bb !important;
 }
 
-/* style2 → Teal */
+/* style2 → Deep Violet */
 .tiles article.style2 > .image:before {
-	background-color: #00897a !important;
+	background-color: #4d1a96 !important;
 }
 
-/* style3 → Indigo */
+/* style3 → Vivid Purple */
 .tiles article.style3 > .image:before {
-	background-color: #3d52cc !important;
+	background-color: #7e3fd4 !important;
 }
 
-/* style4 → Violet */
+/* style4 → Royal Plum */
 .tiles article.style4 > .image:before {
-	background-color: #8b33d4 !important;
+	background-color: #3d1480 !important;
 }
 
-/* style5 → Cyan */
+/* style5 → Lavender */
 .tiles article.style5 > .image:before {
-	background-color: #0592ab !important;
+	background-color: #8a52d4 !important;
 }
 
-/* style6 → Deep Blue */
+/* style6 → Dark Grape */
 .tiles article.style6 > .image:before {
-	background-color: #2563c0 !important;
+	background-color: #5a2aa8 !important;
 }
 
 /* Hover: darken to reveal content */
 .tiles article:hover > .image:before {
-	background-color: #0d0d18 !important;
+	background-color: #0f0a1a !important;
 	opacity: 0.92 !important;
 }
 
 /* Tile heading */
 .tiles article > a h2 {
-	font-family: 'Outfit', sans-serif !important;
+	font-family: 'Rubik', sans-serif !important;
 	font-weight: 700 !important;
 	font-size: 1.3em !important;
 	letter-spacing: -0.01em !important;
@@ -273,11 +274,11 @@ a:hover {
 }
 
 .ps-step-num {
-	font-family: 'Outfit', sans-serif !important;
+	font-family: 'Rubik', sans-serif !important;
 	font-size: 0.65em !important;
 	font-weight: 700 !important;
 	letter-spacing: 0.3em !important;
-	color: var(--ps-purple) !important;
+	color: var(--ps-purple-light) !important;
 	margin-bottom: 1em !important;
 	text-transform: uppercase !important;
 	display: block !important;
@@ -286,7 +287,7 @@ a:hover {
 .ps-step-icon {
 	display: block !important;
 	font-size: 2em !important;
-	color: var(--ps-teal) !important;
+	color: var(--ps-accent) !important;
 	margin-bottom: 0.8em !important;
 }
 
@@ -305,12 +306,101 @@ a:hover {
 }
 
 /* ============================================================
+   TOOLS (TABBED) SECTION
+   ============================================================ */
+
+.ps-tools {
+	background: var(--ps-bg) !important;
+	padding: 5.5em 0 !important;
+	border-top: 1px solid var(--ps-border) !important;
+}
+
+.ps-tools .inner {
+	max-width: 75em !important;
+	margin: 0 auto !important;
+	padding: 0 3em !important;
+}
+
+/* Tab navigation bar */
+.ps-tab-nav {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	gap: 0.5em !important;
+	margin-bottom: 0 !important;
+	border-bottom: 2px solid var(--ps-border) !important;
+	padding-bottom: 0 !important;
+}
+
+.ps-tab-btn {
+	font-family: 'Rubik', sans-serif !important;
+	font-size: 0.88em !important;
+	font-weight: 600 !important;
+	color: var(--ps-text-muted) !important;
+	background: transparent !important;
+	border: none !important;
+	border-bottom: 2px solid transparent !important;
+	margin-bottom: -2px !important;
+	padding: 0.75em 1.2em !important;
+	cursor: pointer !important;
+	transition: color 0.2s, border-color 0.2s !important;
+	white-space: nowrap !important;
+	letter-spacing: 0.01em !important;
+}
+
+.ps-tab-btn:hover {
+	color: var(--ps-text) !important;
+}
+
+.ps-tab-btn.active {
+	color: var(--ps-purple-light) !important;
+	border-bottom-color: var(--ps-purple) !important;
+}
+
+/* Description panels */
+.ps-tool-descriptions {
+	position: relative !important;
+}
+
+.ps-tool-desc-panel {
+	display: none !important;
+	padding: 1.4em 0 1em !important;
+}
+
+.ps-tool-desc-panel.active {
+	display: block !important;
+}
+
+.ps-tool-desc-panel p {
+	font-size: 1em !important;
+	color: var(--ps-text-muted) !important;
+	margin: 0 !important;
+	line-height: 1.6 !important;
+}
+
+/* Embedded tool iframe */
+.ps-tool-embed {
+	margin-top: 0.5em !important;
+	border-radius: 12px !important;
+	overflow: hidden !important;
+	border: 1px solid var(--ps-border) !important;
+	background: var(--ps-surface) !important;
+}
+
+.ps-tool-embed iframe {
+	display: block !important;
+	width: 100% !important;
+	height: 780px !important;
+	border: none !important;
+}
+
+/* ============================================================
    ABOUT SECTION
    ============================================================ */
 
 .ps-about {
-	background: var(--ps-bg) !important;
+	background: var(--ps-surface) !important;
 	padding: 5.5em 0 !important;
+	border-top: 1px solid var(--ps-border) !important;
 }
 
 .ps-about-header {
@@ -391,17 +481,7 @@ a:hover {
 }
 
 .ps-footer-list li a:hover {
-	color: var(--ps-purple) !important;
-}
-
-.icon.style2 {
-	border-color: var(--ps-border) !important;
-	color: var(--ps-text-muted) !important;
-}
-
-.icon.style2:hover {
-	color: var(--ps-teal) !important;
-	border-color: var(--ps-teal) !important;
+	color: var(--ps-purple-light) !important;
 }
 
 .copyright {
@@ -428,6 +508,15 @@ a:hover {
 	.ps-step {
 		min-width: 220px !important;
 	}
+
+	.ps-tab-nav {
+		gap: 0.25em !important;
+	}
+
+	.ps-tab-btn {
+		font-size: 0.8em !important;
+		padding: 0.65em 0.9em !important;
+	}
 }
 
 @media screen and (max-width: 736px) {
@@ -445,17 +534,28 @@ a:hover {
 	}
 
 	.ps-steps .inner,
-	.ps-about .inner {
+	.ps-about .inner,
+	.ps-tools .inner {
 		padding: 0 1.5em !important;
 	}
 
 	.ps-steps,
-	.ps-about {
+	.ps-about,
+	.ps-tools {
 		padding: 3.5em 0 !important;
 	}
 
 	#footer .inner {
 		flex-direction: column !important;
 		gap: 2em !important;
+	}
+
+	.ps-tool-embed iframe {
+		height: 600px !important;
+	}
+
+	.ps-tab-btn {
+		font-size: 0.78em !important;
+		padding: 0.6em 0.75em !important;
 	}
 }
