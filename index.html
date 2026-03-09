@@ -36,8 +36,8 @@
 						<ul>
 							<li class="ps-nav-link"><a href="#features">Features</a></li>
 							<li class="ps-nav-link"><a href="#how-it-works">How It Works</a></li>
-							<li class="ps-nav-link"><a href="#tools">Tools</a></li>
 							<li class="ps-nav-link"><a href="#about">About</a></li>
+							<li class="ps-nav-link"><a href="#contact">Contact</a></li>
 							<li><a href="#tools" class="button primary ps-nav-cta">Jump to the Tool &darr;</a></li>
 							<li class="ps-nav-hamburger"><a href="#menu">Menu</a></li>
 						</ul>
@@ -54,6 +54,7 @@
 					<li><a href="#features">Features</a></li>
 					<li><a href="#how-it-works">How It Works</a></li>
 					<li><a href="#about">About</a></li>
+					<li><a href="#contact">Contact</a></li>
 					<li><a href="#tools">Jump to the Tool &darr;</a></li>
 				</ul>
 			</nav>
@@ -75,7 +76,7 @@
 				</div>
 			</div>
 
-			<!-- How It Works — before the feature tiles -->
+			<!-- How It Works -->
 			<section id="how-it-works" class="ps-steps">
 				<div class="inner">
 					<header class="ps-section-header">
@@ -85,21 +86,18 @@
 					<div class="ps-steps-grid">
 
 						<div class="ps-step">
-							<div class="ps-step-num">01</div>
 							<span class="icon solid fa-upload ps-step-icon"></span>
 							<h3>Upload Your Art</h3>
 							<p>Drop any image &mdash; JPG, PNG, WEBP, or paste from a URL. The tool auto-fits it to your chosen mat size with full bleed.</p>
 						</div>
 
 						<div class="ps-step">
-							<div class="ps-step-num">02</div>
 							<span class="icon solid fa-sliders-h ps-step-icon"></span>
 							<h3>Customize</h3>
 							<p>Add game zone overlays, enhance colors, upscale with AI, adjust zoom and position &mdash; or keep it simple with Quick Upload.</p>
 						</div>
 
 						<div class="ps-step">
-							<div class="ps-step-num">03</div>
 							<span class="icon solid fa-download ps-step-icon"></span>
 							<h3>Download &amp; Print</h3>
 							<p>Export a 300&nbsp;DPI JPG with proper DPI metadata &mdash; exactly what print-on-demand vendors need to produce a sharp, professional mat.</p>
@@ -196,7 +194,7 @@
 				</div>
 			</section>
 
-			<!-- Tools (Tabbed) — 4 tabs matching actual tool -->
+			<!-- Tools (Tabbed) -->
 			<section id="tools" class="ps-tools">
 				<div class="inner">
 					<header class="ps-section-header">
@@ -228,7 +226,7 @@
 						</div>
 					</div>
 
-					<!-- Shared Tool Embed -->
+					<!-- Tool Embed (iframe — native integration pending source access) -->
 					<div class="ps-tool-embed">
 						<iframe
 							id="ps-tool-frame"
@@ -251,7 +249,41 @@
 					<div class="ps-about-body">
 						<p>Playmat Studio is a free, browser-based image prep tool built for tabletop game players who want to print custom playmats with their own artwork. No installs, no subscriptions, no sign-up &mdash; just open the tool and start designing.</p>
 						<p>All image processing runs directly in your browser using the Canvas API and Fabric.js. Your artwork never leaves your machine, except for the optional AI upscaling and background-removal features, which use serverless Cloudflare Workers. Supports standard and extended mat sizes, plus specialty formats ranging from 10&Prime;&times;8&Prime; up to 31&Prime;&times;12&Prime;.</p>
-											</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Contact -->
+			<section id="contact" class="ps-contact">
+				<div class="inner">
+					<header class="ps-section-header">
+						<h2>Contact</h2>
+						<p>Questions, feedback, or just want to say hi? We&rsquo;d love to hear from you.</p>
+					</header>
+					<div class="ps-contact-grid">
+						<div class="ps-contact-info">
+							<p>Whether you have a question about the tools, a feature request, or anything else &mdash; send us a message and we&rsquo;ll get back to you as soon as we can.</p>
+						</div>
+						<form class="ps-contact-form" action="#" method="post">
+							<div class="ps-form-row">
+								<div class="ps-field">
+									<label for="contact-name">Name</label>
+									<input type="text" id="contact-name" name="name" placeholder="Your name" />
+								</div>
+								<div class="ps-field">
+									<label for="contact-email">Email</label>
+									<input type="email" id="contact-email" name="email" placeholder="you@example.com" />
+								</div>
+							</div>
+							<div class="ps-field">
+								<label for="contact-message">Message</label>
+								<textarea id="contact-message" name="message" placeholder="What's on your mind?"></textarea>
+							</div>
+							<ul class="actions">
+								<li><input type="submit" value="Send Message" class="button primary" /></li>
+							</ul>
+						</form>
+					</div>
 				</div>
 			</section>
 
@@ -269,6 +301,7 @@
 							<li><a href="#features">Features</a></li>
 							<li><a href="#how-it-works">How It Works</a></li>
 							<li><a href="#about">About</a></li>
+							<li><a href="#contact">Contact</a></li>
 						</ul>
 					</section>
 					<ul class="copyright">
