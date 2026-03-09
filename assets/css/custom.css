@@ -12,11 +12,17 @@
 	--ps-surface:      #110e1c;
 	--ps-surface-2:    #181228;
 	--ps-border:       rgba(220, 200, 255, 0.08);
-	--ps-purple:       #6830bb;
+
+	/* Brand palette */
+	--ps-purple:       #6830BB;   /* anchor/primary */
+	--ps-purple-soft:  #8565B5;   /* button hover */
 	--ps-purple-dark:  #521898;
 	--ps-purple-light: #8a52d4;
-	--ps-accent:       #2dd4bf;
-	--ps-accent-dark:  #14b8a4;
+	--ps-red:          #BB303E;
+	--ps-green:        #83BB30;
+	--ps-teal:         #30BBAD;
+	--ps-teal-dark:    #22988C;
+
 	--ps-text:         #f0eeff;
 	--ps-text-muted:   #9888c0;
 }
@@ -42,20 +48,19 @@ p {
 }
 
 a {
-	color: var(--ps-accent) !important;
-	border-bottom-color: rgba(45, 212, 191, 0.2) !important;
+	color: var(--ps-teal) !important;
+	border-bottom-color: rgba(48, 187, 173, 0.2) !important;
 }
 
 a:hover {
-	color: var(--ps-purple-light) !important;
-	border-bottom-color: rgba(138, 82, 212, 0.3) !important;
+	color: var(--ps-purple-soft) !important;
+	border-bottom-color: rgba(133, 101, 181, 0.3) !important;
 }
 
 /* ============================================================
    HEADER — Horizontal sticky nav bar
    ============================================================ */
 
-/* Offset page content so it doesn't hide under the fixed bar */
 #wrapper {
 	padding-top: 4em !important;
 }
@@ -125,7 +130,7 @@ a:hover {
 
 /* Desktop nav text links */
 .ps-nav-link a {
-	color: var(--ps-accent) !important;
+	color: var(--ps-teal) !important;
 	font-family: 'Rubik', sans-serif !important;
 	font-weight: 500 !important;
 	font-size: 0.9em !important;
@@ -136,7 +141,7 @@ a:hover {
 }
 
 .ps-nav-link a:hover {
-	color: var(--ps-accent-dark) !important;
+	color: var(--ps-purple-soft) !important;
 	border-bottom: none !important;
 }
 
@@ -145,14 +150,14 @@ a:hover {
 	padding: 0.55em 1.2em !important;
 	font-size: 0.85em !important;
 	margin-left: 0.75em !important;
-	background-color: var(--ps-accent) !important;
-	border-color: var(--ps-accent) !important;
-	color: #0b0912 !important;
+	background-color: var(--ps-purple) !important;
+	border-color: var(--ps-purple) !important;
+	color: #ffffff !important;
 }
 
 .ps-nav-cta.button.primary:hover {
-	background-color: var(--ps-accent-dark) !important;
-	border-color: var(--ps-accent-dark) !important;
+	background-color: var(--ps-purple-soft) !important;
+	border-color: var(--ps-purple-soft) !important;
 }
 
 /* Hamburger button — transparent bg + white lines */
@@ -165,7 +170,7 @@ a:hover {
 }
 
 #header nav ul li a[href="#menu"]:before {
-	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cline x1='2' y1='7' x2='22' y2='7' stroke='%238a52d4' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='2' y1='12' x2='22' y2='12' stroke='%238a52d4' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='2' y1='17' x2='22' y2='17' stroke='%238a52d4' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cline x1='2' y1='7' x2='22' y2='7' stroke='%238565B5' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='2' y1='12' x2='22' y2='12' stroke='%238565B5' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='2' y1='17' x2='22' y2='17' stroke='%238565B5' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
 }
 
 /* ============================================================
@@ -191,7 +196,7 @@ a:hover {
 }
 
 #menu ul li a:hover {
-	color: var(--ps-purple-light) !important;
+	color: var(--ps-purple-soft) !important;
 }
 
 #menu .close:before,
@@ -200,20 +205,30 @@ a:hover {
 }
 
 /* ============================================================
-   MAIN CONTENT AREA
+   MAIN CONTENT AREA — Hero
    ============================================================ */
 
 #main {
 	background: var(--ps-bg) !important;
+	padding-top: 2.5em !important;
+}
+
+#main .inner {
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+#main .inner > header {
+	padding: 3em 0 3.5em !important;
 }
 
 #main .inner > header h1 {
-	font-size: clamp(2.8em, 5.5vw, 6.5em) !important;
+	font-size: clamp(2.4em, 4.5vw, 5.5em) !important;
 	font-weight: 400 !important;
 	line-height: 1.05 !important;
 	color: var(--ps-text) !important;
 	letter-spacing: -0.03em !important;
-	margin-bottom: 0.5em !important;
+	margin-bottom: 0.45em !important;
 	white-space: nowrap !important;
 }
 
@@ -225,7 +240,7 @@ a:hover {
 }
 
 #main .inner > header .actions {
-	margin-top: 2.2em !important;
+	margin-top: 1.8em !important;
 }
 
 /* ============================================================
@@ -248,8 +263,8 @@ a:hover {
 }
 
 .button.primary:hover {
-	background-color: var(--ps-purple-dark) !important;
-	border-color: var(--ps-purple-dark) !important;
+	background-color: var(--ps-purple-soft) !important;
+	border-color: var(--ps-purple-soft) !important;
 }
 
 .button:not(.primary) {
@@ -259,42 +274,42 @@ a:hover {
 }
 
 .button:not(.primary):hover {
-	box-shadow: inset 0 0 0 2px var(--ps-accent) !important;
-	color: var(--ps-accent) !important;
+	box-shadow: inset 0 0 0 2px var(--ps-purple-soft) !important;
+	color: var(--ps-purple-soft) !important;
 }
 
 /* ============================================================
-   TILES — Color overrides (Purple brand palette)
+   TILES — Palette color overrides
    ============================================================ */
 
 /* style1 → Brand Purple */
 .tiles article.style1 > .image:before {
-	background-color: #6830bb !important;
+	background-color: var(--ps-purple) !important;
 }
 
-/* style2 → Deep Violet */
+/* style2 → Red */
 .tiles article.style2 > .image:before {
-	background-color: #4d1a96 !important;
+	background-color: var(--ps-red) !important;
 }
 
-/* style3 → Vivid Purple */
+/* style3 → Green */
 .tiles article.style3 > .image:before {
-	background-color: #7e3fd4 !important;
+	background-color: var(--ps-green) !important;
 }
 
-/* style4 → Royal Plum */
+/* style4 → Teal */
 .tiles article.style4 > .image:before {
-	background-color: #3d1480 !important;
+	background-color: var(--ps-teal) !important;
 }
 
-/* style5 → Lavender */
+/* style5 → Soft Purple */
 .tiles article.style5 > .image:before {
-	background-color: #8a52d4 !important;
+	background-color: var(--ps-purple-soft) !important;
 }
 
-/* style6 → Dark Grape */
+/* style6 → Dark Teal */
 .tiles article.style6 > .image:before {
-	background-color: #5a2aa8 !important;
+	background-color: var(--ps-teal-dark) !important;
 }
 
 /* Hover: darken to reveal content */
@@ -312,7 +327,7 @@ a:hover {
 }
 
 /* ============================================================
-   FEATURE TILES SECTION (tiles live outside #main now)
+   FEATURE TILES SECTION
    ============================================================ */
 
 .ps-features {
@@ -345,7 +360,7 @@ a:hover {
 
 .ps-section-header h2 {
 	font-size: 2.2em !important;
-	font-weight: 900 !important;
+	font-weight: 600 !important;
 	color: var(--ps-text) !important;
 	margin-bottom: 0.4em !important;
 	letter-spacing: -0.02em !important;
@@ -374,21 +389,15 @@ a:hover {
 	border: 1px solid var(--ps-border) !important;
 }
 
+/* Step numbers hidden */
 .ps-step-num {
-	font-family: 'Rubik', sans-serif !important;
-	font-size: 0.65em !important;
-	font-weight: 700 !important;
-	letter-spacing: 0.3em !important;
-	color: var(--ps-purple-light) !important;
-	margin-bottom: 1em !important;
-	text-transform: uppercase !important;
-	display: block !important;
+	display: none !important;
 }
 
 .ps-step-icon {
 	display: block !important;
 	font-size: 2em !important;
-	color: var(--ps-accent) !important;
+	color: var(--ps-teal) !important;
 	margin-bottom: 0.8em !important;
 }
 
@@ -422,12 +431,12 @@ a:hover {
 	padding: 0 3em !important;
 }
 
-/* Tab navigation bar */
+/* Tab navigation — styled like nav links but green accent */
 .ps-tab-nav {
 	display: flex !important;
 	flex-wrap: wrap !important;
 	justify-content: center !important;
-	gap: 0.5em !important;
+	gap: 0.1em !important;
 	margin-bottom: 0 !important;
 	border-bottom: 2px solid var(--ps-border) !important;
 	padding-bottom: 0 !important;
@@ -435,14 +444,14 @@ a:hover {
 
 .ps-tab-btn {
 	font-family: 'Rubik', sans-serif !important;
-	font-size: 0.88em !important;
-	font-weight: 600 !important;
+	font-size: 0.9em !important;
+	font-weight: 500 !important;
 	color: var(--ps-text-muted) !important;
 	background: transparent !important;
 	border: none !important;
 	border-bottom: 2px solid transparent !important;
 	margin-bottom: -2px !important;
-	padding: 0.75em 1.2em !important;
+	padding: 0.5em 1em !important;
 	cursor: pointer !important;
 	transition: color 0.2s, border-color 0.2s !important;
 	white-space: nowrap !important;
@@ -450,12 +459,13 @@ a:hover {
 }
 
 .ps-tab-btn:hover {
-	color: var(--ps-text) !important;
+	color: var(--ps-green) !important;
+	border-bottom: none !important;
 }
 
 .ps-tab-btn.active {
-	color: var(--ps-purple-light) !important;
-	border-bottom-color: var(--ps-purple) !important;
+	color: var(--ps-green) !important;
+	border-bottom-color: var(--ps-green) !important;
 }
 
 /* Description panels */
@@ -479,7 +489,7 @@ a:hover {
 	line-height: 1.6 !important;
 }
 
-/* Embedded tool iframe */
+/* Embedded tool iframe (temporary until native embed) */
 .ps-tool-embed {
 	margin-top: 0.5em !important;
 	border-radius: 12px !important;
@@ -522,6 +532,94 @@ a:hover {
 
 .ps-about-body .actions {
 	margin-top: 2.2em !important;
+}
+
+/* ============================================================
+   CONTACT SECTION
+   ============================================================ */
+
+.ps-contact {
+	background: var(--ps-bg) !important;
+	padding: 5.5em 0 !important;
+	border-top: 1px solid var(--ps-border) !important;
+}
+
+.ps-contact .inner {
+	max-width: 75em !important;
+	margin: 0 auto !important;
+	padding: 0 3em !important;
+}
+
+.ps-contact-grid {
+	display: flex !important;
+	gap: 4em !important;
+	align-items: flex-start !important;
+}
+
+.ps-contact-info {
+	flex: 1 !important;
+	min-width: 200px !important;
+}
+
+.ps-contact-info p {
+	font-size: 1em !important;
+	line-height: 1.75 !important;
+	color: var(--ps-text-muted) !important;
+}
+
+.ps-contact-form {
+	flex: 2 !important;
+}
+
+.ps-contact-form .ps-field {
+	margin-bottom: 1.2em !important;
+}
+
+.ps-contact-form label {
+	display: block !important;
+	font-family: 'Rubik', sans-serif !important;
+	font-size: 0.8em !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.1em !important;
+	text-transform: uppercase !important;
+	color: var(--ps-text-muted) !important;
+	margin-bottom: 0.5em !important;
+}
+
+.ps-contact-form input[type="text"],
+.ps-contact-form input[type="email"],
+.ps-contact-form textarea {
+	width: 100% !important;
+	padding: 0.75em 1em !important;
+	background: var(--ps-surface) !important;
+	border: 1px solid var(--ps-border) !important;
+	border-radius: 6px !important;
+	color: var(--ps-text) !important;
+	font-family: 'Rubik', sans-serif !important;
+	font-size: 0.95em !important;
+	transition: border-color 0.2s !important;
+	box-sizing: border-box !important;
+}
+
+.ps-contact-form input[type="text"]:focus,
+.ps-contact-form input[type="email"]:focus,
+.ps-contact-form textarea:focus {
+	outline: none !important;
+	border-color: var(--ps-purple) !important;
+}
+
+.ps-contact-form textarea {
+	height: 130px !important;
+	resize: vertical !important;
+}
+
+.ps-contact-form .ps-form-row {
+	display: flex !important;
+	gap: 1em !important;
+}
+
+.ps-contact-form .ps-form-row .ps-field {
+	flex: 1 !important;
 }
 
 /* ============================================================
@@ -583,7 +681,7 @@ a:hover {
 }
 
 .ps-footer-list li a:hover {
-	color: var(--ps-purple-light) !important;
+	color: var(--ps-purple-soft) !important;
 }
 
 .copyright {
@@ -603,13 +701,11 @@ a:hover {
    ============================================================ */
 
 @media screen and (max-width: 980px) {
-	/* Hide desktop nav links + CTA, show only logo + hamburger */
 	.ps-nav-link,
 	.ps-nav-cta {
 		display: none !important;
 	}
 
-	/* Show hamburger on mobile */
 	.ps-nav-hamburger {
 		display: block !important;
 	}
@@ -628,7 +724,17 @@ a:hover {
 
 	.ps-tab-btn {
 		font-size: 0.8em !important;
-		padding: 0.65em 0.9em !important;
+		padding: 0.45em 0.85em !important;
+	}
+
+	.ps-contact-grid {
+		flex-direction: column !important;
+		gap: 2em !important;
+	}
+
+	.ps-contact-form .ps-form-row {
+		flex-direction: column !important;
+		gap: 0 !important;
 	}
 }
 
@@ -649,13 +755,15 @@ a:hover {
 
 	.ps-steps .inner,
 	.ps-about .inner,
-	.ps-tools .inner {
+	.ps-tools .inner,
+	.ps-contact .inner {
 		padding: 0 1.5em !important;
 	}
 
 	.ps-steps,
 	.ps-about,
-	.ps-tools {
+	.ps-tools,
+	.ps-contact {
 		padding: 3.5em 0 !important;
 	}
 
@@ -670,6 +778,6 @@ a:hover {
 
 	.ps-tab-btn {
 		font-size: 0.78em !important;
-		padding: 0.6em 0.75em !important;
+		padding: 0.4em 0.65em !important;
 	}
 }
