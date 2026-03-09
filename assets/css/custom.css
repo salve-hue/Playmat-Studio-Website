@@ -1,0 +1,461 @@
+/* ============================================================
+   PLAYMAT STUDIO — Custom Dark Theme
+   Override layer for Phantom (HTML5 UP) template
+   ============================================================ */
+
+/* ---- Google Font: Outfit ---- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+
+/* ---- CSS Variables ---- */
+:root {
+	--ps-bg:          #0a0a0f;
+	--ps-surface:     #13131a;
+	--ps-surface-2:   #1c1c28;
+	--ps-border:      rgba(240, 240, 245, 0.08);
+	--ps-purple:      #7c6fff;
+	--ps-purple-dark: #6355ee;
+	--ps-teal:        #00d4aa;
+	--ps-teal-dark:   #00b896;
+	--ps-text:        #f0f0f5;
+	--ps-text-muted:  #9090b0;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+body {
+	background-color: var(--ps-bg) !important;
+	color: var(--ps-text) !important;
+	font-family: 'Outfit', 'Source Sans Pro', Helvetica, sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: var(--ps-text) !important;
+	font-family: 'Outfit', 'Source Sans Pro', Helvetica, sans-serif !important;
+	font-weight: 700 !important;
+}
+
+p {
+	color: var(--ps-text-muted) !important;
+}
+
+a {
+	color: var(--ps-teal) !important;
+	border-bottom-color: rgba(0, 212, 170, 0.2) !important;
+}
+
+a:hover {
+	color: var(--ps-purple) !important;
+	border-bottom-color: rgba(124, 111, 255, 0.3) !important;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+#header {
+	background: rgba(10, 10, 15, 0.97) !important;
+	border-bottom: 1px solid var(--ps-border) !important;
+}
+
+#header .logo .title {
+	color: var(--ps-text) !important;
+	font-family: 'Outfit', sans-serif !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.02em !important;
+	font-size: 1.05em !important;
+}
+
+#header nav a {
+	color: var(--ps-text-muted) !important;
+}
+
+#header nav a:before,
+#header nav a:after {
+	background: var(--ps-purple) !important;
+}
+
+/* ============================================================
+   MENU (off-canvas)
+   ============================================================ */
+
+#menu {
+	background: var(--ps-surface) !important;
+	border-left: 1px solid var(--ps-border) !important;
+}
+
+#menu h2 {
+	color: var(--ps-text-muted) !important;
+	font-size: 0.65em !important;
+	letter-spacing: 0.25em !important;
+	font-weight: 600 !important;
+}
+
+#menu ul li a {
+	color: var(--ps-text) !important;
+	border-top-color: var(--ps-border) !important;
+	font-weight: 400 !important;
+}
+
+#menu ul li a:hover {
+	color: var(--ps-purple) !important;
+}
+
+#menu .close:before,
+#menu .close:after {
+	background: var(--ps-text-muted) !important;
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+
+#main {
+	background: var(--ps-bg) !important;
+}
+
+#main .inner > header h1 {
+	font-size: 4em !important;
+	font-weight: 900 !important;
+	line-height: 1.05 !important;
+	color: var(--ps-text) !important;
+	letter-spacing: -0.03em !important;
+	margin-bottom: 0.5em !important;
+}
+
+#main .inner > header p {
+	color: var(--ps-text-muted) !important;
+	font-size: 1.05em !important;
+	line-height: 1.7 !important;
+	max-width: 560px !important;
+}
+
+#main .inner > header .actions {
+	margin-top: 2.2em !important;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.button {
+	font-family: 'Outfit', 'Source Sans Pro', sans-serif !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.04em !important;
+	border-radius: 6px !important;
+	text-transform: none !important;
+}
+
+.button.primary {
+	background-color: var(--ps-purple) !important;
+	border-color: var(--ps-purple) !important;
+	box-shadow: none !important;
+	color: #ffffff !important;
+}
+
+.button.primary:hover {
+	background-color: var(--ps-purple-dark) !important;
+	border-color: var(--ps-purple-dark) !important;
+}
+
+.button:not(.primary) {
+	background-color: transparent !important;
+	box-shadow: inset 0 0 0 2px rgba(240, 240, 245, 0.15) !important;
+	color: var(--ps-text) !important;
+}
+
+.button:not(.primary):hover {
+	box-shadow: inset 0 0 0 2px var(--ps-teal) !important;
+	color: var(--ps-teal) !important;
+}
+
+/* ============================================================
+   TILES — Color overrides (Dark Studio palette)
+   ============================================================ */
+
+/* style1 → Electric Purple */
+.tiles article.style1 > .image:before {
+	background-color: #5b4fcf !important;
+}
+
+/* style2 → Teal */
+.tiles article.style2 > .image:before {
+	background-color: #00897a !important;
+}
+
+/* style3 → Indigo */
+.tiles article.style3 > .image:before {
+	background-color: #3d52cc !important;
+}
+
+/* style4 → Violet */
+.tiles article.style4 > .image:before {
+	background-color: #8b33d4 !important;
+}
+
+/* style5 → Cyan */
+.tiles article.style5 > .image:before {
+	background-color: #0592ab !important;
+}
+
+/* style6 → Deep Blue */
+.tiles article.style6 > .image:before {
+	background-color: #2563c0 !important;
+}
+
+/* Hover: darken to reveal content */
+.tiles article:hover > .image:before {
+	background-color: #0d0d18 !important;
+	opacity: 0.92 !important;
+}
+
+/* Tile heading */
+.tiles article > a h2 {
+	font-family: 'Outfit', sans-serif !important;
+	font-weight: 700 !important;
+	font-size: 1.3em !important;
+	letter-spacing: -0.01em !important;
+}
+
+/* ============================================================
+   HOW IT WORKS SECTION
+   ============================================================ */
+
+.ps-steps {
+	background: var(--ps-surface) !important;
+	padding: 5.5em 0 !important;
+	border-top: 1px solid var(--ps-border) !important;
+	border-bottom: 1px solid var(--ps-border) !important;
+}
+
+.ps-steps .inner,
+.ps-about .inner {
+	max-width: 75em !important;
+	margin: 0 auto !important;
+	padding: 0 3em !important;
+}
+
+.ps-section-header {
+	text-align: center !important;
+	margin-bottom: 3.5em !important;
+}
+
+.ps-section-header h2 {
+	font-size: 2.2em !important;
+	font-weight: 900 !important;
+	color: var(--ps-text) !important;
+	margin-bottom: 0.4em !important;
+	letter-spacing: -0.02em !important;
+}
+
+.ps-section-header p {
+	color: var(--ps-text-muted) !important;
+	font-size: 1.05em !important;
+	margin: 0 !important;
+}
+
+.ps-steps-grid {
+	display: flex !important;
+	gap: 2em !important;
+	justify-content: center !important;
+	align-items: stretch !important;
+}
+
+.ps-step {
+	flex: 1 !important;
+	max-width: 300px !important;
+	text-align: center !important;
+	padding: 2.5em 1.8em !important;
+	background: var(--ps-surface-2) !important;
+	border-radius: 12px !important;
+	border: 1px solid var(--ps-border) !important;
+}
+
+.ps-step-num {
+	font-family: 'Outfit', sans-serif !important;
+	font-size: 0.65em !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.3em !important;
+	color: var(--ps-purple) !important;
+	margin-bottom: 1em !important;
+	text-transform: uppercase !important;
+	display: block !important;
+}
+
+.ps-step-icon {
+	display: block !important;
+	font-size: 2em !important;
+	color: var(--ps-teal) !important;
+	margin-bottom: 0.8em !important;
+}
+
+.ps-step h3 {
+	font-size: 1.1em !important;
+	font-weight: 700 !important;
+	color: var(--ps-text) !important;
+	margin-bottom: 0.6em !important;
+}
+
+.ps-step p {
+	font-size: 0.9em !important;
+	color: var(--ps-text-muted) !important;
+	line-height: 1.65 !important;
+	margin: 0 !important;
+}
+
+/* ============================================================
+   ABOUT SECTION
+   ============================================================ */
+
+.ps-about {
+	background: var(--ps-bg) !important;
+	padding: 5.5em 0 !important;
+}
+
+.ps-about-header {
+	text-align: left !important;
+}
+
+.ps-about-body {
+	max-width: 680px !important;
+}
+
+.ps-about-body p {
+	font-size: 1.05em !important;
+	line-height: 1.8 !important;
+	color: var(--ps-text-muted) !important;
+	margin-bottom: 1.2em !important;
+}
+
+.ps-about-body .actions {
+	margin-top: 2.2em !important;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+#footer {
+	background: var(--ps-surface) !important;
+	border-top: 1px solid var(--ps-border) !important;
+}
+
+#footer .inner {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	gap: 3em !important;
+	align-items: flex-start !important;
+}
+
+.ps-footer-col {
+	flex: 1 !important;
+	min-width: 160px !important;
+}
+
+#footer h2 {
+	color: var(--ps-text) !important;
+	font-size: 0.75em !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.2em !important;
+	text-transform: uppercase !important;
+	margin-bottom: 1em !important;
+}
+
+#footer p {
+	color: var(--ps-text-muted) !important;
+	font-size: 0.9em !important;
+	line-height: 1.7 !important;
+}
+
+.ps-footer-list {
+	list-style: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.ps-footer-list li {
+	padding: 0.4em 0 !important;
+	border-top: 1px solid var(--ps-border) !important;
+}
+
+.ps-footer-list li:first-child {
+	border-top: none !important;
+}
+
+.ps-footer-list li a {
+	color: var(--ps-text-muted) !important;
+	font-size: 0.9em !important;
+	text-decoration: none !important;
+	border: none !important;
+}
+
+.ps-footer-list li a:hover {
+	color: var(--ps-purple) !important;
+}
+
+.icon.style2 {
+	border-color: var(--ps-border) !important;
+	color: var(--ps-text-muted) !important;
+}
+
+.icon.style2:hover {
+	color: var(--ps-teal) !important;
+	border-color: var(--ps-teal) !important;
+}
+
+.copyright {
+	width: 100% !important;
+	border-top-color: var(--ps-border) !important;
+	margin-top: 1em !important;
+}
+
+.copyright li,
+.copyright li a {
+	color: var(--ps-text-muted) !important;
+	font-size: 0.85em !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media screen and (max-width: 980px) {
+	.ps-steps-grid {
+		flex-wrap: wrap !important;
+	}
+
+	.ps-step {
+		min-width: 220px !important;
+	}
+}
+
+@media screen and (max-width: 736px) {
+	#main .inner > header h1 {
+		font-size: 2.6em !important;
+	}
+
+	.ps-steps-grid {
+		flex-direction: column !important;
+		align-items: stretch !important;
+	}
+
+	.ps-step {
+		max-width: 100% !important;
+	}
+
+	.ps-steps .inner,
+	.ps-about .inner {
+		padding: 0 1.5em !important;
+	}
+
+	.ps-steps,
+	.ps-about {
+		padding: 3.5em 0 !important;
+	}
+
+	#footer .inner {
+		flex-direction: column !important;
+		gap: 2em !important;
+	}
+}
