@@ -118,20 +118,25 @@ a:hover {
 	margin: 0 !important;
 }
 
+/* Hide hamburger on desktop */
+.ps-nav-hamburger {
+	display: none !important;
+}
+
 /* Desktop nav text links */
 .ps-nav-link a {
-	color: var(--ps-text-muted) !important;
+	color: var(--ps-accent) !important;
 	font-family: 'Rubik', sans-serif !important;
 	font-weight: 500 !important;
 	font-size: 0.9em !important;
-	padding: 0.5em 0.9em !important;
+	padding: 0.5em 1em !important;
 	display: block !important;
 	border-bottom: none !important;
 	transition: color 0.2s !important;
 }
 
 .ps-nav-link a:hover {
-	color: var(--ps-purple-light) !important;
+	color: var(--ps-accent-dark) !important;
 	border-bottom: none !important;
 }
 
@@ -139,7 +144,15 @@ a:hover {
 .ps-nav-cta.button.primary {
 	padding: 0.55em 1.2em !important;
 	font-size: 0.85em !important;
-	margin-left: 0.5em !important;
+	margin-left: 0.75em !important;
+	background-color: var(--ps-accent) !important;
+	border-color: var(--ps-accent) !important;
+	color: #0b0912 !important;
+}
+
+.ps-nav-cta.button.primary:hover {
+	background-color: var(--ps-accent-dark) !important;
+	border-color: var(--ps-accent-dark) !important;
 }
 
 /* Hamburger button — transparent bg + white lines */
@@ -196,7 +209,7 @@ a:hover {
 
 #main .inner > header h1 {
 	font-size: clamp(2.8em, 5.5vw, 6.5em) !important;
-	font-weight: 900 !important;
+	font-weight: 400 !important;
 	line-height: 1.05 !important;
 	color: var(--ps-text) !important;
 	letter-spacing: -0.03em !important;
@@ -413,6 +426,7 @@ a:hover {
 .ps-tab-nav {
 	display: flex !important;
 	flex-wrap: wrap !important;
+	justify-content: center !important;
 	gap: 0.5em !important;
 	margin-bottom: 0 !important;
 	border-bottom: 2px solid var(--ps-border) !important;
@@ -589,10 +603,15 @@ a:hover {
    ============================================================ */
 
 @media screen and (max-width: 980px) {
-	/* Hide desktop nav links, show only logo + hamburger */
+	/* Hide desktop nav links + CTA, show only logo + hamburger */
 	.ps-nav-link,
 	.ps-nav-cta {
 		display: none !important;
+	}
+
+	/* Show hamburger on mobile */
+	.ps-nav-hamburger {
+		display: block !important;
 	}
 
 	.ps-steps-grid {
