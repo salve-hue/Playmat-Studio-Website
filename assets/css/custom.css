@@ -25,6 +25,9 @@
 
 	--ps-text:         #f0eeff;
 	--ps-text-muted:   #9888c0;
+
+	/* Tool lightbox nav offset (matches sticky nav height) */
+	--adv-nav-offset:  64px;
 }
 
 /* ============================================================
@@ -128,36 +131,45 @@ a:hover {
 	display: none !important;
 }
 
-/* Desktop nav text links */
+/* Desktop nav text links — pill buttons: teal bg, white text, hover shifts bg */
 .ps-nav-link a {
-	color: var(--ps-teal) !important;
+	background-color: var(--ps-teal) !important;
+	color: #ffffff !important;
 	font-family: 'Rubik', sans-serif !important;
-	font-weight: 500 !important;
-	font-size: 0.9em !important;
-	padding: 0.5em 1em !important;
-	display: block !important;
+	font-weight: 600 !important;
+	font-size: 0.82em !important;
+	padding: 0.45em 0.9em !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	text-align: center !important;
+	border-radius: 5px !important;
 	border-bottom: none !important;
-	transition: color 0.2s !important;
+	transition: background-color 0.2s !important;
+	white-space: nowrap !important;
 }
 
 .ps-nav-link a:hover {
-	color: var(--ps-purple-soft) !important;
+	background-color: var(--ps-teal-dark) !important;
+	color: #ffffff !important;
 	border-bottom: none !important;
 }
 
 /* CTA button in nav bar */
 .ps-nav-cta.button.primary {
-	padding: 0.55em 1.2em !important;
-	font-size: 0.85em !important;
-	margin-left: 0.75em !important;
+	padding: 0.45em 1.1em !important;
+	font-size: 0.82em !important;
+	margin-left: 0.5em !important;
 	background-color: var(--ps-purple) !important;
 	border-color: var(--ps-purple) !important;
 	color: #ffffff !important;
+	border-radius: 5px !important;
 }
 
 .ps-nav-cta.button.primary:hover {
-	background-color: var(--ps-purple-soft) !important;
-	border-color: var(--ps-purple-soft) !important;
+	background-color: var(--ps-purple-dark) !important;
+	border-color: var(--ps-purple-dark) !important;
+	color: #ffffff !important;
 }
 
 /* Hamburger button — transparent bg + white lines */
@@ -432,78 +444,20 @@ a:hover {
 	padding: 0 3em !important;
 }
 
-/* Tab navigation — styled like nav links but green accent */
-.ps-tab-nav {
-	display: flex !important;
-	flex-wrap: wrap !important;
-	justify-content: center !important;
-	gap: 0.1em !important;
-	margin-bottom: 0 !important;
-	border-bottom: 2px solid var(--ps-border) !important;
-	padding-bottom: 0 !important;
-}
+/* (outer tab nav removed — tool has its own tab bar) */
 
-.ps-tab-btn {
-	font-family: 'Rubik', sans-serif !important;
-	font-size: 0.9em !important;
-	font-weight: 500 !important;
-	color: var(--ps-text-muted) !important;
-	background: transparent !important;
-	border: none !important;
-	border-bottom: 2px solid transparent !important;
-	margin-bottom: -2px !important;
-	padding: 0.5em 1em !important;
-	cursor: pointer !important;
-	transition: color 0.2s, border-color 0.2s !important;
-	white-space: nowrap !important;
-	letter-spacing: 0.01em !important;
-}
-
-.ps-tab-btn:hover {
-	color: var(--ps-green) !important;
-	border-bottom: none !important;
-}
-
-.ps-tab-btn.active {
-	color: var(--ps-green) !important;
-	border-bottom-color: var(--ps-green) !important;
-}
-
-/* Description panels */
-.ps-tool-descriptions {
-	position: relative !important;
-}
-
-.ps-tool-desc-panel {
-	display: none !important;
-	padding: 1.4em 0 1em !important;
-}
-
-.ps-tool-desc-panel.active {
-	display: block !important;
-}
-
-.ps-tool-desc-panel p {
-	font-size: 1em !important;
-	color: var(--ps-text-muted) !important;
-	margin: 0 !important;
-	line-height: 1.6 !important;
-}
-
-/* Embedded tool iframe (temporary until native embed) */
-.ps-tool-embed {
+/* Native tool embed — the designer-container-wrap fills the tools section */
+.designer-container-wrap {
 	margin-top: 0.5em !important;
-	border-radius: 12px !important;
-	overflow: hidden !important;
-	border: 1px solid var(--ps-border) !important;
-	background: var(--ps-surface) !important;
 }
 
-.ps-tool-embed iframe {
-	display: block !important;
-	width: 100% !important;
-	height: 780px !important;
-	border: none !important;
+/* Tool tab bar — use site palette accents */
+.tool-tab-btn.active {
+	color: var(--ps-teal) !important;
+	border-bottom-color: var(--ps-teal) !important;
+}
+.tool-tab-btn:hover {
+	color: var(--ps-teal) !important;
 }
 
 /* ============================================================
@@ -719,15 +673,6 @@ a:hover {
 		min-width: 220px !important;
 	}
 
-	.ps-tab-nav {
-		gap: 0.25em !important;
-	}
-
-	.ps-tab-btn {
-		font-size: 0.8em !important;
-		padding: 0.45em 0.85em !important;
-	}
-
 	.ps-contact-grid {
 		flex-direction: column !important;
 		gap: 2em !important;
@@ -773,12 +718,4 @@ a:hover {
 		gap: 2em !important;
 	}
 
-	.ps-tool-embed iframe {
-		height: 600px !important;
-	}
-
-	.ps-tab-btn {
-		font-size: 0.78em !important;
-		padding: 0.4em 0.65em !important;
-	}
 }
