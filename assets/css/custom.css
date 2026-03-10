@@ -333,6 +333,7 @@ a:hover {
 .ps-features {
 	background: var(--ps-bg) !important;
 	overflow: hidden !important;
+	padding-top: 3em !important;
 }
 
 /* ============================================================
