@@ -12,10 +12,15 @@
 		<meta name="description" content="Free browser-based tools to design, enhance, and download print-ready game mat artwork. No installs. No account. No cost." />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<link rel="stylesheet" href="assets/css/custom.css" />
+		<link rel="stylesheet" href="assets/css/tool.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<!-- Tool dependencies -->
+		<script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/browser/umd/index.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 	</head>
 	<body class="is-preload">
 
@@ -194,7 +199,7 @@
 				</div>
 			</section>
 
-			<!-- Tools (Tabbed) -->
+			<!-- Tools — native embed -->
 			<section id="tools" class="ps-tools">
 				<div class="inner">
 					<header class="ps-section-header">
@@ -202,40 +207,535 @@
 						<p>Everything in one place &mdash; no new tab needed.</p>
 					</header>
 
-					<!-- Tab Navigation -->
-					<div class="ps-tab-nav">
-						<button class="ps-tab-btn active" data-tab="quick-upload">&#9889; Quick Upload</button>
-						<button class="ps-tab-btn" data-tab="adv-editor">&#9998; Advanced Editor</button>
-						<button class="ps-tab-btn" data-tab="batch">&#128444; Batch Enhance</button>
-						<button class="ps-tab-btn" data-tab="converter">&#8635; Format Converter</button>
+					<!-- ═══ TOOL HTML (native embed) ══════════════════════════════ -->
+
+					<div id="fs-backdrop"></div>
+					<div id="brush-cursor"></div>
+
+					<div id="app-alert-modal" class="overlay-modal">
+					    <div class="overlay-box" id="app-alert-box" style="text-align: center;">
+					        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--brand-text-sec); font-size:20px; cursor:pointer;" onclick="document.getElementById('app-alert-modal').style.display='none'">×</button>
+					        <h3 id="app-alert-title" style="margin-top:0; font-size:20px; text-transform:uppercase;">Notice</h3>
+					        <p id="app-alert-text" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px; white-space: pre-wrap;"></p>
+					        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+					            <button class="action-btn" id="app-alert-btn" style="width:auto; padding:12px 30px;" onclick="document.getElementById('app-alert-modal').style.display='none'">OKAY</button>
+					            <button class="action-btn" id="app-alert-retry-btn" style="width:auto; padding:12px 30px; display:none;" onclick="document.getElementById('app-alert-modal').style.display='none'; window._alertRetryFn && window._alertRetryFn();">RETRY</button>
+					        </div>
+					    </div>
 					</div>
 
-					<!-- Tool Descriptions -->
-					<div class="ps-tool-descriptions">
-						<div class="ps-tool-desc-panel active" id="desc-quick-upload">
-							<p>Drop your art, auto-fit to mat size, and download a print-ready 300&nbsp;DPI JPG in seconds.</p>
-						</div>
-						<div class="ps-tool-desc-panel" id="desc-adv-editor">
-							<p>Full canvas editor with AI upscaling, game zone overlays, recolor brush, text layers, and transform tools.</p>
-						</div>
-						<div class="ps-tool-desc-panel" id="desc-batch">
-							<p>Drop multiple images at once, auto color-correct them all, and download individually or as a single ZIP.</p>
-						</div>
-						<div class="ps-tool-desc-panel" id="desc-converter">
-							<p>Convert any image to JPG, PNG, or WEBP &mdash; process a single file or batch-download as a ZIP.</p>
-						</div>
+					<div id="dpi-warning-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color: var(--danger-red); text-align: center;">
+					        <h3 style="color:var(--danger-red); margin-top:0; font-size:22px; text-transform:uppercase;">Resolution Warning</h3>
+					        <p id="dpi-warning-text" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;"></p>
+					        <div style="display:flex; gap:10px; justify-content:center;">
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" onclick="window.openHelpModal()">NEED HELP?</button>
+					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 30px; margin:0;" onclick="document.getElementById('dpi-warning-modal').style.display='none'">I UNDERSTAND</button>
+					        </div>
+					    </div>
 					</div>
 
-					<!-- Tool Embed (iframe — native integration pending source access) -->
-					<div class="ps-tool-embed">
-						<iframe
-							id="ps-tool-frame"
-							src="https://salve-hue.github.io/Image-Prep-Tool/"
-							title="Playmat Studio Tool"
-							allow="clipboard-write"
-							loading="lazy"
-						></iframe>
+					<div id="ai-warning-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color: var(--brand-hover); text-align: center;">
+					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:22px; text-transform:uppercase;">AI Frame Break</h3>
+					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
+					            This magical feature securely sends your artwork to a powerful cloud server to accurately separate the main character from the background!<br><br>
+					            It usually takes <strong>5 to 10 seconds</strong> to process.
+					        </p>
+					        <div style="display:flex; gap:10px; justify-content:center;">
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" onclick="document.getElementById('ai-warning-modal').style.display='none'">CANCEL</button>
+					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" onclick="window.runAutoFrameBreak()">PROCEED</button>
+					        </div>
+					    </div>
 					</div>
+
+					<div id="ai-upscale-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color: var(--brand-hover); text-align: center;">
+					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:22px; text-transform:uppercase;">Cloud AI Enhancer</h3>
+					        <p id="ai-upscale-desc" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
+					            We will securely send your image to a powerful cloud server to magically redraw the missing pixels and double the resolution for perfect printing!<br><br>
+					            It usually takes <strong>5 to 10 seconds</strong>.
+					        </p>
+					        <div style="display:flex; gap:10px; justify-content:center;">
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" onclick="document.getElementById('ai-upscale-modal').style.display='none'">CANCEL</button>
+					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" onclick="window.runAutoUpscale()">PROCEED</button>
+					        </div>
+					    </div>
+					</div>
+
+					<div id="ai-success-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color: var(--success-green); text-align: center;">
+					        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--brand-text-sec); font-size:20px; cursor:pointer;" onclick="document.getElementById('ai-success-modal').style.display='none'">×</button>
+					        <h3 style="color:var(--success-green); margin-top:0; font-size:20px; text-transform:uppercase;">Enhancement Complete</h3>
+					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
+					            Your image has been successfully upscaled and optimized for high-quality printing!
+					        </p>
+					        <button class="action-btn" style="background:var(--success-green); width:auto; padding:12px 30px; margin:0 auto;" onclick="document.getElementById('ai-success-modal').style.display='none'">AWESOME</button>
+					    </div>
+					</div>
+
+					<div id="url-paste-modal" class="overlay-modal">
+					    <div class="overlay-box" style="text-align: center;">
+					        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--brand-text-sec); font-size:20px; cursor:pointer;" onclick="document.getElementById('url-paste-modal').style.display='none'">×</button>
+					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">🔗 Import from Web</h3>
+					        <p style="color:var(--brand-text-sec); font-size:13px; margin-bottom:20px;">Paste a direct link to an image (ending in .jpg, .png, .webp) to load it onto the canvas.</p>
+					        <input type="text" id="paste-url-input" class="ui-select" placeholder="https://example.com/image.jpg" style="margin-bottom: 15px;" />
+					        <button class="action-btn" style="background:var(--brand-hover);" onclick="window.submitUrlPaste()">IMPORT IMAGE</button>
+					    </div>
+					</div>
+
+					<div id="help-modal" class="overlay-modal">
+					    <div class="overlay-box">
+					        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--brand-text-sec); font-size:20px; cursor:pointer;" onclick="document.getElementById('help-modal').style.display='none'">×</button>
+					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">Customer Support</h3>
+					        <p style="color:var(--brand-text-sec); font-size:13px; margin-bottom:10px;">For support and documentation, visit the project on GitHub.</p>
+					    </div>
+					</div>
+
+					<div id="bleed-confirm-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color:var(--danger-red); text-align:center;">
+					        <h3 style="color:var(--danger-red); margin-top:0; font-size:22px; text-transform:uppercase;">&#9888;&#65039; Artwork Does Not Cover Canvas</h3>
+					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
+					            Your artwork does not extend to the edges of the canvas.<br><br>
+					            <strong style="color:#fff;">This will result in white borders on your printed mat.</strong><br><br>
+					            Scale your artwork outward so it fills the entire canvas &mdash; including the red bleed area &mdash; to avoid white borders.
+					        </p>
+					        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 24px; margin:0;" onclick="window._closeBleedConfirm()">&larr; GO BACK AND FIX</button>
+					            <button class="action-btn" style="background:rgba(255,255,255,0.15); width:auto; padding:12px 20px; margin:0; font-size:12px;" onclick="window._proceedDespiteBleed()">Proceed anyway (I accept white borders)</button>
+					        </div>
+					    </div>
+					</div>
+
+					<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
+
+					    <div id="landing-ui">
+					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>
+
+					        <span class="landing-label" style="color: var(--brand-hover);">MAT SIZE</span>
+					        <select id="standalone-size-sel" class="ui-select"
+					            style="max-width:320px; margin:0 auto 24px; display:block;"
+					            onchange="APP.activeSizeKey=this.value; window.populateGameDropdowns(); window.updateInfoBars(null);">
+					            <option value="standard">Standard 24&Prime; &times; 14&Prime;</option>
+					            <option value="extended">Extended 28&Prime; &times; 14&Prime;</option>
+					            <option value="victor">Victor Deskmat 24&Prime; &times; 12&Prime;</option>
+					            <option value="secundus">Secundus Deskmat 28&Prime; &times; 12&Prime;</option>
+					            <option value="primus">Primus Deskmat 31&Prime; &times; 12&Prime;</option>
+					            <option value="tiro">Tiro Mousepad 10&Prime; &times; 8&Prime;</option>
+					            <option value="veteranus">Veteranus Mousepad 12.5&Prime; &times; 10.5&Prime;</option>
+					            <option value="gladiator">Gladiator Mousepad 18&Prime; &times; 12&Prime;</option>
+					        </select>
+
+					        <div class="tool-tab-bar">
+					            <button class="tool-tab-btn active" data-tab="quick-upload" onclick="window.switchTab('quick-upload')">&#x26A1; QUICK UPLOAD</button>
+					            <button class="tool-tab-btn" data-tab="adv-editor" onclick="window.switchTab('adv-editor')">&#x270F;&#xFE0F; ADVANCED EDITOR</button>
+					            <button class="tool-tab-btn" data-tab="batch" onclick="window.switchTab('batch')">&#x1F5BC;&#xFE0F; BATCH ENHANCE</button>
+					            <button class="tool-tab-btn" data-tab="converter" onclick="window.switchTab('converter')">&#x1F504; FORMAT CONVERTER</button>
+					        </div>
+
+					        <!-- Quick Upload: editor launches immediately when this tab is clicked via switchTab() -->
+					        <div id="tab-panel-quick-upload" class="tool-tab-panel active"></div>
+
+					        <!-- Advanced Editor: editor launches immediately when this tab is clicked via switchTab() -->
+					        <div id="tab-panel-adv-editor" class="tool-tab-panel"></div>
+
+					        <!-- Batch Enhance -->
+					        <div id="tab-panel-batch" class="tool-tab-panel">
+					            <div id="batch-drop-zone"
+					                style="border:2px dashed rgba(255,255,255,0.25); border-radius:8px; padding:40px 20px; text-align:center; cursor:pointer; margin-bottom:20px; transition:border-color 0.2s;"
+					                ondragover="event.preventDefault(); this.style.borderColor='var(--brand-hover)';"
+					                ondragleave="this.style.borderColor='rgba(255,255,255,0.25)';"
+					                ondrop="event.preventDefault(); this.style.borderColor='rgba(255,255,255,0.25)'; window.handleBatchFiles(event.dataTransfer.files);"
+					                onclick="document.getElementById('batch-file-in').click()">
+					                <div style="font-size:40px; margin-bottom:10px;">&#x1F5BC;&#xFE0F;</div>
+					                <p style="color:var(--brand-text-pri); font-size:16px; margin:0 0 6px; font-weight:600;">Drag &amp; drop images here</p>
+					                <p style="color:var(--brand-text-sec); font-size:12px; margin:0;">or click to select multiple files</p>
+					                <p style="color:var(--brand-text-sec); font-size:11px; margin:8px 0 0; opacity:0.7;">Applies: Brightness +12% &middot; Contrast +8% &middot; Saturation +15% &middot; Exports as 99% JPG</p>
+					            </div>
+					            <input type="file" id="batch-file-in" accept="image/*" multiple style="display:none;" onchange="window.handleBatchFiles(this.files)">
+					            <div id="batch-status" style="display:none; color:var(--brand-hover); font-size:13px; margin-bottom:12px; text-align:center;"></div>
+					            <div id="batch-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
+					            <div id="batch-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
+					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" onclick="window.clearBatch()">CLEAR</button>
+					                </div>
+					            </div>
+					        </div>
+
+					        <!-- Format Converter -->
+					        <div id="tab-panel-converter" class="tool-tab-panel">
+					            <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+					                <span style="color:var(--brand-text-sec); font-size:12px; font-weight:bold; letter-spacing:1px; white-space:nowrap;">CONVERT TO:</span>
+					                <select id="converter-format-sel" class="ui-select" style="width:auto; min-width:200px; padding:8px 12px; font-size:13px;">
+					                    <option value="jpeg">JPG &mdash; 99% quality</option>
+					                    <option value="png">PNG &mdash; lossless</option>
+					                    <option value="webp">WEBP &mdash; 95% quality</option>
+					                </select>
+					            </div>
+					            <div id="converter-drop-zone"
+					                style="border:2px dashed rgba(255,255,255,0.25); border-radius:8px; padding:40px 20px; text-align:center; cursor:pointer; margin-bottom:20px; transition:border-color 0.2s;"
+					                ondragover="event.preventDefault(); this.style.borderColor='var(--brand-hover)';"
+					                ondragleave="this.style.borderColor='rgba(255,255,255,0.25)';"
+					                ondrop="event.preventDefault(); this.style.borderColor='rgba(255,255,255,0.25)'; window.handleConverterFiles(event.dataTransfer.files);"
+					                onclick="document.getElementById('converter-file-in').click()">
+					                <div style="font-size:40px; margin-bottom:10px;">&#x1F504;</div>
+					                <p style="color:var(--brand-text-pri); font-size:16px; margin:0 0 6px; font-weight:600;">Drag &amp; drop images to convert</p>
+					                <p style="color:var(--brand-text-sec); font-size:12px; margin:0;">PNG &middot; WEBP &middot; GIF &middot; AVIF &middot; BMP &middot; JPG &#x2192; any format</p>
+					            </div>
+					            <input type="file" id="converter-file-in" accept="image/*" multiple style="display:none;" onchange="window.handleConverterFiles(this.files)">
+					            <div id="converter-status" style="display:none; color:var(--brand-hover); font-size:13px; margin-bottom:12px; text-align:center;"></div>
+					            <div id="converter-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
+					            <div id="converter-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
+					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;" onclick="window.downloadConverted()">&#x2B07; DOWNLOAD</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" onclick="window.clearConverter()">CLEAR</button>
+					                </div>
+					            </div>
+					        </div>
+
+					        <input type="file" id="simple-file-in" accept="image/*" style="display:none;" onchange="window.handleSimpleUpload(this)">
+					    </div>
+
+
+					    <div id="simple-backdrop">
+					        <div id="simple-modal">
+					            <div id="simple-header">
+					                <span style="font-weight:600; font-size:22px; color:var(--brand-hover); text-transform:uppercase; letter-spacing:1px; font-family:'Rubik', sans-serif;">Playmat Studio <span style="font-size:16px; color:#ffffff; font-weight:600; font-family:'Rubik', sans-serif; letter-spacing:1px; text-transform:uppercase;">| Quick Upload</span></span>
+					                <button class="action-btn btn-secondary" style="width:auto; padding: 6px 12px; margin:0; font-size:12px;" onclick="window.restartApp()">RESTART</button>
+					            </div>
+
+					            <div id="simple-canvas-wrap">
+					                <div id="simple-canvas-inner">
+					                    <canvas id="s-main-canvas"></canvas>
+					                    <canvas id="s-layout-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; opacity: 1;"></canvas>
+					                </div>
+					            </div>
+
+					            <div id="simple-info-bar" class="canvas-info-bar">
+					                <span id="si-size">Mat size: —</span>
+					                <span id="si-dpi">Image DPI: —</span>
+					                <span><span class="info-red">Red area:</span> Bleed — cut off during production</span>
+					                <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
+					            </div>
+
+					            <div id="simple-tools">
+					                <div class="simple-tool-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:30px; align-items:start;">
+
+					                    <div>
+					                        <label style="color: var(--brand-hover); font-size:11px; font-weight:bold; text-transform:uppercase; display:block; margin-bottom:10px;">Artwork &amp; Filters</label>
+					                        <div style="display:flex; width:100%; gap:8px; margin-bottom:15px;">
+					                            <button class="action-btn" style="flex:2;" onclick="document.getElementById('simple-file-in').click()">📁 UPLOAD FILE</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" onclick="window.promptPasteUrl()">🔗 PASTE URL</button>
+					                        </div>
+
+					                        <div style="display:flex; width:100%; gap:10px; align-items:center; margin-bottom:15px;">
+					                            <input type="range" id="s-zoom-in" min="0.1" max="2.5" step="0.01" value="1" oninput="window.handleSimpleZoom(this.value)" style="flex:2;">
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" onclick="window.rotateSimpleArt()">↻ ROTATE</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" onclick="window.forceSimpleFit()">[ ] FIT</button>
+					                        </div>
+
+					                        <div style="display:flex; width:100%; gap:8px;">
+					                            <button id="s-btn-enhance" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;" onclick="window.toggleSimpleFilter('enhance')">🪄 ENHANCE</button>
+					                            <button id="s-btn-grayscale" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;" onclick="window.toggleSimpleFilter('grayscale')">◑ GRAYSCALE</button>
+					                        </div>
+					                    </div>
+
+					                    <div>
+					                        <label style="color: var(--brand-hover); font-size:11px; font-weight:bold; text-transform:uppercase; display:block; margin-bottom:10px;">Game Layouts (Optional)</label>
+					                        <select id="s-game-sel" class="ui-select" style="margin:0; margin-bottom:10px;" onchange="window.filterSimpleFormats()"><option value="">-- Select Game (Optional) --</option></select>
+					                        <select id="s-format-sel" class="ui-select hidden-field" style="margin:0; margin-bottom:10px;" onchange="window.filterSimpleHands()"></select>
+					                        <select id="s-hand-sel" class="ui-select hidden-field" style="margin:0; margin-bottom:10px;" onchange="window.applySimpleLayout()"></select>
+
+					                        <div id="s-rb-extras-wrap" class="hidden-field" style="margin-bottom:10px;">
+					                            <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px; font-weight:bold; text-transform:uppercase;">Points Overlay</label>
+					                            <select id="s-rb-points-sel" class="ui-select" style="margin:0; padding:8px;" onchange="window.changeRbPoints()">
+					                                <option value="none">None</option>
+					                                <option value="basic">Basic Points</option>
+					                                <option value="basic_1_14">Basic Points 1-14</option>
+					                                <option value="project">Project Points</option>
+					                                <option value="project_1_14">Project Points 1-14</option>
+					                                <option value="lunar">Lunar Points</option>
+					                                <option value="lunar_1_14">Lunar Points 1-14</option>
+					                                <option value="khasino">Khasino Points</option>
+					                            </select>
+					                        </div>
+
+					                        <div id="s-color-wrap" class="hidden-field">
+					                            <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px; font-weight:bold; text-transform:uppercase;">Zone Color</label>
+					                            <input type="color" id="s-col" value="#ffffff" oninput="window.renderSimpleLayout()" class="color-swatch" style="height:38px;">
+					                        </div>
+					                    </div>
+					                </div>
+
+					                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top:20px;">
+					                    <div id="simple-bleed-warning" class="bleed-warning-banner">
+					                        &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
+					                        Scale your artwork to fill the entire canvas including the red bleed area.
+					                    </div>
+					                    <div style="display:flex; justify-content:space-between; align-items:center;">
+					                        <button class="action-btn btn-secondary" style="width:auto; margin:0; font-size:11px;" onclick="window.toggleSimpleGuides()">SHOW/HIDE PRINT GUIDES</button>
+					                        <button id="simple-atc" class="action-btn" style="width:250px; height:50px; font-size:16px; margin:0;" onclick="window.downloadDesign('simple')">DOWNLOAD</button>
+					                    </div>
+					                </div>
+
+					                <div style="text-align:center; padding-top: 15px;">
+					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
+					                </div>
+					            </div>
+					        </div>
+					        <div class="version-tag">v1.7.1</div>
+					    </div>
+
+
+					    <div id="adv-backdrop">
+					    <div id="playmat-tool-root">
+					        <div id="sidebar">
+					            <div class="studio-title-wrap">
+					                <h2 class="studio-title">Playmat Studio</h2>
+					                <span class="studio-subtitle">Advanced Editor <span class="beta-badge" style="font-size:9px; vertical-align:middle;">BETA</span></span>
+					            </div>
+
+					            <div class="sidebar-header">
+					                <button class="action-btn btn-secondary" style="margin:0;" onclick="window.restartApp()">RESTART</button>
+					                <button id="fs-toggle-btn" class="action-btn" style="margin:0; background: var(--brand-hover);" onclick="window.toggleFullScreen()">FULL SCREEN</button>
+					            </div>
+
+					            <button class="acc-btn" onclick="window.toggleAcc('acc-size')">ARTWORK <span>▼</span></button>
+					            <div id="acc-size" class="acc-content" style="display:block;">
+					                <div style="display:flex; gap:10px; margin-bottom:10px;">
+					                    <button class="action-btn" style="flex:2;" onclick="window.triggerUpload()">📁 UPLOAD FILE</button>
+					                    <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" onclick="window.promptPasteUrl()">🔗 PASTE URL</button>
+					                </div>
+
+					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;" onchange="window.handleUpload(this)">
+
+					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality</label>
+					                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); line-height: 1.2; width: 100%;" onclick="window.confirmAutoUpscale(true)">
+					                        ✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>
+					                    </button>
+					                </div>
+
+					                <div style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+					                    <label style="font-size: 12px; color: var(--brand-text-sec); display: block; margin-bottom: 10px;">No artwork? Try a solid color:</label>
+					                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+					                        <input type="color" id="bg-color-picker" value="#000000" oninput="window.syncHex('bg-color-picker', 'bg-color-hex'); window.setSolidBackground(this.value)" class="color-swatch" style="width: 50px;">
+					                        <input type="text" id="bg-color-hex" value="#000000" oninput="window.syncColor('bg-color-hex', 'bg-color-picker'); window.setSolidBackground(document.getElementById('bg-color-picker').value)" class="ui-select" style="margin:0; width:80px; padding:8px; font-family:monospace;">
+					                    </div>
+					                </div>
+					            </div>
+
+					            <button class="acc-btn" onclick="window.toggleAcc('acc-layouts')">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
+					            <div id="acc-layouts" class="acc-content">
+					                <select id="game-sel" class="ui-select" style="margin:0;" onchange="window.filterFormats()"><option value="">-- Select Game (Optional) --</option></select>
+					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;" onchange="window.filterHands()"></select>
+					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;" onchange="window.applyFinalLayout()"></select>
+
+					                <div id="rb-extras-wrap" class="hidden-field" style="margin-top:15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+					                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px; font-weight:bold; text-transform:uppercase;">Points Overlay</label>
+					                    <select id="rb-points-sel" class="ui-select" style="margin:0; padding:8px;" onchange="window.changeRbPoints()">
+					                        <option value="none">None</option>
+					                        <option value="basic">Basic Points</option>
+					                        <option value="basic_1_14">Basic Points 1-14</option>
+					                        <option value="project">Project Points</option>
+					                        <option value="project_1_14">Project Points 1-14</option>
+					                        <option value="lunar">Lunar Points</option>
+					                        <option value="lunar_1_14">Lunar Points 1-14</option>
+					                        <option value="khasino">Khasino Points</option>
+					                    </select>
+					                </div>
+
+					                <div id="zone-style-wrap" class="hidden-field">
+					                    <div class="slider-row">
+					                        <label>Zone Color Mode</label>
+					                        <select id="mode-sel" class="ui-select" onchange="window.renderLayout()">
+					                            <option value="solid">Solid Color</option>
+					                            <option value="gradient">Gradient</option>
+					                        </select>
+
+					                        <label style="margin-top:15px;">Primary Color</label>
+					                        <div style="display: flex; gap: 8px;">
+					                            <input type="color" id="col-1" value="#ffffff" oninput="window.syncHex('col-1', 'col-1-hex'); window.renderLayout()" class="color-swatch" style="flex:1;">
+					                            <input type="text" id="col-1-hex" value="#ffffff" oninput="window.syncColor('col-1-hex', 'col-1'); window.renderLayout()" class="ui-select" style="margin:0; width:90px; padding:8px; font-family:monospace;">
+					                        </div>
+
+					                        <div id="grad-controls" class="hidden-field">
+					                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+					                                <label style="margin:0;">Secondary Color</label>
+					                                <label style="margin:0; font-size:12px; cursor:pointer; color:var(--brand-text-sec);"><input type="checkbox" id="col-2-trans" onchange="window.renderLayout()"> Transparent</label>
+					                            </div>
+					                            <div style="display: flex; gap: 8px; margin-top:6px;">
+					                                <input type="color" id="col-2" value="#000000" oninput="window.syncHex('col-2', 'col-2-hex'); window.renderLayout()" class="color-swatch" style="flex:1;">
+					                                <input type="text" id="col-2-hex" value="#000000" oninput="window.syncColor('col-2-hex', 'col-2'); window.renderLayout()" class="ui-select" style="margin:0; width:90px; padding:8px; font-family:monospace;">
+					                            </div>
+
+					                            <label style="margin-top:15px;">Gradient Angle</label>
+					                            <div style="display: flex; align-items: center; gap: 10px;">
+					                                <input type="range" id="angle-in" min="0" max="360" value="180" oninput="window.renderLayout()" style="flex:1;">
+					                                <span id="angle-val" style="font-size: 13px; width: 35px; text-align: right; color: var(--brand-text-pri);">180°</span>
+					                                <div id="angle-compass" class="compass" style="transform: rotate(180deg);">↑</div>
+					                            </div>
+					                        </div>
+
+					                        <label style="margin-top:20px;">Overlay Opacity</label>
+					                        <input type="range" id="op-in" min="0.1" max="1" step="0.1" value="1" oninput="window.updateOpacity()" style="width:100%;">
+					                    </div>
+
+					                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+
+					                    <div class="inner-panel">
+					                        <span class="panel-title">FRAME BREAKING</span>
+					                        <button id="ai-fb-btn" class="action-btn" style="background:var(--brand-hover); margin-bottom:10px; line-height:1.2;" onclick="window.confirmAutoFrameBreak()">
+					                            ✨ AUTO FRAME BREAK<br><span style="font-size: 10px; font-weight: normal;">(experimental)</span>
+					                        </button>
+					                        <button id="ai-fb-clear-btn" class="action-btn btn-secondary hidden-field" style="margin-bottom:15px; border: 1px solid var(--danger-red); color: var(--danger-red);" onclick="window.clearAutoFrameBreak()">🗑️ REMOVE AI POP-OUT</button>
+
+					                        <button id="mask-toggle-btn" class="action-btn btn-secondary btn-eraser" onclick="window.toggleMaskMode()">ENABLE MANUAL ERASER</button>
+					                        <div id="mask-controls" class="hidden-field">
+					                            <label style="font-size:11px; margin-top:10px; display:block; color:var(--brand-text-sec);">Eraser Size</label>
+					                            <input type="range" id="brush-size" min="10" max="150" value="40" oninput="window.updateCursorStyle()">
+					                            <div style="display: flex; gap: 8px; margin-top: 10px;">
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.undoMask()">UNDO</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.resetMask()">RESET</button>
+					                            </div>
+					                        </div>
+					                    </div>
+
+					                    <div class="inner-panel">
+					                        <span class="panel-title">ZONE RECOLORING</span>
+					                        <button id="recolor-toggle-btn" class="action-btn btn-secondary btn-recolor" onclick="window.toggleRecolorMode()">ENABLE RECOLOR BRUSH</button>
+					                        <div id="recolor-controls" class="hidden-field">
+					                            <div style="display:flex; gap:10px; margin-bottom:10px; margin-top:10px;">
+					                                <div style="flex:1;">
+					                                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Brush Size</label>
+					                                    <input type="range" id="recolor-size" min="5" max="100" value="30" oninput="window.updateRecolorBrush()" style="width:100%;">
+					                                </div>
+					                                <div>
+					                                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Paint Color</label>
+					                                    <input type="color" id="recolor-color" value="#ff0000" class="color-swatch" style="width:50px; height:30px;" oninput="window.updateRecolorBrush()">
+					                                </div>
+					                            </div>
+					                            <div style="display: flex; gap: 8px;">
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.undoRecolor()">UNDO</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.resetRecolor()">RESET</button>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+					            </div>
+
+					            <button class="acc-btn" onclick="window.toggleAcc('acc-art')">ADJUSTMENTS <span>▼</span></button>
+					            <div id="acc-art" class="acc-content">
+
+					                <div class="inner-panel">
+					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
+					                    <p style="font-size:11px; color:var(--brand-text-sec); line-height:1.4; margin-bottom:15px; margin-top:0;">
+					                        Images on digital screens look much brighter than physical ink. Use our Auto-Optimize tool to perfectly calibrate your art for printing!
+					                    </p>
+					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px;" onclick="window.autoOptimizePrintAdv()">🪄 AUTO-OPTIMIZE FOR PRINT</button>
+
+					                    <div class="slider-row" style="margin-top:0;">
+					                        <label>Brightness</label>
+					                        <input type="range" id="filter-brightness" min="-0.3" max="0.3" step="0.01" value="0" oninput="window.updateFilters()">
+
+					                        <label style="margin-top:10px;">Contrast</label>
+					                        <input type="range" id="filter-contrast" min="-0.3" max="0.3" step="0.01" value="0" oninput="window.updateFilters()">
+
+					                        <label style="margin-top:10px;">Saturation</label>
+					                        <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0" oninput="window.updateFilters()">
+					                    </div>
+					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" onclick="window.resetFilters()">RESET COLORS</button>
+					                </div>
+
+					                <div class="slider-row">
+					                    <label>Art Scale</label>
+					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" oninput="window.handleZoom(this.value)" style="width:100%;">
+					                    <button class="action-btn btn-secondary" style="margin-top:15px;" onclick="window.forceFit()">RESET ART SCALE &amp; CENTER</button>
+					                </div>
+
+					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+
+					                <div class="inner-panel">
+					                    <span class="panel-title">TEXT &amp; TRANSFORMATIONS</span>
+					                    <button class="action-btn" style="background: var(--brand-hover); margin-bottom:15px;" onclick="window.addAdvText()">+ ADD TEXT</button>
+
+					                    <div id="adv-text-tools" class="hidden-field" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:6px; border: 1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
+					                        <select id="adv-font-family" class="ui-select" onchange="window.updateAdvTextAttr('fontFamily', this.value)">
+					                            <option value="Rubik">Rubik</option> <option value="Bangers">Bangers</option> <option value="Oswald">Oswald</option> <option value="Permanent Marker">Marker</option> <option value="Cinzel">Cinzel</option> <option value="Pacifico">Pacifico</option>
+					                        </select>
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Font Size</label>
+					                        <input type="range" id="adv-text-size-in" min="10" max="200" value="40" oninput="window.updateAdvTextAttr('fontSize', parseInt(this.value, 10))" style="width:100%; margin-bottom:15px;">
+					                        <div style="display:flex; gap:10px;">
+					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Fill</label><input type="color" id="adv-text-col" class="color-swatch" value="#ffffff" oninput="window.updateAdvTextAttr('fill', this.value)"></div>
+					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline</label><input type="color" id="adv-text-stroke" class="color-swatch" value="#000000" oninput="window.updateAdvTextAttr('stroke', this.value)"></div>
+					                        </div>
+					                        <button class="action-btn" style="background:var(--danger-red); margin-top:15px;" onclick="window.removeAdvActive()">DELETE SELECTED</button>
+					                    </div>
+
+					                    <div style="display:flex; gap:8px; margin-bottom: 15px;">
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.transformActive('rotate')">ROTATE 90°</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.transformActive('flipX')">FLIP H</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.transformActive('flipY')">FLIP V</button>
+					                    </div>
+					                    <div style="display:flex; gap:10px; align-items:center; margin-bottom: 15px;">
+					                        <input type="range" id="transform-rotation" min="-180" max="180" value="0" oninput="window.transformActive('angle', this.value)" style="flex:1;">
+					                        <span id="rotation-val" style="font-size: 13px; width: 35px; text-align: right; color:var(--brand-text-pri);">0°</span>
+					                    </div>
+					                    <button class="action-btn btn-secondary" style="margin:0;" onclick="window.transformActive('angle', 0)">RESET ROTATION</button>
+					                </div>
+
+					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+
+					                <button class="action-btn btn-secondary" style="margin-top:10px;" onclick="window.toggleAdvGuides()">SHOW/HIDE PRINT GUIDES</button>
+					            </div>
+
+					            <div style="flex-grow: 1;"></div>
+
+					            <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+					                <div id="adv-bleed-warning" class="bleed-warning-banner">
+					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
+					                    Scale your artwork to fill the entire canvas including the red bleed area.
+					                </div>
+					                <button id="sidebar-atc" class="action-btn" style="height: 60px; width: 100%; font-size: 16px;" onclick="window.downloadDesign('adv')">DOWNLOAD</button>
+					                <div style="text-align:center; padding-top: 15px;">
+					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
+					                </div>
+					            </div>
+					        </div>
+
+					        <div id="canvas-column">
+					            <div id="zoom-toolbar">
+					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">VIEW:</span>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" onclick="window.workspaceZoom(0.1)">+</button>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" onclick="window.workspaceZoom(-0.1)">-</button>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" onclick="window.workspaceZoom(0)">RESET</button>
+					            </div>
+
+					            <div id="canvas-wrapper">
+					                <canvas id="main-canvas"></canvas>
+					                <canvas id="layout-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; opacity: 1;"></canvas>
+					                <canvas id="fg-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 20; opacity: 1;"></canvas>
+					                <div id="recolor-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; mask-size: 100% 100%; -webkit-mask-size: 100% 100%;">
+					                    <canvas id="recolor-canvas"></canvas>
+					                </div>
+					                <div id="eraser-interaction" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none;"></div>
+					            </div>
+
+					            <div id="adv-info-bar" class="canvas-info-bar">
+					                <span id="ai-size">Mat size: —</span>
+					                <span id="ai-dpi">Image DPI: —</span>
+					                <span><span class="info-red">Red area:</span> Bleed — cut off during production</span>
+					                <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
+					            </div>
+					        </div>
+					    </div>
+					    <div class="version-tag" style="color:rgba(255,255,255,0.2); z-index:10001;">v1.7.1</div>
+					    </div><!-- /#adv-backdrop -->
+					</div>
+					</div><!-- /#designer-visibility-wrapper -->
+
+					<!-- ═══ END TOOL HTML ════════════════════════════════════════ -->
 
 				</div>
 			</section>
@@ -318,28 +818,7 @@
 		<script src="assets/js/breakpoints.min.js"></script>
 		<script src="assets/js/util.js"></script>
 		<script src="assets/js/main.js"></script>
-		<script>
-			// Tab switching for the Tools section
-			(function () {
-				var tabBtns = document.querySelectorAll('.ps-tab-btn');
-				tabBtns.forEach(function (btn) {
-					btn.addEventListener('click', function () {
-						var target = btn.getAttribute('data-tab');
-
-						// Update button states
-						tabBtns.forEach(function (b) { b.classList.remove('active'); });
-						btn.classList.add('active');
-
-						// Update description panels
-						document.querySelectorAll('.ps-tool-desc-panel').forEach(function (p) {
-							p.classList.remove('active');
-						});
-						var descPanel = document.getElementById('desc-' + target);
-						if (descPanel) descPanel.classList.add('active');
-					});
-				});
-			})();
-		</script>
+		<script src="assets/js/tool.js"></script>
 
 	</body>
 </html>
