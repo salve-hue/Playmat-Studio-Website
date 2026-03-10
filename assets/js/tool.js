@@ -12,7 +12,7 @@
     // ============================================================
     window.CLOUDFLARE_WORKER_URL    = 'https://playmat-upscaler.salve.workers.dev';
     window.CLOUDFLARE_BG_WORKER_URL = 'https://playmat-removebg.salve.workers.dev/';
-    window.CLOUDFLARE_UPLOAD_URL    = 'https://playmat-r2-upload.salve.workers.dev/';
+    window.CLOUDFLARE_UPLOAD_URL    = 'https://files.playmatstudio.com/';
     // Image hosting worker — deploy playmat-host-worker.js to Cloudflare and paste URL here
     window.CLOUDFLARE_HOST_URL = 'https://files.playmatstudio.com';
 
