@@ -9,8 +9,8 @@
 //   2. Paste this entire file as the worker code
 //   3. Settings → Bindings → Add binding:
 //        Type:          R2 bucket
-//        Variable name: BUCKET
-//        Bucket:        playmat-print-files
+//        Variable name: BUCKET1
+//        Bucket:        playmat-studio-hosting-files
 //   4. Deploy → copy the worker URL
 //   5. Paste the URL into tool.js as CLOUDFLARE_HOST_URL
 // ============================================================
@@ -70,7 +70,7 @@ export default {
         }
 
         if (method === 'DELETE' && path.length > 1) {
-            await env.BUCKET.delete(PREFIX + path.slice(1));
+            await env.BUCKET1.delete(PREFIX + path.slice(1));
             return json({ ok: true });
         }
 
@@ -104,7 +104,7 @@ async function handleUpload(request, env) {
     const now       = new Date().toISOString();
     const expiresAt = new Date(Date.now() + TTL_MS).toISOString();
 
-    await env.BUCKET.put(key, buf, {
+    await env.BUCKET1.put(key, buf, {
         httpMetadata: { contentType: mime },
         customMetadata: { uploadedAt: now, originalName: file.name || 'upload' },
     });
@@ -118,12 +118,12 @@ async function handleServe(id, env) {
         return json({ error: 'Invalid file id' }, 400);
     }
 
-    const obj = await env.BUCKET.get(PREFIX + id);
+    const obj = await env.BUCKET1.get(PREFIX + id);
     if (!obj) return json({ error: 'File not found' }, 404);
 
     const { uploadedAt } = obj.customMetadata || {};
     if (uploadedAt && Date.now() - new Date(uploadedAt).getTime() > TTL_MS) {
-        await env.BUCKET.delete(PREFIX + id);
+        await env.BUCKET1.delete(PREFIX + id);
         return json({ error: 'This file has expired and been deleted.' }, 410);
     }
 
