@@ -849,6 +849,9 @@
         btn.classList.add('active');
         window.populateGameDropdowns();
         window.updateInfoBars(null);
+        // Resize whichever canvas is currently active
+        if (window.canvas) window.changeSize();
+        if (window.sCanvas) window.initSimpleCanvas();
     };
 
     window.workspaceZoom = (amt) => {
