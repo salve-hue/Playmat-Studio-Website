@@ -485,6 +485,8 @@
 
     // Measure the 
     window.restartApp = () => {
+        location.reload();
+        return;
         var _dvw  = document.getElementById('designer-visibility-wrapper');
         var _rsbd = document.getElementById('simple-backdrop');
         var _rabd = document.getElementById('adv-backdrop');
