@@ -458,6 +458,14 @@ a:hover {
 	margin-top: 0.5em !important;
 }
 
+/* Reduce gap between "THE TOOLS" heading and the tool embed (~75% less) */
+.ps-tools .ps-section-header {
+	margin-bottom: 0.75em !important;
+}
+.ps-tools .designer-container-wrap {
+	padding-top: 8px !important;
+}
+
 /* Tool buttons — kill Phantom's pink box-shadow on hover/active */
 .tool-tab-btn,
 .mat-size-btn,
