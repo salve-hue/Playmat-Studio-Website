@@ -207,8 +207,10 @@
         const res = await fetch(window.CLOUDFLARE_UPLOAD_URL, { method: 'POST', body: formData });
         if (!res.ok) throw new Error('Failed to upload print file. Please try again.');
         const data = await res.json();
-        if (!data?.data?.url) throw new Error('Upload succeeded but no URL returned.');
-        return data.data.url;
+        // Handle both imgbb format { data: { url } } and R2 worker format { url }
+        const url = data?.data?.url || data?.url;
+        if (!url) throw new Error('Upload succeeded but no URL returned.');
+        return url;
     }
 
     // ============================================================
@@ -1013,9 +1015,14 @@
         if (!url) { APP.activePointsUrl=null; isAdv?window.renderLayout():window.renderSimpleLayout(); return; }
         if (APP.activePointsUrl !== url) {
             APP.activePointsUrl = url;
-            // Use fabric.Image.fromURL so ibb.co CORS headers are handled correctly
             fabric.Image.fromURL(url, (fabricImg, isError) => {
-                if (isError) { console.error('Failed to load points overlay:', url); return; }
+                if (isError) {
+                    const fb = new Image();
+                    fb.onload = () => { window.rbPointsImg = fb; isAdv ? window.renderLayout() : window.renderSimpleLayout(); };
+                    fb.onerror = () => console.error('Failed to load points overlay:', url);
+                    fb.src = url;
+                    return;
+                }
                 window.rbPointsImg = fabricImg.getElement();
                 isAdv ? window.renderLayout() : window.renderSimpleLayout();
             }, { crossOrigin: 'anonymous' });
@@ -1221,9 +1228,16 @@
         if (APP.activeLayoutUrl === '') { drawFn(null); return; }
         if (APP.cachedLayoutUrl===APP.activeLayoutUrl && APP.cachedLayoutImg) { drawFn(APP.cachedLayoutImg); }
         else {
-            // Use fabric.Image.fromURL so ibb.co CORS headers are handled correctly
             fabric.Image.fromURL(APP.activeLayoutUrl, (fabricImg, isError) => {
-                if (isError) { console.error('Failed to load layout image:', APP.activeLayoutUrl); return; }
+                if (isError) {
+                    // CORS failed — retry without crossOrigin (recolor mask will be unavailable)
+                    console.warn('Layout image CORS load failed, retrying without crossOrigin:', APP.activeLayoutUrl);
+                    const fallbackImg = new Image();
+                    fallbackImg.onload = () => { APP.cachedLayoutImg = fallbackImg; APP.cachedLayoutUrl = APP.activeLayoutUrl; drawFn(fallbackImg); };
+                    fallbackImg.onerror = () => { console.error('Failed to load layout image:', APP.activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "The game zone image could not be loaded. Please check your R2 bucket has CORS enabled, or try again.", "error"); };
+                    fallbackImg.src = APP.activeLayoutUrl;
+                    return;
+                }
                 const img = fabricImg.getElement();
                 APP.cachedLayoutImg = img; APP.cachedLayoutUrl = APP.activeLayoutUrl;
                 drawFn(img);
@@ -1586,9 +1600,16 @@
         if (APP.s_cachedLayoutImg && APP.s_activeLayoutUrl === lCanvas.dataset.lastUrl) {
             drawFn(APP.s_cachedLayoutImg);
         } else {
-            // Use fabric.Image.fromURL so ibb.co CORS headers are handled correctly
             fabric.Image.fromURL(APP.s_activeLayoutUrl, (fabricImg, isError) => {
-                if (isError) { console.error('Failed to load simple layout image:', APP.s_activeLayoutUrl); return; }
+                if (isError) {
+                    // CORS failed — retry without crossOrigin
+                    console.warn('Simple layout image CORS load failed, retrying without crossOrigin:', APP.s_activeLayoutUrl);
+                    const fallbackImg = new Image();
+                    fallbackImg.onload = () => { APP.s_cachedLayoutImg = fallbackImg; lCanvas.dataset.lastUrl = APP.s_activeLayoutUrl; drawFn(fallbackImg); };
+                    fallbackImg.onerror = () => { console.error('Failed to load simple layout image:', APP.s_activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "The game zone image could not be loaded. Please check your R2 bucket has CORS enabled, or try again.", "error"); };
+                    fallbackImg.src = APP.s_activeLayoutUrl;
+                    return;
+                }
                 const img = fabricImg.getElement();
                 lCanvas.dataset.lastUrl = APP.s_activeLayoutUrl;
                 drawFn(img);
