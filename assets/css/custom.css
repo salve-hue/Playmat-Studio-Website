@@ -223,18 +223,18 @@ a:hover {
 }
 
 #main .inner > header h1 {
-	font-size: clamp(2.4em, 4.5vw, 5.5em) !important;
+	font-size: clamp(1.6em, 2.8vw, 2.4em) !important;
 	font-weight: 400 !important;
-	line-height: 1.05 !important;
+	line-height: 1.1 !important;
 	color: var(--ps-text) !important;
-	letter-spacing: -0.03em !important;
-	margin-bottom: 0.45em !important;
+	letter-spacing: -0.02em !important;
+	margin-bottom: 0.5em !important;
 	white-space: nowrap !important;
 }
 
 #main .inner > header p {
 	color: var(--ps-text-muted) !important;
-	font-size: 1.05em !important;
+	font-size: 0.95em !important;
 	line-height: 1.7 !important;
 	max-width: none !important;
 }
@@ -359,16 +359,16 @@ a:hover {
 }
 
 .ps-section-header h2 {
-	font-size: 2.2em !important;
+	font-size: 1.4em !important;
 	font-weight: 600 !important;
 	color: var(--ps-text) !important;
 	margin-bottom: 0.4em !important;
-	letter-spacing: -0.02em !important;
+	letter-spacing: -0.01em !important;
 }
 
 .ps-section-header p {
 	color: var(--ps-text-muted) !important;
-	font-size: 1.05em !important;
+	font-size: 0.9em !important;
 	margin: 0 !important;
 }
 
@@ -741,7 +741,7 @@ a:hover {
 @media screen and (max-width: 736px) {
 	#main .inner > header h1 {
 		white-space: normal !important;
-		font-size: clamp(2em, 8vw, 3em) !important;
+		font-size: clamp(1.4em, 5vw, 1.8em) !important;
 	}
 
 	.ps-steps-grid {
