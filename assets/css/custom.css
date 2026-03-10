@@ -458,7 +458,24 @@ a:hover {
 	margin-top: 0.5em !important;
 }
 
-/* Tool tab bar — use site palette accents */
+/* Tool buttons — kill Phantom's pink box-shadow on hover/active */
+.tool-tab-btn,
+.mat-size-btn,
+.action-btn,
+.acc-btn {
+	box-shadow: none !important;
+}
+.tool-tab-btn:hover,
+.tool-tab-btn:active,
+.mat-size-btn:hover,
+.mat-size-btn:active,
+.action-btn:hover,
+.action-btn:active,
+.acc-btn:hover,
+.acc-btn:active {
+	box-shadow: none !important;
+}
+/* Tool tab bar — palette accents */
 .tool-tab-btn.active {
 	color: var(--ps-teal) !important;
 	border-bottom-color: var(--ps-teal) !important;
