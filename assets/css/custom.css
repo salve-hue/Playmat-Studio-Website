@@ -300,6 +300,17 @@ a:hover {
    TILES — Palette color overrides
    ============================================================ */
 
+/* Inline SVG tile icons — uniform white, vertically centred */
+.tiles article h2 .ti {
+	width: 0.85em;
+	height: 0.85em;
+	vertical-align: -0.1em;
+	fill: currentColor;
+	display: inline-block;
+	margin-right: 0.2em;
+	flex-shrink: 0;
+}
+
 /* style1 → Brand Purple */
 .tiles article.style1 > .image:before {
 	background-color: var(--ps-purple) !important;
