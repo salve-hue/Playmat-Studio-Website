@@ -302,32 +302,32 @@ a:hover {
 
 /* style1 → Brand Purple */
 .tiles article.style1 > .image:before {
-	background-color: #6830bb !important;
+	background-color: var(--ps-purple) !important;
 }
 
-/* style2 → Deep Violet */
+/* style2 → Red */
 .tiles article.style2 > .image:before {
-	background-color: #4d1a96 !important;
+	background-color: var(--ps-red) !important;
 }
 
-/* style3 → Vivid Purple */
+/* style3 → Green */
 .tiles article.style3 > .image:before {
-	background-color: #7e3fd4 !important;
+	background-color: var(--ps-green) !important;
 }
 
-/* style4 → Royal Plum */
+/* style4 → Teal */
 .tiles article.style4 > .image:before {
-	background-color: #3d1480 !important;
+	background-color: var(--ps-teal) !important;
 }
 
-/* style5 → Lavender */
+/* style5 → Soft Purple */
 .tiles article.style5 > .image:before {
-	background-color: #8a52d4 !important;
+	background-color: var(--ps-purple-soft) !important;
 }
 
-/* style6 → Dark Grape */
+/* style6 → Dark Teal */
 .tiles article.style6 > .image:before {
-	background-color: #5a2aa8 !important;
+	background-color: var(--ps-teal-dark) !important;
 }
 
 /* Hover: darken to reveal content */
