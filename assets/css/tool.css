@@ -413,6 +413,23 @@
         letter-spacing: 0.5px;
         display: block;
     }
+    .mat-size-btn .msb-icon {
+        display: block;
+        margin-top: 8px;
+    }
+    .mat-size-btn .msb-icon rect {
+        fill: rgba(255,255,255,0.04);
+        stroke: rgba(152,136,192,0.55);
+        stroke-width: 1.5;
+    }
+    .mat-size-btn.active .msb-icon rect {
+        fill: rgba(48,187,173,0.12);
+        stroke: #30BBAD;
+    }
+    .mat-size-btn:hover .msb-icon rect {
+        fill: rgba(133,101,181,0.12);
+        stroke: #8565B5;
+    }
 
     /* ── BATCH / CONVERTER PANEL THEMING (matches Quick Upload style) ── */
     .ps-drop-zone {
