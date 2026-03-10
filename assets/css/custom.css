@@ -116,7 +116,7 @@ a:hover {
 #header nav ul {
 	display: flex !important;
 	align-items: center !important;
-	gap: 1.8em !important;
+	gap: 0.9em !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	list-style: none !important;
@@ -302,32 +302,32 @@ a:hover {
 
 /* style1 → Brand Purple */
 .tiles article.style1 > .image:before {
-	background-color: var(--ps-purple) !important;
+	background-color: #6830bb !important;
 }
 
-/* style2 → Red */
+/* style2 → Deep Violet */
 .tiles article.style2 > .image:before {
-	background-color: var(--ps-red) !important;
+	background-color: #4d1a96 !important;
 }
 
-/* style3 → Green */
+/* style3 → Vivid Purple */
 .tiles article.style3 > .image:before {
-	background-color: var(--ps-green) !important;
+	background-color: #7e3fd4 !important;
 }
 
-/* style4 → Teal */
+/* style4 → Royal Plum */
 .tiles article.style4 > .image:before {
-	background-color: var(--ps-teal) !important;
+	background-color: #3d1480 !important;
 }
 
-/* style5 → Soft Purple */
+/* style5 → Lavender */
 .tiles article.style5 > .image:before {
-	background-color: var(--ps-purple-soft) !important;
+	background-color: #8a52d4 !important;
 }
 
-/* style6 → Dark Teal */
+/* style6 → Dark Grape */
 .tiles article.style6 > .image:before {
-	background-color: var(--ps-teal-dark) !important;
+	background-color: #5a2aa8 !important;
 }
 
 /* Hover: darken to reveal content */
@@ -416,7 +416,7 @@ a:hover {
 .ps-step-icon {
 	display: block !important;
 	font-size: 2em !important;
-	color: var(--ps-teal) !important;
+	color: #2dd4bf !important;
 	margin-bottom: 0.8em !important;
 }
 
