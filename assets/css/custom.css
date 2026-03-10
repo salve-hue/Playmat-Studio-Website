@@ -157,6 +157,9 @@ a:hover {
 
 /* CTA button in nav bar */
 .ps-nav-cta.button.primary {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
 	padding: 0.45em 1.1em !important;
 	font-size: 0.82em !important;
 	margin-left: 0.5em !important;
@@ -268,6 +271,9 @@ a:hover {
 }
 
 .button.primary {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
 	background-color: var(--ps-purple) !important;
 	border-color: var(--ps-purple) !important;
 	box-shadow: none !important;
@@ -275,8 +281,9 @@ a:hover {
 }
 
 .button.primary:hover {
-	background-color: var(--ps-purple-soft) !important;
-	border-color: var(--ps-purple-soft) !important;
+	background-color: var(--ps-purple-dark) !important;
+	border-color: var(--ps-purple-dark) !important;
+	color: #ffffff !important;
 }
 
 .button:not(.primary) {
