@@ -312,24 +312,26 @@
 					    <div id="landing-ui">
 					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>
 
-					        <span class="landing-label" style="color: var(--brand-hover);">MAT SIZE</span>
-					        <select id="standalone-size-sel" class="ui-select"
-					            style="max-width:320px; margin:0 auto 24px; display:block;"
-					            onchange="APP.activeSizeKey=this.value; window.populateGameDropdowns(); window.updateInfoBars(null);">
-					            <option value="standard">Standard 24&Prime; &times; 14&Prime;</option>
-					            <option value="extended">Extended 28&Prime; &times; 14&Prime;</option>
-					            <option value="victor">Victor Deskmat 24&Prime; &times; 12&Prime;</option>
-					            <option value="secundus">Secundus Deskmat 28&Prime; &times; 12&Prime;</option>
-					            <option value="primus">Primus Deskmat 31&Prime; &times; 12&Prime;</option>
-					            <option value="tiro">Tiro Mousepad 10&Prime; &times; 8&Prime;</option>
-					            <option value="veteranus">Veteranus Mousepad 12.5&Prime; &times; 10.5&Prime;</option>
-					            <option value="gladiator">Gladiator Mousepad 18&Prime; &times; 12&Prime;</option>
-					        </select>
+					        <span class="landing-label">MAT SIZE</span>
+					        <div class="mat-size-btn-group">
+					            <button class="mat-size-btn active" data-size="standard" onclick="window.selectMatSize('standard', this)">
+					                <span class="msb-name">Standard</span>
+					                <span class="msb-dim">24&Prime; &times; 14&Prime;</span>
+					            </button>
+					            <button class="mat-size-btn" data-size="expanded" onclick="window.selectMatSize('expanded', this)">
+					                <span class="msb-name">Expanded</span>
+					                <span class="msb-dim">28&Prime; &times; 16&Prime;</span>
+					            </button>
+					            <button class="mat-size-btn" data-size="extended" onclick="window.selectMatSize('extended', this)">
+					                <span class="msb-name">Extended</span>
+					                <span class="msb-dim">28&Prime; &times; 14&Prime;</span>
+					            </button>
+					        </div>
 
 					        <div class="tool-tab-bar">
-					            <button class="tool-tab-btn active" data-tab="quick-upload" onclick="window.switchTab('quick-upload')">&#x26A1; QUICK UPLOAD</button>
+					            <button class="tool-tab-btn active" data-tab="quick-upload" onclick="window.switchTab('quick-upload')">&#x26A1;&#xFE0F; QUICK UPLOAD</button>
 					            <button class="tool-tab-btn" data-tab="adv-editor" onclick="window.switchTab('adv-editor')">&#x270F;&#xFE0F; ADVANCED EDITOR</button>
-					            <button class="tool-tab-btn" data-tab="batch" onclick="window.switchTab('batch')">&#x1F5BC;&#xFE0F; BATCH ENHANCE</button>
+					            <button class="tool-tab-btn" data-tab="batch" onclick="window.switchTab('batch')">&#x1F9F9; BATCH ENHANCE</button>
 					            <button class="tool-tab-btn" data-tab="converter" onclick="window.switchTab('converter')">&#x1F504; FORMAT CONVERTER</button>
 					        </div>
 
@@ -341,55 +343,54 @@
 
 					        <!-- Batch Enhance -->
 					        <div id="tab-panel-batch" class="tool-tab-panel">
-					            <div id="batch-drop-zone"
-					                style="border:2px dashed rgba(255,255,255,0.25); border-radius:8px; padding:40px 20px; text-align:center; cursor:pointer; margin-bottom:20px; transition:border-color 0.2s;"
-					                ondragover="event.preventDefault(); this.style.borderColor='var(--brand-hover)';"
-					                ondragleave="this.style.borderColor='rgba(255,255,255,0.25)';"
-					                ondrop="event.preventDefault(); this.style.borderColor='rgba(255,255,255,0.25)'; window.handleBatchFiles(event.dataTransfer.files);"
+					            <div id="batch-drop-zone" class="ps-drop-zone"
+					                ondragover="event.preventDefault(); this.classList.add('dz-hover');"
+					                ondragleave="this.classList.remove('dz-hover');"
+					                ondrop="event.preventDefault(); this.classList.remove('dz-hover'); window.handleBatchFiles(event.dataTransfer.files);"
 					                onclick="document.getElementById('batch-file-in').click()">
-					                <div style="font-size:40px; margin-bottom:10px;">&#x1F5BC;&#xFE0F;</div>
-					                <p style="color:var(--brand-text-pri); font-size:16px; margin:0 0 6px; font-weight:600;">Drag &amp; drop images here</p>
-					                <p style="color:var(--brand-text-sec); font-size:12px; margin:0;">or click to select multiple files</p>
-					                <p style="color:var(--brand-text-sec); font-size:11px; margin:8px 0 0; opacity:0.7;">Applies: Brightness +12% &middot; Contrast +8% &middot; Saturation +15% &middot; Exports as 99% JPG</p>
+					                <div class="dz-icon">&#x1F5BC;&#xFE0F;</div>
+					                <p class="dz-title">&#x1F9F9; Batch Enhance</p>
+					                <p class="dz-sub">Drag &amp; drop images, or click to select</p>
+					                <p class="dz-note">Applies: Brightness +12% &middot; Contrast +8% &middot; Saturation +15% &middot; Exports 99% JPG</p>
 					            </div>
 					            <input type="file" id="batch-file-in" accept="image/*" multiple style="display:none;" onchange="window.handleBatchFiles(this.files)">
-					            <div id="batch-status" style="display:none; color:var(--brand-hover); font-size:13px; margin-bottom:12px; text-align:center;"></div>
+					            <div id="batch-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Rubik',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
 					            <div id="batch-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
 					            <div id="batch-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
 					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD</button>
-					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" onclick="window.clearBatch()">CLEAR</button>
+					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" onclick="window.clearBatch()">&#x2715; CLEAR</button>
 					                </div>
 					            </div>
 					        </div>
 
 					        <!-- Format Converter -->
 					        <div id="tab-panel-converter" class="tool-tab-panel">
-					            <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
-					                <span style="color:var(--brand-text-sec); font-size:12px; font-weight:bold; letter-spacing:1px; white-space:nowrap;">CONVERT TO:</span>
-					                <select id="converter-format-sel" class="ui-select" style="width:auto; min-width:200px; padding:8px 12px; font-size:13px;">
+					            <div class="ps-tool-controls">
+					                <span class="ps-panel-label">&#x1F504; CONVERT TO:</span>
+					                <select id="converter-format-sel" class="ui-select" style="width:auto; min-width:180px; padding:8px 12px; font-size:13px;">
 					                    <option value="jpeg">JPG &mdash; 99% quality</option>
 					                    <option value="png">PNG &mdash; lossless</option>
 					                    <option value="webp">WEBP &mdash; 95% quality</option>
 					                </select>
 					            </div>
-					            <div id="converter-drop-zone"
-					                style="border:2px dashed rgba(255,255,255,0.25); border-radius:8px; padding:40px 20px; text-align:center; cursor:pointer; margin-bottom:20px; transition:border-color 0.2s;"
-					                ondragover="event.preventDefault(); this.style.borderColor='var(--brand-hover)';"
-					                ondragleave="this.style.borderColor='rgba(255,255,255,0.25)';"
-					                ondrop="event.preventDefault(); this.style.borderColor='rgba(255,255,255,0.25)'; window.handleConverterFiles(event.dataTransfer.files);"
+					            <div id="converter-drop-zone" class="ps-drop-zone"
+					                ondragover="event.preventDefault(); this.classList.add('dz-hover');"
+					                ondragleave="this.classList.remove('dz-hover');"
+					                ondrop="event.preventDefault(); this.classList.remove('dz-hover'); window.handleConverterFiles(event.dataTransfer.files);"
 					                onclick="document.getElementById('converter-file-in').click()">
-					                <div style="font-size:40px; margin-bottom:10px;">&#x1F504;</div>
-					                <p style="color:var(--brand-text-pri); font-size:16px; margin:0 0 6px; font-weight:600;">Drag &amp; drop images to convert</p>
-					                <p style="color:var(--brand-text-sec); font-size:12px; margin:0;">PNG &middot; WEBP &middot; GIF &middot; AVIF &middot; BMP &middot; JPG &#x2192; any format</p>
+					                <div class="dz-icon">&#x1F504;</div>
+					                <p class="dz-title">&#x1F4C4; Format Converter</p>
+					                <p class="dz-sub">Drag &amp; drop images to convert, or click to select</p>
+					                <p class="dz-note">PNG &middot; WEBP &middot; GIF &middot; AVIF &middot; BMP &middot; JPG &#x2192; any format</p>
 					            </div>
 					            <input type="file" id="converter-file-in" accept="image/*" multiple style="display:none;" onchange="window.handleConverterFiles(this.files)">
-					            <div id="converter-status" style="display:none; color:var(--brand-hover); font-size:13px; margin-bottom:12px; text-align:center;"></div>
+					            <div id="converter-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Rubik',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
 					            <div id="converter-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
 					            <div id="converter-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
 					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;" onclick="window.downloadConverted()">&#x2B07; DOWNLOAD</button>
-					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" onclick="window.clearConverter()">CLEAR</button>
+					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;" onclick="window.downloadConverted()">&#x2B07; DOWNLOAD ALL</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" onclick="window.clearConverter()">&#x2715; CLEAR</button>
 					                </div>
 					            </div>
 					        </div>
@@ -403,6 +404,7 @@
 					            <div id="simple-header">
 					                <span style="font-weight:600; font-size:22px; color:var(--brand-hover); text-transform:uppercase; letter-spacing:1px; font-family:'Rubik', sans-serif;">Playmat Studio <span style="font-size:16px; color:#ffffff; font-weight:600; font-family:'Rubik', sans-serif; letter-spacing:1px; text-transform:uppercase;">| Quick Upload</span></span>
 					                <button class="action-btn btn-secondary" style="width:auto; padding: 6px 12px; margin:0; font-size:12px;" onclick="window.restartApp()">RESTART</button>
+					                <button id="s-fs-toggle-btn" class="action-btn" style="width:auto; padding:6px 12px; margin:0; font-size:12px; background:var(--brand-hover);" onclick="window.toggleSimpleFullScreen()">&#x26F6; FULL SCREEN</button>
 					            </div>
 
 					            <div id="simple-canvas-wrap">

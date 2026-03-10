@@ -78,6 +78,7 @@
     const SIZE_DB = {
         //                 raw canvas size       customer-facing label
         "standard":  { w: 24.5, h: 14.5, label: '24" x 14"'  },  // Standard Playmat
+        "expanded":  { w: 28.5, h: 16.5, label: '28" x 16"'  },  // Expanded Playmat
         "extended":  { w: 28.5, h: 14.5, label: '28" x 14"'  },  // Extended Playmat
         "victor":    { w: 24.0, h: 12.0, label: '24" x 12"'  },  // Victor Deskmat
         "secundus":  { w: 28.0, h: 12.0, label: '28" x 12"'  },  // Secundus Deskmat
@@ -827,6 +828,27 @@
         if (root.classList.contains('app-fullscreen-mode')) { bd.style.display='block'; btn.innerText='EXIT FULL SCREEN'; btn.style.background='var(--danger-red)'; }
         else { bd.style.display='none'; btn.innerText='FULL SCREEN'; btn.style.background='var(--brand-hover)'; }
         setTimeout(() => window.changeSize(), 350);
+    };
+
+    window.toggleSimpleFullScreen = function() {
+        const modal = document.getElementById('simple-modal');
+        const btn   = document.getElementById('s-fs-toggle-btn');
+        modal.classList.toggle('simple-fullscreen-mode');
+        if (modal.classList.contains('simple-fullscreen-mode')) {
+            btn.innerText = '⛶ EXIT FULL SCREEN';
+            btn.style.background = 'var(--danger-red)';
+        } else {
+            btn.innerText = '⛶ FULL SCREEN';
+            btn.style.background = 'var(--brand-hover)';
+        }
+    };
+
+    window.selectMatSize = function(sizeKey, btn) {
+        APP.activeSizeKey = sizeKey;
+        document.querySelectorAll('.mat-size-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        window.populateGameDropdowns();
+        window.updateInfoBars(null);
     };
 
     window.workspaceZoom = (amt) => {

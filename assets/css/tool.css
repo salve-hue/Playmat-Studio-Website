@@ -3,10 +3,10 @@
    Palette is overridden below to match the site's brand colors.
    ============================================================ */
 
-/* Override tool CSS variables to match site palette */
+/* Override tool CSS variables to match site palette — second :root below wins */
 :root {
-    --brand-primary: #6830BB;
-    --brand-hover: #30BBAD;
+    --brand-primary: #DF5918;   /* orange CTA */
+    --brand-hover: #30BBAD;     /* teal accent */
     --brand-bg: #110e1c;
     --brand-text-pri: #f0eeff;
     --brand-text-sec: #9888c0;
@@ -37,9 +37,13 @@
         transition: color 0.15s, border-color 0.15s;
         white-space: nowrap;
         font-family: 'Rubik', sans-serif;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
     }
-    .tool-tab-btn:hover { color: var(--brand-text-pri); }
-    .tool-tab-btn.active { color: var(--brand-hover); border-bottom-color: var(--brand-hover); }
+    .tool-tab-btn:hover { color: #8565B5; }
+    .tool-tab-btn.active { color: #30BBAD; border-bottom-color: #30BBAD; }
     .tool-tab-panel { display: none; }
     .tool-tab-panel.active { display: block; }
 
@@ -88,7 +92,8 @@
     /* ── RESPONSIVE WIDTH ── */
     /* Override the source's max-width:600px on #landing-ui so it fills wide screens */
     #landing-ui {
-        max-width: 1100px !important;
+        max-width: 1380px !important;
+        width: 100% !important;
         padding: 10px 32px !important;
         box-sizing: border-box;
     }
@@ -100,24 +105,37 @@
         }
     }
     @media (min-width: 1000px) {
-        #landing-ui { padding: 10px 56px !important; }
+        #landing-ui { padding: 10px 48px !important; }
         #batch-preview-grid,
         #converter-preview-grid {
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         }
     }
-    @media (min-width: 1280px) {
-        #landing-ui { padding: 10px 80px !important; }
+    @media (min-width: 1400px) {
+        #landing-ui { padding: 10px 64px !important; }
     }
-    :root { 
-        --brand-primary: #DF5918; 
-        --brand-hover: #02B6FA; 
-        --brand-bg: #10333D; 
-        --brand-text-sec: #c6c6c6; 
-        --brand-text-pri: #FFFFFF; 
-        --success-green: #28a745; 
-        --danger-red: #ff4757;
-        --app-width: 85%; 
+
+    /* ── SIMPLE EDITOR FULL-SCREEN MODE ── */
+    #simple-modal.simple-fullscreen-mode {
+        position: fixed !important;
+        top: 2% !important;
+        left: 2% !important;
+        width: 96vw !important;
+        height: 96vh !important;
+        max-width: none !important;
+        max-height: none !important;
+        z-index: 10000 !important;
+        border-radius: 6px !important;
+    }
+    :root {
+        --brand-primary: #DF5918;   /* orange CTA buttons */
+        --brand-hover: #30BBAD;     /* teal — site interactive accent */
+        --brand-bg: #10333D;
+        --brand-text-sec: #9888c0;
+        --brand-text-pri: #f0eeff;
+        --success-green: #83BB30;
+        --danger-red: #BB303E;
+        --app-width: 85%;
     }
     
     .designer-container-wrap { width: 100%; padding: 40px 0; display: flex; justify-content: center; background: transparent; font-family: 'Rubik', sans-serif; font-size: 16px; color: var(--brand-text-pri); }
@@ -295,4 +313,102 @@
     .switch input:checked + .slider { background-color: var(--success-green); }
     .switch input:checked + .slider:before { transform: translateX(16px); }
     .toggle-label { font-size: 11px; color: var(--brand-text-sec); font-weight: bold; text-transform: uppercase; cursor: pointer; user-select: none; }
+
+    /* ── MAT SIZE BUTTON GROUP ── */
+    .mat-size-btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin: 0 auto 28px;
+    }
+    .mat-size-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 10px 24px;
+        background: rgba(255,255,255,0.06);
+        border: 2px solid rgba(255,255,255,0.15);
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Rubik', sans-serif;
+        transition: background 0.18s, border-color 0.18s, transform 0.1s;
+        min-width: 120px;
+    }
+    .mat-size-btn:hover {
+        background: rgba(133,101,181,0.2);
+        border-color: #8565B5;
+    }
+    .mat-size-btn.active {
+        background: rgba(48,187,173,0.15);
+        border-color: #30BBAD;
+    }
+    .mat-size-btn .msb-name {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #f0eeff;
+    }
+    .mat-size-btn.active .msb-name { color: #30BBAD; }
+    .mat-size-btn:hover .msb-name  { color: #8565B5; }
+    .mat-size-btn .msb-dim {
+        font-size: 11px;
+        color: #9888c0;
+        letter-spacing: 0.5px;
+    }
+
+    /* ── BATCH / CONVERTER PANEL THEMING (matches Quick Upload style) ── */
+    .ps-drop-zone {
+        border: 2px dashed rgba(48,187,173,0.35);
+        border-radius: 8px;
+        padding: 44px 20px;
+        text-align: center;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: border-color 0.2s, background 0.2s;
+        background: rgba(0,0,0,0.15);
+    }
+    .ps-drop-zone:hover { border-color: #30BBAD; background: rgba(48,187,173,0.06); }
+    .ps-drop-zone .dz-icon { font-size: 38px; margin-bottom: 10px; }
+    .ps-drop-zone .dz-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #f0eeff;
+        margin: 0 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Rubik', sans-serif;
+    }
+    .ps-drop-zone .dz-sub {
+        font-size: 12px;
+        color: #9888c0;
+        margin: 0;
+    }
+    .ps-drop-zone .dz-note {
+        font-size: 11px;
+        color: #9888c0;
+        margin: 8px 0 0;
+        opacity: 0.7;
+    }
+    .ps-panel-label {
+        color: #30BBAD;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: block;
+        margin-bottom: 10px;
+        font-family: 'Rubik', sans-serif;
+    }
+    .ps-tool-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .ps-tool-controls .ps-panel-label { margin: 0; white-space: nowrap; }
 </style>
