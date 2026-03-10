@@ -464,6 +464,14 @@
         margin: 8px 0 0;
         opacity: 0.7;
     }
+    /* ── IMAGE HOSTING TAB ── */
+    .host-hist-btn {
+        width: auto !important;
+        padding: 4px 10px !important;
+        margin: 0 !important;
+        font-size: 11px !important;
+        flex-shrink: 0;
+    }
     .ps-panel-label {
         color: #30BBAD;
         font-size: 11px;

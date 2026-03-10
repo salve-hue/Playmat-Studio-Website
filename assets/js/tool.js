@@ -13,6 +13,8 @@
     window.CLOUDFLARE_WORKER_URL    = 'https://playmat-upscaler.salve.workers.dev';
     window.CLOUDFLARE_BG_WORKER_URL = 'https://playmat-removebg.salve.workers.dev/';
     window.CLOUDFLARE_UPLOAD_URL    = 'https://playmat-r2-upload.salve.workers.dev/';
+    // Image hosting worker — deploy playmat-host-worker.js to Cloudflare and paste URL here
+    window.CLOUDFLARE_HOST_URL = 'https://playmat-image-host.salve.workers.dev';
 
     // Liquid-injected fallback variant ID (Shopify) — removed in standalone build
     // products that have no [name="id"] input or variant radio buttons on the page.
@@ -551,6 +553,7 @@
         window.populateGameDropdowns();
         // Auto-open the Quick Upload tab so the canvas is ready immediately
         setTimeout(function() { window.switchTab('quick-upload'); }, 0);
+        window.renderHostHistory();
     };
 
     // --- DPI CHECKER ---
@@ -1959,5 +1962,148 @@
             window.showAppAlert("Download Error", "Failed to download. Please try again.", "error");
             btn.innerText = origText; btn.disabled = false;
         }
+    };
+
+    // ============================================================
+    // IMAGE HOSTING TAB
+    // ============================================================
+    const HOST_STORAGE_KEY = 'ps_hosted_images';
+
+    function getHostHistory() {
+        try { return JSON.parse(localStorage.getItem(HOST_STORAGE_KEY) || '[]'); }
+        catch { return []; }
+    }
+
+    function saveHostHistory(items) {
+        localStorage.setItem(HOST_STORAGE_KEY, JSON.stringify(items.slice(0, 20)));
+    }
+
+    function setHostStatus(msg, color) {
+        var el = document.getElementById('host-status');
+        if (!el) return;
+        el.style.display = msg ? '' : 'none';
+        el.style.color   = color || '#30BBAD';
+        el.textContent   = msg || '';
+    }
+
+    window.handleHostUpload = async function(files) {
+        var file = files && files[0];
+        if (!file) return;
+
+        var result = document.getElementById('host-result');
+        result.style.display = 'none';
+        setHostStatus('Uploading\u2026');
+
+        var form = new FormData();
+        form.append('file', file);
+
+        try {
+            var res  = await fetch(window.CLOUDFLARE_HOST_URL, { method: 'POST', body: form });
+            var data = await res.json();
+            if (!res.ok || !data.url) throw new Error(data.error || 'Upload failed');
+
+            setHostStatus('');
+
+            // Populate result card
+            var preview = document.getElementById('host-preview');
+            preview.src = data.url;
+            document.getElementById('host-url-input').value = data.url;
+
+            var exp = new Date(data.expires);
+            var daysLeft = Math.round((exp - Date.now()) / 86400000);
+            document.getElementById('host-expiry').innerHTML =
+                '&#x23F3; Expires in ' + daysLeft + ' days &mdash; ' +
+                exp.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' }) +
+                ' at ' + exp.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
+
+            result.style.display = '';
+
+            // Persist to history
+            var hist = getHostHistory();
+            hist.unshift({
+                url:        data.url,
+                id:         data.id,
+                expires:    data.expires,
+                name:       file.name,
+                uploadedAt: new Date().toISOString(),
+            });
+            saveHostHistory(hist);
+            window.renderHostHistory();
+
+            // Reset file input so the same file can be re-uploaded
+            var fi = document.getElementById('host-file-in');
+            if (fi) fi.value = '';
+
+        } catch (e) {
+            setHostStatus('Error: ' + e.message, '#ff6b6b');
+        }
+    };
+
+    window.copyHostUrl = function() {
+        var input = document.getElementById('host-url-input');
+        var btn   = input ? input.parentNode.querySelector('button') : null;
+        if (!input || !btn) return;
+        navigator.clipboard.writeText(input.value).then(function() {
+            var prev = btn.textContent;
+            btn.textContent = 'COPIED!';
+            btn.style.background = 'var(--success-green, #30BBAD)';
+            setTimeout(function() { btn.textContent = prev; btn.style.background = ''; }, 1500);
+        });
+    };
+
+    window.resetHostPanel = function() {
+        document.getElementById('host-result').style.display = 'none';
+        setHostStatus('');
+    };
+
+    window.renderHostHistory = function() {
+        var list = document.getElementById('host-history-list');
+        var wrap = document.getElementById('host-history');
+        if (!list || !wrap) return;
+
+        var hist = getHostHistory();
+        if (!hist.length) { wrap.style.display = 'none'; return; }
+
+        wrap.style.display = '';
+        list.innerHTML = hist.map(function(item, i) {
+            var exp     = new Date(item.expires);
+            var expired = Date.now() > exp.getTime();
+            var daysLeft = expired ? 0 : Math.ceil((exp - Date.now()) / 86400000);
+            var expLabel = expired
+                ? '<span style="color:#ff6b6b;">Expired</span>'
+                : '<span style="color:#9888c0;">' + daysLeft + 'd left</span>';
+            var copyBtn = !expired
+                ? '<button class="action-btn btn-secondary host-hist-btn" onclick="window.copyHostHistItem(' + i + ')">COPY</button>'
+                : '';
+            return '<div class="host-hist-item" style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:8px; margin-bottom:8px;">' +
+                '<img src="' + (expired ? '' : item.url) + '" alt="" style="width:48px; height:32px; object-fit:cover; border-radius:4px; background:rgba(255,255,255,0.05); flex-shrink:0;">' +
+                '<span style="flex:1; font-size:12px; color:#f0eeff; font-family:\'Rubik\',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + item.name + '">' + (item.name || 'Image') + '</span>' +
+                '<span style="font-size:11px; flex-shrink:0;">' + expLabel + '</span>' +
+                copyBtn +
+                '<button class="action-btn btn-secondary host-hist-btn" onclick="window.removeHostHistItem(' + i + ')" title="Remove from history">&times;</button>' +
+                '</div>';
+        }).join('');
+    };
+
+    window.copyHostHistItem = function(i) {
+        var hist = getHostHistory();
+        if (!hist[i]) return;
+        navigator.clipboard.writeText(hist[i].url).then(function() {
+            // Brief visual feedback via status bar
+            setHostStatus('Link copied!');
+            setTimeout(function() { setHostStatus(''); }, 1500);
+        });
+    };
+
+    window.removeHostHistItem = function(i) {
+        var hist = getHostHistory();
+        hist.splice(i, 1);
+        saveHostHistory(hist);
+        window.renderHostHistory();
+    };
+
+    window.clearHostHistory = function() {
+        saveHostHistory([]);
+        window.renderHostHistory();
     };
 

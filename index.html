@@ -346,6 +346,7 @@
 					            <button class="tool-tab-btn" data-tab="adv-editor" onclick="window.switchTab('adv-editor')">&#x270F;&#xFE0F; ADVANCED EDITOR</button>
 					            <button class="tool-tab-btn" data-tab="batch" onclick="window.switchTab('batch')">&#x2728; BATCH ENHANCE</button>
 					            <button class="tool-tab-btn" data-tab="converter" onclick="window.switchTab('converter')">&#x1F504; FORMAT CONVERTER</button>
+					            <button class="tool-tab-btn" data-tab="host" onclick="window.switchTab('host')">&#x2601; IMAGE HOST</button>
 					        </div>
 
 					        <!-- Quick Upload: editor launches immediately when this tab is clicked via switchTab() -->
@@ -408,7 +409,49 @@
 					            </div>
 					        </div>
 
-					        <input type="file" id="simple-file-in" accept="image/*" style="display:none;" onchange="window.handleSimpleUpload(this)">
+					        <!-- Image Hosting -->
+				        <div id="tab-panel-host" class="tool-tab-panel">
+				            <div id="host-drop-zone" class="ps-drop-zone"
+				                ondragover="event.preventDefault(); this.classList.add('dz-hover');"
+				                ondragleave="this.classList.remove('dz-hover');"
+				                ondrop="event.preventDefault(); this.classList.remove('dz-hover'); window.handleHostUpload(event.dataTransfer.files);"
+				                onclick="document.getElementById('host-file-in').click()">
+				                <div class="dz-icon">&#x2601;</div>
+				                <p class="dz-title">&#x1F517; Image Hosting</p>
+				                <p class="dz-sub">Drag &amp; drop an image, or click to select</p>
+				                <p class="dz-note">Hosted for 7 days &middot; Max 50 MB &middot; JPG &middot; PNG &middot; WEBP &middot; GIF &middot; AVIF</p>
+				            </div>
+				            <input type="file" id="host-file-in" accept="image/*" style="display:none;" onchange="window.handleHostUpload(this.files)">
+
+				            <div id="host-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Rubik',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
+
+				            <!-- Result card (shown after a successful upload) -->
+				            <div id="host-result" style="display:none; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px; margin-bottom:20px; display:none;">
+				                <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+				                    <img id="host-preview" src="" alt="Preview" style="width:120px; height:80px; object-fit:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.12); flex-shrink:0; display:block;">
+				                    <div style="flex:1; min-width:200px;">
+				                        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Rubik',sans-serif; margin-bottom:6px;">Hosted URL</div>
+				                        <div style="display:flex; gap:8px; align-items:center;">
+				                            <input id="host-url-input" type="text" readonly style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:8px 10px; font-size:12px; color:#f0eeff; font-family:monospace; outline:none;">
+				                            <button class="action-btn" style="width:auto; padding:8px 16px; margin:0; font-size:12px; flex-shrink:0;" onclick="window.copyHostUrl()">COPY</button>
+				                        </div>
+				                        <div id="host-expiry" style="font-size:12px; color:#9888c0; margin-top:8px; font-family:'Rubik',sans-serif;"></div>
+				                        <button class="action-btn btn-secondary" style="width:auto; padding:6px 14px; margin-top:12px; font-size:12px;" onclick="window.resetHostPanel()">&#x2B06; UPLOAD ANOTHER</button>
+				                    </div>
+				                </div>
+				            </div>
+
+				            <!-- Upload history from localStorage -->
+				            <div id="host-history" style="display:none;">
+				                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+				                    <span style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Rubik',sans-serif;">Recent Uploads</span>
+				                    <button class="action-btn btn-secondary" style="width:auto; padding:4px 10px; margin:0; font-size:11px;" onclick="window.clearHostHistory()">CLEAR ALL</button>
+				                </div>
+				                <div id="host-history-list"></div>
+				            </div>
+				        </div>
+
+				        <input type="file" id="simple-file-in" accept="image/*" style="display:none;" onchange="window.handleSimpleUpload(this)">
 					    </div>
 
 
