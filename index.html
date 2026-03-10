@@ -16,9 +16,16 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
-		<link rel="stylesheet" href="assets/css/main.css?v=3" />
-		<link rel="stylesheet" href="assets/css/custom.css?v=3" />
-		<link rel="stylesheet" href="assets/css/tool.css?v=3" />
+<script>
+		(function(){
+			var v=Date.now();
+			document.write(
+				'<link rel="stylesheet" href="assets/css/main.css?v='+v+'">'
+				+'<link rel="stylesheet" href="assets/css/custom.css?v='+v+'">'
+				+'<link rel="stylesheet" href="assets/css/tool.css?v='+v+'">'
+			);
+		})();
+		</script>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<!-- Tool dependencies -->
 		<script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/browser/umd/index.min.js"></script>
@@ -822,8 +829,19 @@
 		<script src="assets/js/browser.min.js"></script>
 		<script src="assets/js/breakpoints.min.js"></script>
 		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js?v=3"></script>
-		<script src="assets/js/tool.js?v=3"></script>
+<script>
+		(function(){
+			var v=Date.now();
+			var s=document.createElement('script');
+			s.src='assets/js/main.js?v='+v;
+			s.onload=function(){
+				var t=document.createElement('script');
+				t.src='assets/js/tool.js?v='+v;
+				document.body.appendChild(t);
+			};
+			document.body.appendChild(s);
+		})();
+		</script>
 
 	</body>
 </html>
