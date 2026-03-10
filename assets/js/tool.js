@@ -14,7 +14,7 @@
     window.CLOUDFLARE_BG_WORKER_URL = 'https://playmat-removebg.salve.workers.dev/';
     window.CLOUDFLARE_UPLOAD_URL    = 'https://playmat-r2-upload.salve.workers.dev/';
     // Image hosting worker — deploy playmat-host-worker.js to Cloudflare and paste URL here
-    window.CLOUDFLARE_HOST_URL = 'https://playmat-image-host.salve.workers.dev';
+    window.CLOUDFLARE_HOST_URL = 'https://files.playmatstudio.com';
 
     // Liquid-injected fallback variant ID (Shopify) — removed in standalone build
     // products that have no [name="id"] input or variant radio buttons on the page.
