@@ -2130,3 +2130,78 @@
         window.renderHostHistory();
     };
 
+
+
+    /* ============================================================
+       SHARE & GET PRINTED
+       ============================================================ */
+
+    window.shareDesign = async function(mode) {
+        var isAdv       = (mode === 'adv');
+        var btnId       = isAdv ? 'sidebar-share-btn' : 'simple-share-btn';
+        var shareBtn    = document.getElementById(btnId);
+        var activeCanvas = isAdv ? window.canvas : window.sCanvas;
+
+        // Guard: need artwork
+        var hasArt = activeCanvas && (
+            activeCanvas.getObjects().find(function(o){ return o.name === 'art'; }) ||
+            activeCanvas.backgroundColor
+        );
+        if (!hasArt) {
+            window.showAppAlert("No Artwork", "Please upload artwork before sharing.", "error");
+            return;
+        }
+
+        var origText = shareBtn.textContent;
+        shareBtn.textContent = 'UPLOADING…';
+        shareBtn.disabled = true;
+
+        try {
+            var blob     = await buildPrintCanvas(isAdv, activeCanvas);
+            var filename = window.buildPrintFilename();
+            var form     = new FormData();
+            form.append('file', blob, filename);
+
+            var res  = await fetch(window.CLOUDFLARE_HOST_URL, { method: 'POST', body: form });
+            var data = await res.json();
+            if (!res.ok || !data.url) throw new Error(data.error || 'Upload failed');
+
+            // Show the share modal with the link
+            document.getElementById('share-url-output').value = data.url;
+            var exp = new Date(data.expires);
+            var daysLeft = Math.round((exp - Date.now()) / 86400000);
+            document.getElementById('share-expiry-note').textContent =
+                'Link expires in ' + daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + '.';
+            document.getElementById('share-result-modal').style.display = 'flex';
+
+            shareBtn.textContent = 'SHARED! ✓';
+            shareBtn.style.background = 'var(--success-green)';
+            setTimeout(function() {
+                shareBtn.textContent = origText;
+                shareBtn.style.background = '';
+                shareBtn.disabled = false;
+            }, 3000);
+        } catch(e) {
+            window.showAppAlert("Share Error", e.message || "Upload failed. Please try again.", "error");
+            shareBtn.textContent = origText;
+            shareBtn.disabled = false;
+        }
+    };
+
+    window.copyShareUrl = function() {
+        var input = document.getElementById('share-url-output');
+        var copyBtn = document.getElementById('share-copy-btn');
+        if (!input || !input.value) return;
+        navigator.clipboard.writeText(input.value).catch(function() {
+            input.select();
+            document.execCommand('copy');
+        });
+        var orig = copyBtn.textContent;
+        copyBtn.textContent = 'COPIED! ✓';
+        setTimeout(function() { copyBtn.textContent = orig; }, 1800);
+    };
+
+    // Placeholder — replace href with final print vendor URL when ready
+    window.openGetPrinted = function() {
+        window.open('https://playmatstudio.com/print', '_blank');
+    };

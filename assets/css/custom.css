@@ -1053,20 +1053,18 @@ a:hover {
 		display: none !important;
 	}
 
-	/* ── SIMPLE EDITOR bottom row: stack guides + download vertically ── */
-	#simple-tools div[style*="space-between"] {
+	/* ── DOWNLOAD + SHARE rows: stack vertically on mobile ── */
+	div:has(> #simple-atc),
+	div:has(> #sidebar-atc) {
 		flex-direction: column !important;
-		gap: 10px !important;
-		align-items: stretch !important;
 	}
-	#simple-tools div[style*="space-between"] button {
-		width: 100% !important;
-		margin: 0 !important;
-	}
-	#simple-atc {
+	#simple-atc, #simple-share-btn,
+	#sidebar-atc, #sidebar-share-btn {
+		flex: unset !important;
 		width: 100% !important;
 		height: 44px !important;
 		font-size: 14px !important;
+		margin: 0 !important;
 	}
 
 	/* ── FOOTER ── */
