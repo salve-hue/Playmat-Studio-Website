@@ -360,6 +360,8 @@
         .action-row-3 > button:first-child { order: 3; flex: 0 0 100% !important; }
         .action-row-3 > button:not(:first-child) { flex: 1; }
         .action-row-3 .action-btn { flex-direction: row !important; height: 48px !important; font-size: 15px !important; padding: 10px 14px !important; letter-spacing: 0.8px !important; white-space: nowrap !important; gap: 7px !important; min-height: unset !important; }
+        /* Hide the flex-grow spacer so action buttons appear right after accordions */
+        .sidebar-spacer { display: none !important; }
     }
     @media (hover: none) and (pointer: coarse) { #brush-cursor { display: none !important; } }
     
