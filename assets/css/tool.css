@@ -322,6 +322,10 @@
     .social-row a:hover { background: var(--brand-hover); transform: scale(1.05); }
     .social-icon { width: 24px; height: 24px; fill: currentColor; }
 
+    /* ── THREE-BUTTON ACTION ROW (GET PRINTED | DOWNLOAD | SHARE) ── */
+    .action-row-3 { display: flex; gap: 8px; margin-bottom: 10px; }
+    .action-row-3 .action-btn { height: auto !important; min-height: 48px; padding: 8px 4px !important; font-size: 11px !important; letter-spacing: 0.3px !important; flex-direction: column !important; gap: 3px !important; white-space: normal !important; line-height: 1.2 !important; }
+
     /* --- RESPONSIVENESS --- */
     @media (max-width: 900px) {
         :root { --app-width: 100%; }
@@ -347,6 +351,11 @@
         #simple-backdrop { padding: 0; }
         #simple-canvas-wrap { padding: 10px; }
         .simple-tool-grid { grid-template-columns: 1fr !important; }
+        /* Mobile: restore original layout — DOWNLOAD+SHARE side-by-side, GET PRINTED full-width below */
+        .action-row-3 { flex-wrap: wrap; }
+        .action-row-3 > button:first-child { order: 3; flex: 0 0 100% !important; }
+        .action-row-3 > button:not(:first-child) { flex: 1; }
+        .action-row-3 .action-btn { flex-direction: row !important; height: 48px !important; font-size: 15px !important; padding: 10px 14px !important; letter-spacing: 0.8px !important; white-space: nowrap !important; gap: 7px !important; min-height: unset !important; }
     }
     @media (hover: none) and (pointer: coarse) { #brush-cursor { display: none !important; } }
     
