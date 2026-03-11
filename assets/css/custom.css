@@ -1017,6 +1017,36 @@ a:hover {
 		gap: 16px !important;
 	}
 
+	/* ── QUICK UPLOAD: stack all inline flex button rows vertically ── */
+	#simple-tools .simple-tool-grid > div > div[style*="display:flex"] {
+		flex-direction: column !important;
+		align-items: stretch !important;
+	}
+	/* Buttons inside those rows go full width */
+	#simple-tools .simple-tool-grid > div > div[style*="display:flex"] .action-btn,
+	#simple-tools .simple-tool-grid > div > div[style*="display:flex"] input[type="range"] {
+		flex: unset !important;
+		width: 100% !important;
+	}
+
+	/* ── ADVANCED EDITOR SIDEBAR: stack button rows vertically ── */
+	/* ARTWORK: upload file / paste url row */
+	#acc-size > div[style*="display:flex"]:not([style*="center"]) {
+		flex-direction: column !important;
+		align-items: stretch !important;
+	}
+	#acc-size > div[style*="display:flex"]:not([style*="center"]) .action-btn {
+		flex: unset !important;
+		width: 100% !important;
+	}
+	/* RESTART / FULL SCREEN header row */
+	.sidebar-header {
+		flex-direction: column !important;
+	}
+	.sidebar-header .action-btn {
+		width: 100% !important;
+	}
+
 	/* ── ADVANCED EDITOR: collapse ARTWORK content on mobile so all
 	      three accordion headers are visible without scrolling ── */
 	#acc-size {
