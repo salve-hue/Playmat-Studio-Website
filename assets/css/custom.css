@@ -1017,6 +1017,12 @@ a:hover {
 		gap: 16px !important;
 	}
 
+	/* ── ADVANCED EDITOR: collapse ARTWORK content on mobile so all
+	      three accordion headers are visible without scrolling ── */
+	#acc-size {
+		display: none !important;
+	}
+
 	/* ── SIMPLE EDITOR bottom row: stack guides + download vertically ── */
 	#simple-tools div[style*="space-between"] {
 		flex-direction: column !important;
