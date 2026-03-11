@@ -925,26 +925,58 @@ a:hover {
 		padding: 3em 0 !important;
 	}
 
-	/* ── TOOL TABS: horizontal scroll, no wrapping ── */
+	/* ── TOOL TABS: 2-column grid layout on mobile ── */
 	.tool-tab-bar {
-		overflow-x: auto !important;
-		flex-wrap: nowrap !important;
-		justify-content: flex-start !important;
-		-webkit-overflow-scrolling: touch !important;
-		scrollbar-width: none !important;
-		padding-bottom: 2px !important;
-		margin-bottom: 18px !important;
-	}
-	.tool-tab-bar::-webkit-scrollbar {
-		display: none !important;
+		display: grid !important;
+		grid-template-columns: 1fr 1fr !important;
+		overflow-x: visible !important;
+		flex-wrap: unset !important;
+		gap: 8px !important;
+		padding-bottom: 0 !important;
+		border-bottom: none !important;
+		margin-bottom: 20px !important;
 	}
 	.tool-tab-btn {
-		flex: 0 0 auto !important;
+		flex: unset !important;
 		min-width: 0 !important;
-		font-size: 11px !important;
-		letter-spacing: 0.5px !important;
-		padding: 10px 12px !important;
-		white-space: nowrap !important;
+		width: 100% !important;
+		font-size: 12px !important;
+		letter-spacing: 0.8px !important;
+		padding: 13px 10px !important;
+		border-radius: 8px !important;
+		border: 1px solid rgba(255,255,255,0.12) !important;
+		border-bottom: 2px solid transparent !important;
+		margin-bottom: 0 !important;
+		white-space: normal !important;
+		text-align: center !important;
+		line-height: 1.3 !important;
+	}
+	.tool-tab-btn.active {
+		border-color: #30BBAD !important;
+		border-bottom-color: #30BBAD !important;
+		background: rgba(48,187,173,0.13) !important;
+		color: #30BBAD !important;
+	}
+	/* Last tab (5th, IMAGE HOST) spans full width */
+	.tool-tab-btn:last-child {
+		grid-column: 1 / -1 !important;
+	}
+
+	/* ── PREVENT HORIZONTAL OVERFLOW in tool panels ── */
+	.tool-tab-panel,
+	#landing-ui,
+	#simple-modal,
+	#simple-tools,
+	#simple-canvas-wrap {
+		max-width: 100% !important;
+		overflow-x: hidden !important;
+		box-sizing: border-box !important;
+	}
+	/* Keep action buttons within bounds */
+	.tool-tab-panel .action-btn,
+	#simple-tools .action-btn {
+		max-width: 100% !important;
+		box-sizing: border-box !important;
 	}
 
 	/* ── SIMPLE EDITOR: header wrap ── */
