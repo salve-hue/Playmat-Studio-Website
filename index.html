@@ -567,9 +567,9 @@
 
 					            <button class="acc-btn" onclick="window.toggleAcc('acc-size')">ARTWORK <span>▼</span></button>
 					            <div id="acc-size" class="acc-content" style="display:block;">
-					                <div style="display:flex; gap:10px; margin-bottom:10px;">
-					                    <button class="action-btn" style="flex:2;" onclick="window.triggerUpload()">📁 UPLOAD FILE</button>
-					                    <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" onclick="window.promptPasteUrl()">🔗 PASTE URL</button>
+					                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
+					                    <button class="action-btn" onclick="window.triggerUpload()">📁 UPLOAD FILE</button>
+					                    <button class="action-btn btn-secondary" style="font-size:12px;" onclick="window.promptPasteUrl()">🔗 PASTE URL</button>
 					                </div>
 
 					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;" onchange="window.handleUpload(this)">

@@ -187,7 +187,7 @@
     .ui-select option { background: var(--brand-bg); color: var(--brand-text-pri); }
     
     /* ── ACTION BUTTONS ── */
-    .action-btn { width: 100%; background: var(--brand-primary); border: none !important; font-weight: 700; font-family: 'Rubik', sans-serif; cursor: pointer; color: #fff !important; transition: background 0.2s, transform 0.1s; padding: 10px 14px; border-radius: 6px; font-size: 14px !important; letter-spacing: 0.8px; text-transform: uppercase; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 7px; }
+    .action-btn { width: 100%; box-sizing: border-box; background: var(--brand-primary); border: none !important; font-weight: 700; font-family: 'Rubik', sans-serif; cursor: pointer; color: #fff !important; transition: background 0.2s, transform 0.1s; padding: 10px 14px; border-radius: 6px; font-size: 14px !important; letter-spacing: 0.8px; text-transform: uppercase; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 7px; min-width: 0; }
     .action-btn:hover:not(:disabled) { background: var(--brand-hover) !important; color: #fff !important; }
     .action-btn:active:not(:disabled) { transform: scale(0.98); }
     .btn-secondary { background: rgba(255,255,255,0.1) !important; color: #f0eeff !important; border: 1px solid rgba(255,255,255,0.2) !important; }
@@ -231,7 +231,8 @@
     /* --- ADVANCED EDITOR --- */
     #playmat-tool-root { display: flex; width: 100%; max-width: 1400px; height: 90vh; max-height: 900px; background: #181228; border-radius: 6px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; flex-direction: row; }
     .app-fullscreen-mode { position: fixed !important; top: 2% !important; left: 2% !important; width: 96vw !important; height: 96vh !important; max-width: none !important; max-height: none !important; z-index: 10000 !important; border-radius: 6px !important; }
-    #sidebar { width: 300px; border-right: 1px solid rgba(104,48,187,0.25); overflow-y: auto; background: #181228; flex-shrink: 0; z-index: 20; display: flex; flex-direction: column; }
+    #sidebar { width: 300px; border-right: 1px solid rgba(104,48,187,0.25); overflow-y: auto; overflow-x: hidden; scrollbar-width: none; background: #181228; flex-shrink: 0; z-index: 20; display: flex; flex-direction: column; }
+    #sidebar::-webkit-scrollbar { display: none; }
 
     .studio-title-wrap { padding: 16px 15px; text-align: center; background: rgba(104,48,187,0.15); border-bottom: 1px solid rgba(104,48,187,0.25); }
     .studio-title { margin:0; font-size:18px; color:#30BBAD; text-transform:uppercase; letter-spacing:2px; font-family:'Rubik', sans-serif; font-weight:700; }
@@ -241,7 +242,7 @@
     /* Sidebar header buttons — compact */
     .sidebar-header .action-btn { font-size: 14px !important; padding: 8px 14px; letter-spacing: 1px; }
 
-    .acc-btn { width: 100%; padding: 11px 16px; background: transparent; color: #f0eeff !important; border: none !important; border-bottom: 1px solid rgba(104,48,187,0.2) !important; text-align: left; cursor: pointer; font-size: 12px !important; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; font-family: 'Rubik', sans-serif; }
+    .acc-btn { width: 100%; padding: 11px 16px; background: transparent; color: #f0eeff !important; border: none !important; border-bottom: 1px solid rgba(104,48,187,0.2) !important; text-align: left; cursor: pointer; font-size: 14px !important; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; font-family: 'Rubik', sans-serif; box-sizing: border-box; }
     .acc-btn:hover { background: rgba(104,48,187,0.1) !important; color: #30BBAD !important; }
     .acc-content { padding: 16px; display: none; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(104,48,187,0.15); }
     .slider-row { margin-top: 12px; }
@@ -325,6 +326,9 @@
     /* ── THREE-BUTTON ACTION ROW (GET PRINTED | DOWNLOAD | SHARE) ── */
     .action-row-3 { display: flex; gap: 8px; margin-bottom: 10px; }
     .action-row-3 .action-btn { height: auto !important; min-height: 48px; padding: 8px 4px !important; font-size: 11px !important; letter-spacing: 0.3px !important; flex-direction: column !important; gap: 3px !important; white-space: normal !important; line-height: 1.2 !important; }
+    /* Advanced editor sidebar: stack buttons vertically at full width */
+    #sidebar .action-row-3 { flex-direction: column; gap: 6px; }
+    #sidebar .action-row-3 .action-btn { flex-direction: row !important; height: 44px !important; font-size: 13px !important; padding: 10px 14px !important; letter-spacing: 0.8px !important; white-space: nowrap !important; gap: 7px !important; min-height: unset !important; flex: none !important; width: 100% !important; }
 
     /* --- RESPONSIVENESS --- */
     @media (max-width: 900px) {
