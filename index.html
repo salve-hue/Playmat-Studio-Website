@@ -501,6 +501,7 @@
 					                            <button id="s-btn-enhance" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;" onclick="window.toggleSimpleFilter('enhance')">🪄 ENHANCE</button>
 					                            <button id="s-btn-grayscale" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;" onclick="window.toggleSimpleFilter('grayscale')">◑ GRAYSCALE</button>
 					                        </div>
+					                        <button class="action-btn btn-secondary" style="width:100%; margin-top:8px; font-size:10px; padding:6px 8px;" onclick="window.toggleSimpleGuides()">SHOW/HIDE PRINT GUIDES</button>
 					                    </div>
 
 					                    <div>
@@ -535,7 +536,6 @@
 					                        &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
 					                        Scale your artwork to fill the entire canvas including the red bleed area.
 					                    </div>
-					                    <button class="action-btn btn-secondary" style="width:100%; margin:0 0 10px; font-size:11px;" onclick="window.toggleSimpleGuides()">SHOW/HIDE PRINT GUIDES</button>
 					                    <div class="action-row-3">
 					                        <button id="simple-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);" onclick="window.openGetPrinted('simple')">&#128424;&#65039; GET PRINTED</button>
 					                        <button id="simple-atc" class="action-btn" style="flex:1; margin:0;" onclick="window.downloadDesign('simple')">&#11015;&#65039; DOWNLOAD</button>
@@ -710,6 +710,7 @@
 					                        <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0" oninput="window.updateFilters()">
 					                    </div>
 					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" onclick="window.resetFilters()">RESET COLORS</button>
+					                    <button class="action-btn btn-secondary" style="margin-top:8px; font-size:10px; padding:6px 8px;" onclick="window.toggleAdvGuides()">SHOW/HIDE PRINT GUIDES</button>
 					                </div>
 
 					                <div class="slider-row">
@@ -751,7 +752,6 @@
 
 					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
 
-					                <button class="action-btn btn-secondary" style="margin-top:10px;" onclick="window.toggleAdvGuides()">SHOW/HIDE PRINT GUIDES</button>
 					            </div>
 
 					            <div style="flex-grow: 1;"></div>
