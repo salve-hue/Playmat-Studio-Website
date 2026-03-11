@@ -1132,8 +1132,8 @@
             };
             fgImg.src = prediction.output;
         } catch(err) {
-            console.error(err);
-            window.showAppAlert("Frame Break Failed", "An unexpected error occurred. Please try again or contact support.", "error");
+            console.error('Frame Break Error:', err);
+            window.showAppAlert("Frame Break Failed", err.message || "An unexpected error occurred.", "error");
             btn.innerHTML='✨ AUTO FRAME BREAK<br><span style="font-size:10px;font-weight:normal;">(experimental)</span>'; btn.disabled=false;
         }
     };
