@@ -2201,7 +2201,66 @@
         setTimeout(function() { copyBtn.textContent = orig; }, 1800);
     };
 
-    // Placeholder — replace href with final print vendor URL when ready
-    window.openGetPrinted = function() {
-        window.open('https://www.rubicongamesupplies.com?bg_ref=gBU3NKBThS', '_blank');
+    window.openGetPrinted = async function(mode) {
+        mode = mode || 'simple';
+        var isAdv        = (mode === 'adv');
+        var btnId        = isAdv ? 'sidebar-print-btn' : 'simple-print-btn';
+        var printBtn     = document.getElementById(btnId);
+        var activeCanvas = isAdv ? window.canvas : window.sCanvas;
+
+        var hasArt = activeCanvas && (
+            activeCanvas.getObjects().find(function(o){ return o.name === 'art'; }) ||
+            activeCanvas.backgroundColor
+        );
+        if (!hasArt) {
+            window.showAppAlert("No Artwork", "Please upload artwork before ordering a print.", "error");
+            return;
+        }
+
+        var origText = printBtn.innerHTML;
+        printBtn.innerHTML = 'UPLOADING&hellip;';
+        printBtn.disabled  = true;
+
+        try {
+            var blob     = await buildPrintCanvas(isAdv, activeCanvas);
+            var filename = window.buildPrintFilename();
+            var form     = new FormData();
+            form.append('file', blob, filename);
+
+            var res  = await fetch(window.CLOUDFLARE_HOST_URL, { method: 'POST', body: form });
+            var data = await res.json();
+            if (!res.ok || !data.url) throw new Error(data.error || 'Upload failed');
+
+            document.getElementById('print-url-output').value = data.url;
+            var exp      = new Date(data.expires);
+            var daysLeft = Math.round((exp - Date.now()) / 86400000);
+            document.getElementById('print-expiry-note').textContent =
+                'Link expires in ' + daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + '.';
+            document.getElementById('get-printed-modal').style.display = 'flex';
+
+            printBtn.innerHTML = '&#10003; READY!';
+            printBtn.style.background = '#83BB30';
+            setTimeout(function() {
+                printBtn.innerHTML = origText;
+                printBtn.style.background = '';
+                printBtn.disabled = false;
+            }, 3000);
+        } catch(e) {
+            window.showAppAlert("Upload Error", e.message || "Upload failed. Please try again.", "error");
+            printBtn.innerHTML = origText;
+            printBtn.disabled  = false;
+        }
+    };
+
+    window.copyPrintUrl = function() {
+        var input   = document.getElementById('print-url-output');
+        var copyBtn = document.getElementById('print-copy-btn');
+        if (!input || !input.value) return;
+        navigator.clipboard.writeText(input.value).catch(function() {
+            input.select();
+            document.execCommand('copy');
+        });
+        var orig = copyBtn.textContent;
+        copyBtn.textContent = 'COPIED! \u2713';
+        setTimeout(function() { copyBtn.textContent = orig; }, 1800);
     };

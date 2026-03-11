@@ -536,11 +536,11 @@
 					                        Scale your artwork to fill the entire canvas including the red bleed area.
 					                    </div>
 					                    <button class="action-btn btn-secondary" style="width:100%; margin:0 0 10px; font-size:11px;" onclick="window.toggleSimpleGuides()">SHOW/HIDE PRINT GUIDES</button>
-					                    <div style="display:flex; gap:10px; margin-bottom:10px;">
-					                        <button id="simple-atc" class="action-btn" style="flex:1; height:48px; font-size:15px; margin:0;" onclick="window.downloadDesign('simple')">&#11015;&#65039; DOWNLOAD</button>
-					                        <button id="simple-share-btn" class="action-btn btn-secondary" style="flex:1; height:48px; font-size:15px; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);" onclick="window.shareDesign('simple')">&#128279; SHARE</button>
+					                    <div class="action-row-3">
+					                        <button id="simple-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);" onclick="window.openGetPrinted('simple')">&#128424;&#65039; GET PRINTED</button>
+					                        <button id="simple-atc" class="action-btn" style="flex:1; margin:0;" onclick="window.downloadDesign('simple')">&#11015;&#65039; DOWNLOAD</button>
+					                        <button id="simple-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);" onclick="window.shareDesign('simple')">&#128279; SHARE</button>
 					                    </div>
-					                    <button class="action-btn" style="width:100%; height:48px; font-size:15px; margin:0; background:var(--success-green);" onclick="window.openGetPrinted()">&#128424;&#65039; GET PRINTED</button>
 					                </div>
 
 					                <div style="text-align:center; padding-top: 15px;">
@@ -761,11 +761,11 @@
 					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
 					                    Scale your artwork to fill the entire canvas including the red bleed area.
 					                </div>
-					                <div style="display:flex; gap:10px; margin-bottom:10px;">
-					                    <button id="sidebar-atc" class="action-btn" style="flex:1; height:48px; font-size:15px; margin:0;" onclick="window.downloadDesign('adv')">&#11015;&#65039; DOWNLOAD</button>
-					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; height:48px; font-size:15px; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);" onclick="window.shareDesign('adv')">&#128279; SHARE</button>
+					                <div class="action-row-3">
+					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);" onclick="window.openGetPrinted('adv')">&#128424;&#65039; GET PRINTED</button>
+					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;" onclick="window.downloadDesign('adv')">&#11015;&#65039; DOWNLOAD</button>
+					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);" onclick="window.shareDesign('adv')">&#128279; SHARE</button>
 					                </div>
-					                <button class="action-btn" style="width:100%; height:48px; font-size:15px; margin:0; background:var(--success-green);" onclick="window.openGetPrinted()">&#128424;&#65039; GET PRINTED</button>
 					                <div style="text-align:center; padding-top: 15px;">
 					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
 					                </div>
@@ -968,15 +968,29 @@
 			})();
 		</script>
 
-	<div id="share-result-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
-    <div style="background:var(--panel-bg); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:32px; max-width:480px; width:90%; position:relative;">
-        <button onclick="document.getElementById('share-result-modal').style.display='none';" style="position:absolute; top:12px; right:16px; background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer;">&#10005;</button>
-        <h3 style="margin:0 0 8px; color:var(--text-primary); font-size:18px;">&#128279; Share Your Design</h3>
-        <p id="share-expiry-note" style="margin:0 0 16px; color:var(--text-muted); font-size:13px;"></p>
+	<div id="share-result-modal" style="display:none; position:fixed; inset:0; z-index:9999999; background:rgba(0,0,0,0.82); align-items:center; justify-content:center;">
+    <div style="background:#181228; border:1px solid rgba(104,48,187,0.4); border-radius:12px; padding:32px; max-width:480px; width:90%; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+        <button onclick="document.getElementById('share-result-modal').style.display='none';" style="position:absolute; top:12px; right:16px; background:none; border:none; color:#9888c0; font-size:20px; cursor:pointer; line-height:1;">&#10005;</button>
+        <h3 style="margin:0 0 8px; color:#f0eeff; font-size:18px;">&#128279; Share Your Design</h3>
+        <p id="share-expiry-note" style="margin:0 0 16px; color:#9888c0; font-size:13px;"></p>
         <div style="display:flex; gap:8px;">
-            <input id="share-url-output" type="text" readonly style="flex:1; background:var(--input-bg); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:10px 12px; color:var(--text-primary); font-size:13px; outline:none;" />
+            <input id="share-url-output" type="text" readonly style="flex:1; background:#0d0a1a; border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:10px 12px; color:#f0eeff; font-size:13px; outline:none; font-family:monospace;" />
             <button id="share-copy-btn" class="action-btn" style="width:auto; padding:0 16px; height:40px; font-size:13px; margin:0;" onclick="window.copyShareUrl()">COPY</button>
         </div>
+    </div>
+</div>
+
+	<div id="get-printed-modal" style="display:none; position:fixed; inset:0; z-index:9999999; background:rgba(0,0,0,0.82); align-items:center; justify-content:center;">
+    <div style="background:#181228; border:1px solid rgba(48,187,173,0.4); border-radius:12px; padding:32px; max-width:500px; width:90%; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+        <button onclick="document.getElementById('get-printed-modal').style.display='none';" style="position:absolute; top:12px; right:16px; background:none; border:none; color:#9888c0; font-size:20px; cursor:pointer; line-height:1;">&#10005;</button>
+        <h3 style="margin:0 0 8px; color:#f0eeff; font-size:18px;">&#128424;&#65039; Get Your Design Printed</h3>
+        <p style="margin:0 0 6px; color:#9888c0; font-size:13px;">Your design has been uploaded. Copy the link below, then click <strong style="color:#30BBAD;">Open Print Site</strong> and paste it into the image URL field to order your playmat.</p>
+        <p id="print-expiry-note" style="margin:0 0 14px; color:#6b5f8a; font-size:12px;"></p>
+        <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <input id="print-url-output" type="text" readonly style="flex:1; background:#0d0a1a; border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:10px 12px; color:#f0eeff; font-size:13px; outline:none; font-family:monospace;" />
+            <button id="print-copy-btn" class="action-btn" style="width:auto; padding:0 16px; height:40px; font-size:13px; margin:0;" onclick="window.copyPrintUrl()">COPY</button>
+        </div>
+        <a href="https://www.rubicongamesupplies.com/collections/custom-playmats/?bg_ref=gBU3NKBThS" target="_blank" rel="noopener" class="action-btn" style="display:flex; box-sizing:border-box; width:100%; height:48px; font-size:15px; margin:0; background:#83BB30; text-decoration:none; color:#fff; border-radius:6px; align-items:center; justify-content:center; gap:8px;">&#128424;&#65039; OPEN PRINT SITE</a>
     </div>
 </div>
 </body>
