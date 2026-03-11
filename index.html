@@ -49,8 +49,8 @@
 					<!-- Nav -->
 					<nav>
 						<ul>
-							<li class="ps-nav-link"><a href="#features">Features</a></li>
 							<li class="ps-nav-link"><a href="#how-it-works">How It Works</a></li>
+							<li class="ps-nav-link"><a href="#features">Features</a></li>
 							<li class="ps-nav-link"><a href="#about">About</a></li>
 							<li class="ps-nav-link"><a href="#contact">Contact</a></li>
 							<li><a href="#tools" class="button primary ps-nav-cta">Jump to the Tool &darr;</a></li>
@@ -66,8 +66,8 @@
 				<h2>Menu</h2>
 				<ul>
 					<li><a href="index.html">Home</a></li>
-					<li><a href="#features">Features</a></li>
 					<li><a href="#how-it-works">How It Works</a></li>
+					<li><a href="#features">Features</a></li>
 					<li><a href="#about">About</a></li>
 					<li><a href="#contact">Contact</a></li>
 					<li><a href="#tools">Jump to the Tool &darr;</a></li>
@@ -79,7 +79,7 @@
 				<div class="inner">
 
 					<!-- Hero -->
-					<header id="features">
+					<header>
 						<h1>Design. Enhance. Print.</h1>
 						<p>Free browser-based tools to prepare your artwork for professional printing.<br />
 						No installs. No account. No cost. Everything runs in your browser.</p>
@@ -123,8 +123,12 @@
 			</section>
 
 			<!-- Feature Tiles -->
-			<section class="ps-features">
+			<section id="features" class="ps-features">
 				<div class="inner">
+					<header class="ps-section-header">
+						<h2>Features</h2>
+						<p>Everything you need, from upload to print-ready file.</p>
+					</header>
 					<section class="tiles">
 
 						<!-- 1: Quick Upload -->
@@ -855,9 +859,9 @@
 					<section class="ps-footer-col">
 						<h2>Links</h2>
 						<ul class="ps-footer-list">
-							<li><a href="#tools">Jump to the Tool</a></li>
-							<li><a href="#features">Features</a></li>
+							<li><a href="#" onclick="document.getElementById('privacy-modal').style.display='flex';return false;">Privacy Policy</a></li>
 							<li><a href="#how-it-works">How It Works</a></li>
+							<li><a href="#features">Features</a></li>
 							<li><a href="#about">About</a></li>
 							<li><a href="#contact">Contact</a></li>
 						</ul>
@@ -877,6 +881,86 @@
 		<script src="assets/js/util.js"></script>
 <script src="assets/js/main.js?v=4"></script>
 		<script src="assets/js/tool.js?v=4"></script>
+
+
+		<!-- Back to Top -->
+		<a id="back-to-top" href="#" aria-label="Back to top">&#8679;</a>
+
+		<!-- Privacy Policy Modal -->
+		<div id="privacy-modal">
+			<div class="privacy-box">
+				<div class="privacy-header">
+					<h2>Privacy Policy</h2>
+					<button class="privacy-close" onclick="document.getElementById('privacy-modal').style.display='none'" aria-label="Close">&times;</button>
+				</div>
+				<div class="privacy-body">
+					<p><strong>Effective Date: March 2025</strong></p>
+					<p>Playmat Studio is a free, browser-based image preparation tool. This policy explains what data is collected, how it is used, and your rights under applicable privacy law including the GDPR (EU/UK) and the CCPA (California).</p>
+
+					<h3>1. Data We Collect</h3>
+					<p>We collect <strong>no personal information</strong> and require no account, registration, or login. The following data may be processed during normal use:</p>
+					<ul>
+						<li><strong>Image files you upload</strong> &mdash; processed locally in your browser. They are never transmitted to our servers except as described in Section 3.</li>
+						<li><strong>Browser local storage</strong> &mdash; used solely to remember recent upload history within your own browser. This data never leaves your device and is not accessible to us.</li>
+						<li><strong>Contact form submissions</strong> &mdash; if you use the contact form, your name, email address, and message are transmitted to us so we can respond. This data is not shared with third parties and is retained only as long as necessary to address your enquiry.</li>
+					</ul>
+
+					<h3>2. In-Browser Processing</h3>
+					<p>All core image-processing tasks &mdash; resizing, cropping, colour correction, format conversion, overlay rendering, and export &mdash; run <strong>entirely within your browser</strong> using the HTML5 Canvas API and the Fabric.js library. Your artwork is never uploaded to any server during these operations.</p>
+
+					<h3>3. Optional Cloud AI Features</h3>
+					<p>Two features optionally transmit image data to a serverless cloud environment:</p>
+					<ul>
+						<li><strong>AI Resolution Enhancer</strong> &mdash; sends your image to a serverless processing function to upscale it to higher resolution.</li>
+						<li><strong>AI Frame Break (background removal)</strong> &mdash; sends your image to a serverless processing function to isolate the foreground subject.</li>
+					</ul>
+					<p>These transmissions occur <strong>only when you explicitly initiate the feature</strong> by clicking the corresponding button and confirming the prompt. Image data sent to these functions is processed transiently and is <strong>not stored, logged, or retained</strong> after the response is returned to your browser. No metadata identifying you is attached to these requests.</p>
+
+					<h3>4. Cookies &amp; Tracking</h3>
+					<p>We do <strong>not</strong> use tracking cookies, advertising cookies, analytics scripts, or any third-party tracking technology. The site uses only browser local storage as described above.</p>
+
+					<h3>5. Third-Party Services</h3>
+					<p>All libraries used (Fabric.js and others) are loaded and executed locally. The site does not embed third-party widgets, social buttons, or advertising networks that could independently collect your data.</p>
+
+					<h3>6. Data Retention</h3>
+					<p>We hold no persistent user data on our servers. Local storage data (upload history) is retained in your own browser until you clear it via the &ldquo;Clear History&rdquo; button or your browser settings. Contact form submissions are retained only as long as needed to resolve your request.</p>
+
+					<h3>7. Your Rights (GDPR &amp; UK GDPR)</h3>
+					<p>If you are located in the European Economic Area or the United Kingdom, you have the right to access, rectify, erase, or restrict the processing of any personal data we hold about you (limited to contact form submissions). To exercise these rights, contact us via the contact form on this site. We will respond within 30 days.</p>
+
+					<h3>8. Your Rights (CCPA &mdash; California Residents)</h3>
+					<p>We do not sell, share, or disclose personal information to third parties for commercial purposes. California residents have the right to know what personal information is collected and to request deletion. Because we collect only contact form submissions and retain them for the limited purpose of responding to you, there is nothing to &ldquo;sell&rdquo; and deletion requests are honoured upon request.</p>
+
+					<h3>9. Children&rsquo;s Privacy</h3>
+					<p>This site is not directed to children under 13 (or under 16 in the EEA). We do not knowingly collect information from minors. If you believe a minor has submitted information via the contact form, please contact us and we will delete it promptly.</p>
+
+					<h3>10. Changes to This Policy</h3>
+					<p>We may update this policy to reflect changes in technology or law. The effective date at the top of this page will be updated accordingly. Continued use of the site after changes are posted constitutes acceptance of the revised policy.</p>
+
+					<h3>11. Contact</h3>
+					<p>For privacy-related questions or to exercise your rights, use the <a href="#contact" onclick="document.getElementById('privacy-modal').style.display='none'" style="color:var(--ps-teal);">contact form</a> on this site.</p>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// Back-to-top visibility
+			(function(){
+				var btn = document.getElementById('back-to-top');
+				window.addEventListener('scroll', function(){
+					if(window.scrollY > 400){ btn.classList.add('visible'); }
+					else { btn.classList.remove('visible'); }
+				}, {passive:true});
+				btn.addEventListener('click', function(e){
+					e.preventDefault();
+					window.scrollTo({top:0, behavior:'smooth'});
+				});
+				// Close privacy modal on backdrop click
+				document.getElementById('privacy-modal').addEventListener('click', function(e){
+					if(e.target === this) this.style.display = 'none';
+				});
+			})();
+		</script>
 
 	</body>
 </html>

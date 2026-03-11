@@ -105,7 +105,12 @@ a:hover {
 	font-family: 'Rubik', sans-serif !important;
 	font-weight: 700 !important;
 	letter-spacing: 0.02em !important;
-	font-size: 0.9em !important;
+	font-size: 1.125em !important;
+}
+
+#header .logo .symbol img {
+	width: 2.5em !important;
+	height: 2.5em !important;
 }
 
 #header nav {
@@ -137,7 +142,7 @@ a:hover {
 	color: #ffffff !important;
 	font-family: 'Rubik', sans-serif !important;
 	font-weight: 600 !important;
-	font-size: 0.9em !important;
+	font-size: 14px !important;
 	padding: 0.45em 0.9em !important;
 	display: flex !important;
 	align-items: center !important;
@@ -161,7 +166,7 @@ a:hover {
 	align-items: center !important;
 	justify-content: center !important;
 	padding: 0.45em 1.1em !important;
-	font-size: 0.9em !important;
+	font-size: 14px !important;
 	background-color: var(--ps-purple) !important;
 	border-color: var(--ps-purple) !important;
 	color: #ffffff !important;
@@ -363,7 +368,14 @@ a:hover {
 .ps-features {
 	background: var(--ps-bg) !important;
 	overflow: hidden !important;
-	padding-top: 3em !important;
+	padding-top: 5em !important;
+	border-top: 1px solid var(--ps-border) !important;
+}
+
+.ps-features .inner {
+	max-width: 75em !important;
+	margin: 0 auto !important;
+	padding: 0 3em !important;
 }
 
 /* ============================================================
@@ -390,11 +402,11 @@ a:hover {
 }
 
 .ps-section-header h2 {
-	font-size: 1.3em !important;
-	font-weight: 600 !important;
+	font-size: clamp(1.6em, 2.5vw, 2.2em) !important;
+	font-weight: 700 !important;
 	color: var(--ps-text) !important;
 	margin-bottom: 0.4em !important;
-	letter-spacing: -0.01em !important;
+	letter-spacing: -0.02em !important;
 }
 
 .ps-section-header p {
@@ -412,7 +424,7 @@ a:hover {
 
 .ps-step {
 	flex: 1 !important;
-	max-width: 300px !important;
+	max-width: 375px !important;
 	text-align: center !important;
 	padding: 2.5em 1.8em !important;
 	background: var(--ps-surface-2) !important;
@@ -515,11 +527,13 @@ a:hover {
 }
 
 .ps-about-header {
-	text-align: left !important;
+	text-align: center !important;
 }
 
 .ps-about-body {
-	max-width: 680px !important;
+	max-width: 850px !important;
+	margin: 0 auto !important;
+	text-align: center !important;
 }
 
 .ps-about-body p {
@@ -633,8 +647,10 @@ a:hover {
 #footer .inner {
 	display: flex !important;
 	flex-wrap: wrap !important;
-	gap: 3em !important;
+	gap: 2em !important;
 	align-items: flex-start !important;
+	padding-top: 2em !important;
+	padding-bottom: 1em !important;
 }
 
 .ps-footer-col {
@@ -693,6 +709,137 @@ a:hover {
 .copyright li a {
 	color: var(--ps-text-muted) !important;
 	font-size: 0.85em !important;
+}
+
+/* ============================================================
+   BACK TO TOP BUTTON
+   ============================================================ */
+
+#back-to-top {
+	position: fixed !important;
+	bottom: 2em !important;
+	right: 2em !important;
+	width: 2.8em !important;
+	height: 2.8em !important;
+	background: var(--ps-purple) !important;
+	color: #fff !important;
+	border-radius: 50% !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	font-size: 1.3em !important;
+	text-decoration: none !important;
+	border: none !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
+	transition: opacity 0.25s, background 0.2s !important;
+	z-index: 9000 !important;
+	box-shadow: 0 4px 16px rgba(0,0,0,0.4) !important;
+	line-height: 1 !important;
+}
+
+#back-to-top.visible {
+	opacity: 1 !important;
+	pointer-events: auto !important;
+}
+
+#back-to-top:hover {
+	background: var(--ps-teal) !important;
+	color: #fff !important;
+	border-bottom: none !important;
+}
+
+/* ============================================================
+   PRIVACY POLICY LIGHTBOX
+   ============================================================ */
+
+#privacy-modal {
+	display: none;
+	position: fixed;
+	top: 0; left: 0;
+	width: 100vw; height: 100vh;
+	background: rgba(0,0,0,0.85);
+	z-index: 99999;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5em;
+	box-sizing: border-box;
+}
+
+#privacy-modal .privacy-box {
+	background: var(--ps-surface-2);
+	border: 1px solid var(--ps-border);
+	border-radius: 10px;
+	max-width: 720px;
+	width: 100%;
+	max-height: 85vh;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+	position: relative;
+}
+
+#privacy-modal .privacy-header {
+	padding: 1.5em 2em 1em;
+	border-bottom: 1px solid var(--ps-border);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-shrink: 0;
+}
+
+#privacy-modal .privacy-header h2 {
+	margin: 0 !important;
+	font-size: 1.125em !important;
+	color: var(--ps-text) !important;
+	letter-spacing: 0.05em !important;
+	text-transform: uppercase !important;
+	font-weight: 700 !important;
+}
+
+#privacy-modal .privacy-close {
+	background: none;
+	border: none;
+	color: var(--ps-text-muted);
+	font-size: 1.4em;
+	cursor: pointer;
+	padding: 0;
+	line-height: 1;
+	transition: color 0.2s;
+}
+
+#privacy-modal .privacy-close:hover {
+	color: var(--ps-text);
+}
+
+#privacy-modal .privacy-body {
+	padding: 1.5em 2em 2em;
+	overflow-y: auto;
+	font-size: 0.85em;
+	line-height: 1.75;
+	color: var(--ps-text-muted);
+}
+
+#privacy-modal .privacy-body h3 {
+	font-size: 0.95em !important;
+	color: var(--ps-teal) !important;
+	font-weight: 700 !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.08em !important;
+	margin: 1.4em 0 0.4em !important;
+}
+
+#privacy-modal .privacy-body p,
+#privacy-modal .privacy-body ul {
+	margin: 0 0 0.8em !important;
+}
+
+#privacy-modal .privacy-body ul {
+	padding-left: 1.4em !important;
+}
+
+#privacy-modal .privacy-body strong {
+	color: var(--ps-text);
 }
 
 /* ============================================================
