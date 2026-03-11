@@ -535,10 +535,12 @@
 					                        &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
 					                        Scale your artwork to fill the entire canvas including the red bleed area.
 					                    </div>
-					                    <div style="display:flex; justify-content:space-between; align-items:center;">
-					                        <button class="action-btn btn-secondary" style="width:auto; margin:0; font-size:11px;" onclick="window.toggleSimpleGuides()">SHOW/HIDE PRINT GUIDES</button>
-					                        <button id="simple-atc" class="action-btn" style="width:250px; height:50px; font-size:16px; margin:0;" onclick="window.downloadDesign('simple')">DOWNLOAD</button>
+					                    <button class="action-btn btn-secondary" style="width:100%; margin:0 0 10px; font-size:11px;" onclick="window.toggleSimpleGuides()">SHOW/HIDE PRINT GUIDES</button>
+					                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+					                        <button id="simple-atc" class="action-btn" style="flex:1; height:48px; font-size:15px; margin:0;" onclick="window.downloadDesign('simple')">&#11015;&#65039; DOWNLOAD</button>
+					                        <button id="simple-share-btn" class="action-btn btn-secondary" style="flex:1; height:48px; font-size:15px; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);" onclick="window.shareDesign('simple')">&#128279; SHARE</button>
 					                    </div>
+					                    <button class="action-btn" style="width:100%; height:48px; font-size:15px; margin:0; background:var(--success-green);" onclick="window.openGetPrinted()">&#128424;&#65039; GET PRINTED</button>
 					                </div>
 
 					                <div style="text-align:center; padding-top: 15px;">
@@ -589,7 +591,7 @@
 					            </div>
 
 					            <button class="acc-btn" onclick="window.toggleAcc('acc-layouts')">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
-					            <div id="acc-layouts" class="acc-content" style="display:block;">
+					            <div id="acc-layouts" class="acc-content">
 					                <select id="game-sel" class="ui-select" style="margin:0;" onchange="window.filterFormats()"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;" onchange="window.filterHands()"></select>
 					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;" onchange="window.applyFinalLayout()"></select>
@@ -688,7 +690,7 @@
 					            </div>
 
 					            <button class="acc-btn" onclick="window.toggleAcc('acc-art')">ADJUSTMENTS <span>▼</span></button>
-					            <div id="acc-art" class="acc-content" style="display:block;">
+					            <div id="acc-art" class="acc-content">
 
 					                <div class="inner-panel">
 					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
@@ -759,7 +761,11 @@
 					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
 					                    Scale your artwork to fill the entire canvas including the red bleed area.
 					                </div>
-					                <button id="sidebar-atc" class="action-btn" style="height: 60px; width: 100%; font-size: 16px;" onclick="window.downloadDesign('adv')">DOWNLOAD</button>
+					                <div style="display:flex; gap:10px; margin-bottom:10px;">
+					                    <button id="sidebar-atc" class="action-btn" style="flex:1; height:48px; font-size:15px; margin:0;" onclick="window.downloadDesign('adv')">&#11015;&#65039; DOWNLOAD</button>
+					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; height:48px; font-size:15px; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);" onclick="window.shareDesign('adv')">&#128279; SHARE</button>
+					                </div>
+					                <button class="action-btn" style="width:100%; height:48px; font-size:15px; margin:0; background:var(--success-green);" onclick="window.openGetPrinted()">&#128424;&#65039; GET PRINTED</button>
 					                <div style="text-align:center; padding-top: 15px;">
 					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
 					                </div>
@@ -962,5 +968,16 @@
 			})();
 		</script>
 
-	</body>
+	<div id="share-result-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
+    <div style="background:var(--panel-bg); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:32px; max-width:480px; width:90%; position:relative;">
+        <button onclick="document.getElementById('share-result-modal').style.display='none';" style="position:absolute; top:12px; right:16px; background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer;">&#10005;</button>
+        <h3 style="margin:0 0 8px; color:var(--text-primary); font-size:18px;">&#128279; Share Your Design</h3>
+        <p id="share-expiry-note" style="margin:0 0 16px; color:var(--text-muted); font-size:13px;"></p>
+        <div style="display:flex; gap:8px;">
+            <input id="share-url-output" type="text" readonly style="flex:1; background:var(--input-bg); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:10px 12px; color:var(--text-primary); font-size:13px; outline:none;" />
+            <button id="share-copy-btn" class="action-btn" style="width:auto; padding:0 16px; height:40px; font-size:13px; margin:0;" onclick="window.copyShareUrl()">COPY</button>
+        </div>
+    </div>
+</div>
+</body>
 </html>
