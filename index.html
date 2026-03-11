@@ -369,7 +369,7 @@
 					                <div class="dz-icon">&#x1F4E4;</div>
 					                <p class="dz-title">&#x2728; Batch Enhance</p>
 					                <p class="dz-sub">Drag &amp; drop images, or click to select</p>
-					                <p class="dz-note">Applies: Brightness +12% &middot; Contrast +8% &middot; Saturation +15% &middot; Exports 99% JPG</p>
+					                <p class="dz-note">Automatically boosts color and contrast so your artwork looks vivid and sharp when printed &mdash; no manual adjustments needed.</p>
 					            </div>
 					            <input type="file" id="batch-file-in" accept="image/*" multiple style="display:none;" onchange="window.handleBatchFiles(this.files)">
 					            <div id="batch-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Rubik',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
@@ -589,7 +589,7 @@
 					            </div>
 
 					            <button class="acc-btn" onclick="window.toggleAcc('acc-layouts')">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
-					            <div id="acc-layouts" class="acc-content">
+					            <div id="acc-layouts" class="acc-content" style="display:block;">
 					                <select id="game-sel" class="ui-select" style="margin:0;" onchange="window.filterFormats()"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;" onchange="window.filterHands()"></select>
 					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;" onchange="window.applyFinalLayout()"></select>
@@ -688,7 +688,7 @@
 					            </div>
 
 					            <button class="acc-btn" onclick="window.toggleAcc('acc-art')">ADJUSTMENTS <span>▼</span></button>
-					            <div id="acc-art" class="acc-content">
+					            <div id="acc-art" class="acc-content" style="display:block;">
 
 					                <div class="inner-panel">
 					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
