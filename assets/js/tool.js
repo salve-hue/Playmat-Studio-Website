@@ -2203,5 +2203,5 @@
 
     // Placeholder — replace href with final print vendor URL when ready
     window.openGetPrinted = function() {
-        window.open('https://playmatstudio.com/print', '_blank');
+        window.open('https://www.rubicongamesupplies.com?bg_ref=gBU3NKBThS', '_blank');
     };
