@@ -560,11 +560,9 @@
         if (window.location.hash === '#upload') {
             setTimeout(function() {
                 window.switchTab('host');
-                var toolsSection = document.getElementById('tools');
-                if (toolsSection) { toolsSection.scrollIntoView({ behavior: 'smooth' }); }
                 var banner = document.getElementById('upload-customer-banner');
                 if (banner) { banner.style.display = 'block'; }
-            }, 0);
+            }, 100);
         } else {
             setTimeout(function() { window.switchTab('quick-upload'); }, 0);
         }
