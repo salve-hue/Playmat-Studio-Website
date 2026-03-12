@@ -8,7 +8,7 @@
  */
 
 const TO_EMAIL   = 'support@rubicongamesupplies.com';
-const FROM_EMAIL = 'Playmat Studio <noreply@playmatstudio.com>';
+const FROM_EMAIL = 'Playmat Studio <noreply@rubicongamesupplies.com>';
 
 const ALLOWED_ORIGINS = [
   'https://playmatstudio.com',
