@@ -450,9 +450,6 @@ a:hover {
 	color: var(--ps-text) !important;
 	margin-bottom: 0.6em !important;
 	min-height: 2.8em !important;
-	display: flex !important;
-	align-items: flex-end !important;
-	justify-content: center !important;
 }
 
 .ps-step p {
