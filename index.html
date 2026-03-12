@@ -844,23 +844,24 @@
 						<div class="ps-contact-info">
 							<p>Whether you have a question about the tools, a feature request, or anything else &mdash; send us a message and we&rsquo;ll get back to you as soon as we can.</p>
 						</div>
-						<form class="ps-contact-form" action="#" method="post">
+						<form id="contact-form" class="ps-contact-form" action="#" method="post" novalidate>
 							<div class="ps-form-row">
 								<div class="ps-field">
 									<label for="contact-name">Name</label>
-									<input type="text" id="contact-name" name="name" placeholder="Your name" />
+									<input type="text" id="contact-name" name="name" placeholder="Your name" required />
 								</div>
 								<div class="ps-field">
 									<label for="contact-email">Email</label>
-									<input type="email" id="contact-email" name="email" placeholder="you@example.com" />
+									<input type="email" id="contact-email" name="email" placeholder="you@example.com" required />
 								</div>
 							</div>
 							<div class="ps-field">
 								<label for="contact-message">Message</label>
-								<textarea id="contact-message" name="message" placeholder="What's on your mind?"></textarea>
+								<textarea id="contact-message" name="message" placeholder="What's on your mind?" required></textarea>
 							</div>
+							<div id="contact-status" role="status" aria-live="polite" style="display:none; padding:10px 14px; border-radius:6px; margin-bottom:14px; font-size:14px; font-weight:600;"></div>
 							<ul class="actions">
-								<li><input type="submit" value="Send Message" class="button primary" /></li>
+								<li><button type="submit" id="contact-submit" class="button primary">Send Message</button></li>
 							</ul>
 						</form>
 					</div>
@@ -978,6 +979,61 @@
 					if(e.target === this) this.style.display = 'none';
 				});
 			})();
+		</script>
+
+		<script>
+		// Contact form — submit via Resend worker
+		(function(){
+			var CONTACT_WORKER = 'https://contact.playmatstudio.com';
+			var form      = document.getElementById('contact-form');
+			var status    = document.getElementById('contact-status');
+			var submitBtn = document.getElementById('contact-submit');
+			if (!form) return;
+
+			function showStatus(msg, ok) {
+				status.textContent = msg;
+				status.style.display = 'block';
+				status.style.background = ok ? 'rgba(131,187,48,0.15)' : 'rgba(187,48,62,0.15)';
+				status.style.border = ok ? '1px solid rgba(131,187,48,0.4)' : '1px solid rgba(187,48,62,0.4)';
+				status.style.color = ok ? '#83BB30' : '#e05060';
+			}
+
+			form.addEventListener('submit', function(e) {
+				e.preventDefault();
+				var name    = document.getElementById('contact-name').value.trim();
+				var email   = document.getElementById('contact-email').value.trim();
+				var message = document.getElementById('contact-message').value.trim();
+				if (!name || !email || !message) {
+					showStatus('Please fill in all fields.', false);
+					return;
+				}
+				submitBtn.disabled = true;
+				submitBtn.textContent = 'Sending…';
+				status.style.display = 'none';
+
+				fetch(CONTACT_WORKER, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ name: name, email: email, message: message })
+				})
+				.then(function(res) { return res.json(); })
+				.then(function(data) {
+					if (data.ok) {
+						showStatus('Message sent! We’ll get back to you soon.', true);
+						form.reset();
+					} else {
+						showStatus(data.error || 'Something went wrong. Please try again.', false);
+					}
+				})
+				.catch(function() {
+					showStatus('Could not send message. Please check your connection and try again.', false);
+				})
+				.finally(function() {
+					submitBtn.disabled = false;
+					submitBtn.textContent = 'Send Message';
+				});
+			});
+		})();
 		</script>
 
 	<div id="share-result-modal" style="display:none; position:fixed; inset:0; z-index:9999999; background:rgba(0,0,0,0.82); align-items:center; justify-content:center;">
