@@ -4,6 +4,7 @@ Header set X-Content-Type-Options "nosniff"
 Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 Header set Referrer-Policy "strict-origin-when-cross-origin"
 Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';"
 
 # Cache control for Playmat Studio
 # HTML — never cache (always fetch fresh so ?v= asset links are current)

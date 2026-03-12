@@ -3,6 +3,21 @@
 
     var _dbg = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
+    // Escape HTML special chars before inserting any user-derived string into innerHTML.
+    function escHtml(s) {
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // Sanitise a filename: keep alphanumerics, dots, dashes, underscores; cap at 128 chars.
+    function sanitizeFilename(name) {
+        return String(name).replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 128);
+    }
+
     // ============================================================
     // WORKER URLS — update these if workers are redeployed
     // CLOUDFLARE_WORKER_URL    — image upscaler (Replicate AI)
@@ -162,7 +177,7 @@
         const btnEl      = document.getElementById('app-alert-btn');
         const retryBtnEl = document.getElementById('app-alert-retry-btn');
         titleEl.innerText  = title;
-        textEl.innerHTML   = message;
+        textEl.textContent = message;
         if(type === 'error')        { titleEl.style.color = 'var(--danger-red)';   boxEl.style.borderColor = 'var(--danger-red)';   btnEl.style.background = 'var(--danger-red)'; }
         else if(type === 'success') { titleEl.style.color = 'var(--success-green)';boxEl.style.borderColor = 'var(--success-green)';btnEl.style.background = 'var(--success-green)';}
         else                        { titleEl.style.color = 'var(--brand-hover)';  boxEl.style.borderColor = 'var(--brand-hover)';  btnEl.style.background = 'var(--brand-hover)'; }
@@ -569,6 +584,7 @@
             setTimeout(function() { window.switchTab('quick-upload'); }, 0);
         }
         window.renderHostHistory();
+        window.initEventListeners();
     };
 
     // --- DPI CHECKER ---
@@ -1782,17 +1798,17 @@
                 card.style.cssText = 'background:rgba(0,0,0,0.3);border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);text-align:center;';
                 card.innerHTML =
                     '<img src="' + thumbUrl + '" style="width:100%;height:100px;object-fit:cover;display:block;">' +
-                    '<div style="padding:6px 6px 2px;font-size:10px;color:var(--brand-text-sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + outName + '">' + outName + '</div>' +
+                    '<div style="padding:6px 6px 2px;font-size:10px;color:var(--brand-text-sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + escHtml(outName) + '">' + escHtml(outName) + '</div>' +
                     '<div style="padding:2px 6px 6px;display:flex;justify-content:space-between;align-items:center;">' +
                     '<span style="font-size:10px;color:var(--success-green);font-weight:bold;">✓ ENHANCED</span>' +
-                    '<button onclick="window.downloadBatchSingle(' + idx + ')" style="background:none;border:none;color:var(--brand-hover);cursor:pointer;font-size:15px;padding:2px 4px;line-height:1;" title="Download this file">⬇</button>' +
+                    '<button data-dl-idx="' + idx + '" style="background:none;border:none;color:var(--brand-hover);cursor:pointer;font-size:15px;padding:2px 4px;line-height:1;" title="Download this file">⬇</button>' +
                     '</div>';
                 gridEl.appendChild(card);
             } catch(err) {
                 _dbg && console.error('Batch error for', file.name, err);
                 var errCard = document.createElement('div');
                 errCard.style.cssText = 'background:rgba(255,71,87,0.15);border-radius:6px;padding:10px;border:1px solid rgba(255,71,87,0.3);text-align:center;';
-                errCard.innerHTML = '<div style="font-size:10px;color:var(--danger-red);">✗ ' + file.name + '<br>Failed</div>';
+                errCard.innerHTML = '<div style="font-size:10px;color:var(--danger-red);">✗ ' + escHtml(file.name) + '<br>Failed</div>';
                 gridEl.appendChild(errCard);
             }
         }
@@ -1917,9 +1933,9 @@
                 card.style.cssText = 'background:rgba(0,0,0,0.3);border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);text-align:center;';
                 card.innerHTML =
                     '<img src="' + thumbUrl + '" style="width:100%;height:100px;object-fit:cover;display:block;">' +
-                    '<div style="padding:6px 6px 2px;font-size:10px;color:var(--brand-text-sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + outName + '">' + outName + '</div>' +
+                    '<div style="padding:6px 6px 2px;font-size:10px;color:var(--brand-text-sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + escHtml(outName) + '">' + escHtml(outName) + '</div>' +
                     '<div style="padding:2px 6px 6px;display:flex;justify-content:center;gap:4px;align-items:center;">' +
-                    '<span style="font-size:9px;background:rgba(255,255,255,0.15);padding:2px 5px;border-radius:3px;color:var(--brand-text-sec);">' + origExt + '</span>' +
+                    '<span style="font-size:9px;background:rgba(255,255,255,0.15);padding:2px 5px;border-radius:3px;color:var(--brand-text-sec);">' + escHtml(origExt) + '</span>' +
                     '<span style="font-size:9px;color:var(--brand-text-sec);">&#x2192;</span>' +
                     '<span style="font-size:9px;background:var(--brand-primary);padding:2px 5px;border-radius:3px;color:#fff;font-weight:bold;">' + fmt.label + '</span>' +
                     '</div>';
@@ -1928,7 +1944,7 @@
                 _dbg && console.error('Converter error for', file.name, err);
                 var errCard = document.createElement('div');
                 errCard.style.cssText = 'background:rgba(255,71,87,0.15);border-radius:6px;padding:10px;border:1px solid rgba(255,71,87,0.3);text-align:center;';
-                errCard.innerHTML = '<div style="font-size:10px;color:var(--danger-red);">✗ ' + file.name + '<br>Failed</div>';
+                errCard.innerHTML = '<div style="font-size:10px;color:var(--danger-red);">✗ ' + escHtml(file.name) + '<br>Failed</div>';
                 gridEl.appendChild(errCard);
             }
         }
@@ -2006,12 +2022,12 @@
     const HOST_STORAGE_KEY = 'ps_hosted_images';
 
     function getHostHistory() {
-        try { return JSON.parse(localStorage.getItem(HOST_STORAGE_KEY) || '[]'); }
+        try { return JSON.parse(sessionStorage.getItem(HOST_STORAGE_KEY) || '[]'); }
         catch { return []; }
     }
 
     function saveHostHistory(items) {
-        localStorage.setItem(HOST_STORAGE_KEY, JSON.stringify(items.slice(0, 20)));
+        sessionStorage.setItem(HOST_STORAGE_KEY, JSON.stringify(items.slice(0, 20)));
     }
 
     function setHostStatus(msg, color) {
@@ -2060,7 +2076,7 @@
                 url:        data.url,
                 id:         data.id,
                 expires:    data.expires,
-                name:       file.name,
+                name:       sanitizeFilename(file.name),
                 uploadedAt: new Date().toISOString(),
             });
             saveHostHistory(hist);
@@ -2112,11 +2128,11 @@
                 ? '<button class="action-btn btn-secondary host-hist-btn" onclick="window.copyHostHistItem(' + i + ')">COPY</button>'
                 : '';
             return '<div class="host-hist-item" style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:8px; margin-bottom:8px;">' +
-                '<img src="' + (expired ? '' : item.url) + '" alt="" style="width:48px; height:32px; object-fit:cover; border-radius:4px; background:rgba(255,255,255,0.05); flex-shrink:0;">' +
-                '<span style="flex:1; font-size:12px; color:#f0eeff; font-family:\'Rubik\',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + item.name + '">' + (item.name || 'Image') + '</span>' +
+                '<img src="' + (expired ? '' : escHtml(item.url)) + '" alt="" style="width:48px; height:32px; object-fit:cover; border-radius:4px; background:rgba(255,255,255,0.05); flex-shrink:0;">' +
+                '<span style="flex:1; font-size:12px; color:#f0eeff; font-family:\'Rubik\',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + escHtml(item.name) + '">' + escHtml(item.name || 'Image') + '</span>' +
                 '<span style="font-size:11px; flex-shrink:0;">' + expLabel + '</span>' +
-                copyBtn +
-                '<button class="action-btn btn-secondary host-hist-btn" onclick="window.removeHostHistItem(' + i + ')" title="Remove from history">&times;</button>' +
+                (!expired ? '<button class="action-btn btn-secondary host-hist-btn" data-copy-idx="' + i + '">COPY</button>' : '') +
+                '<button class="action-btn btn-secondary host-hist-btn" data-rm-idx="' + i + '" title="Remove from history">&times;</button>' +
                 '</div>';
         }).join('');
     };
@@ -2276,4 +2292,181 @@
         var orig = copyBtn.textContent;
         copyBtn.textContent = 'COPIED! \u2713';
         setTimeout(function() { copyBtn.textContent = orig; }, 1800);
+    };
+
+    // ============================================================
+    // EVENT LISTENERS — replaces all inline handlers from HTML
+    // ============================================================
+    window.initEventListeners = function() {
+        function on(id, evt, fn) { var el = document.getElementById(id); if (el) el.addEventListener(evt, fn); }
+        function hide(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; }
+
+        // ── Modals ──
+        on('app-alert-close-x',   'click', function() { hide('app-alert-modal'); });
+        on('app-alert-btn',       'click', function() { hide('app-alert-modal'); });
+        on('app-alert-retry-btn', 'click', function() { hide('app-alert-modal'); if (window._alertRetryFn) window._alertRetryFn(); });
+        on('dpi-help-btn',        'click', function() { window.openHelpModal(); });
+        on('dpi-understand-btn',  'click', function() { hide('dpi-warning-modal'); });
+        on('ai-warn-cancel-btn',  'click', function() { hide('ai-warning-modal'); });
+        on('ai-warn-proceed-btn', 'click', function() { window.runAutoFrameBreak(); });
+        on('ai-upscale-cancel-btn',  'click', function() { hide('ai-upscale-modal'); });
+        on('ai-upscale-proceed-btn', 'click', function() { window.runAutoUpscale(); });
+        on('ai-success-close-x',  'click', function() { hide('ai-success-modal'); });
+        on('ai-success-btn',      'click', function() { hide('ai-success-modal'); });
+        on('url-paste-close-x',   'click', function() { hide('url-paste-modal'); });
+        on('url-paste-submit',    'click', function() { window.submitUrlPaste(); });
+        on('help-close-x',        'click', function() { hide('help-modal'); });
+        on('bleed-back-btn',      'click', function() { window._closeBleedConfirm(); });
+        on('bleed-proceed-btn',   'click', function() { window._proceedDespiteBleed(); });
+        on('share-result-close',  'click', function() { hide('share-result-modal'); });
+        on('get-printed-close',   'click', function() { hide('get-printed-modal'); });
+        on('privacy-close-btn',   'click', function() { hide('privacy-modal'); });
+        on('footer-privacy-link', 'click', function(e) { e.preventDefault(); document.getElementById('privacy-modal').style.display = 'flex'; });
+        on('privacy-contact-link','click', function() { hide('privacy-modal'); });
+
+        // ── Mat size buttons ──
+        document.querySelectorAll('.mat-size-btn[data-size]').forEach(function(btn) {
+            btn.addEventListener('click', function() { window.selectMatSize(this.dataset.size, this); });
+        });
+
+        // ── Tab buttons ──
+        document.querySelectorAll('.tool-tab-btn[data-tab]').forEach(function(btn) {
+            btn.addEventListener('click', function() { window.switchTab(this.dataset.tab); });
+        });
+
+        // ── Accordion buttons ──
+        document.querySelectorAll('.acc-btn[data-acc]').forEach(function(btn) {
+            btn.addEventListener('click', function() { window.toggleAcc(this.dataset.acc); });
+        });
+
+        // ── Drop zones ──
+        function setupDropZone(zoneId, fileInputId, handlerFn) {
+            var zone = document.getElementById(zoneId);
+            if (!zone) return;
+            zone.addEventListener('dragover',  function(e) { e.preventDefault(); this.classList.add('dz-hover'); });
+            zone.addEventListener('dragleave', function()  { this.classList.remove('dz-hover'); });
+            zone.addEventListener('drop',      function(e) { e.preventDefault(); this.classList.remove('dz-hover'); handlerFn(e.dataTransfer.files); });
+            zone.addEventListener('click',     function()  { document.getElementById(fileInputId).click(); });
+        }
+        setupDropZone('batch-drop-zone',    'batch-file-in',     window.handleBatchFiles);
+        setupDropZone('converter-drop-zone','converter-file-in', window.handleConverterFiles);
+        setupDropZone('host-drop-zone',     'host-file-in',      window.handleHostUpload);
+
+        // ── File inputs ──
+        on('batch-file-in',     'change', function() { window.handleBatchFiles(this.files); });
+        on('converter-file-in', 'change', function() { window.handleConverterFiles(this.files); });
+        on('host-file-in',      'change', function() { window.handleHostUpload(this.files); });
+        on('simple-file-in',    'change', function() { window.handleSimpleUpload(this); });
+        on('adv-file-in',       'change', function() { window.handleUpload(this); });
+
+        // ── Batch / Converter controls ──
+        on('batch-clear-btn',        'click', function() { window.clearBatch(); });
+        on('converter-download-btn', 'click', function() { window.downloadConverted(); });
+        on('converter-clear-btn',    'click', function() { window.clearConverter(); });
+
+        // Event delegation for dynamically generated batch download buttons
+        var batchGrid = document.getElementById('batch-preview-grid');
+        if (batchGrid) {
+            batchGrid.addEventListener('click', function(e) {
+                var btn = e.target.closest('[data-dl-idx]');
+                if (btn) window.downloadBatchSingle(parseInt(btn.dataset.dlIdx, 10));
+            });
+        }
+
+        // ── Image Host controls ──
+        on('host-copy-btn',           'click', function() { window.copyHostUrl(); });
+        on('host-upload-another-btn', 'click', function() { window.resetHostPanel(); });
+        on('host-clear-history-btn',  'click', function() { window.clearHostHistory(); });
+
+        // Event delegation for dynamically generated host history buttons
+        var histList = document.getElementById('host-history-list');
+        if (histList) {
+            histList.addEventListener('click', function(e) {
+                var btn = e.target.closest('[data-copy-idx]');
+                if (btn) { window.copyHostHistItem(parseInt(btn.dataset.copyIdx, 10)); return; }
+                btn = e.target.closest('[data-rm-idx]');
+                if (btn) window.removeHostHistItem(parseInt(btn.dataset.rmIdx, 10));
+            });
+        }
+
+        // ── Simple editor ──
+        on('s-restart-btn',    'click', function() { window.restartApp(); });
+        on('s-fs-toggle-btn',  'click', function() { window.toggleSimpleFullScreen(); });
+        on('s-upload-file-btn','click', function() { document.getElementById('simple-file-in').click(); });
+        on('s-paste-url-btn',  'click', function() { window.promptPasteUrl(); });
+        on('s-zoom-in',        'input', function() { window.handleSimpleZoom(this.value); });
+        on('s-rotate-btn',     'click', function() { window.rotateSimpleArt(); });
+        on('s-fit-btn',        'click', function() { window.forceSimpleFit(); });
+        on('s-btn-enhance',    'click', function() { window.toggleSimpleFilter('enhance'); });
+        on('s-btn-grayscale',  'click', function() { window.toggleSimpleFilter('grayscale'); });
+        on('s-guides-btn',     'click', function() { window.toggleSimpleGuides(); });
+        on('s-game-sel',       'change', function() { window.filterSimpleFormats(); });
+        on('s-format-sel',     'change', function() { window.filterSimpleHands(); });
+        on('s-hand-sel',       'change', function() { window.applySimpleLayout(); });
+        on('s-rb-points-sel',  'change', function() { window.changeRbPoints(); });
+        on('s-col',            'input',  function() { window.renderSimpleLayout(); });
+        on('simple-print-btn', 'click', function() { window.openGetPrinted('simple'); });
+        on('simple-atc',       'click', function() { window.downloadDesign('simple'); });
+        on('simple-share-btn', 'click', function() { window.shareDesign('simple'); });
+
+        // ── Advanced editor ──
+        on('adv-restart-btn',    'click', function() { window.restartApp(); });
+        on('fs-toggle-btn',      'click', function() { window.toggleFullScreen(); });
+        on('adv-upload-file-btn','click', function() { window.triggerUpload(); });
+        on('adv-paste-url-btn',  'click', function() { window.promptPasteUrl(); });
+        on('ai-upscale-btn-adv', 'click', function() { window.confirmAutoUpscale(true); });
+        on('bg-color-picker',    'input', function() { window.syncHex('bg-color-picker','bg-color-hex'); window.setSolidBackground(this.value); });
+        on('bg-color-hex',       'input', function() { window.syncColor('bg-color-hex','bg-color-picker'); window.setSolidBackground(document.getElementById('bg-color-picker').value); });
+        on('game-sel',           'change', function() { window.filterFormats(); });
+        on('format-sel',         'change', function() { window.filterHands(); });
+        on('hand-sel',           'change', function() { window.applyFinalLayout(); });
+        on('rb-points-sel',      'change', function() { window.changeRbPoints(); });
+        on('mode-sel',           'change', function() { window.renderLayout(); });
+        on('col-1',              'input',  function() { window.syncHex('col-1','col-1-hex'); window.renderLayout(); });
+        on('col-1-hex',          'input',  function() { window.syncColor('col-1-hex','col-1'); window.renderLayout(); });
+        on('col-2-trans',        'change', function() { window.renderLayout(); });
+        on('col-2',              'input',  function() { window.syncHex('col-2','col-2-hex'); window.renderLayout(); });
+        on('col-2-hex',          'input',  function() { window.syncColor('col-2-hex','col-2'); window.renderLayout(); });
+        on('angle-in',           'input',  function() { window.renderLayout(); });
+        on('op-in',              'input',  function() { window.updateOpacity(); });
+        on('ai-fb-btn',          'click',  function() { window.confirmAutoFrameBreak(); });
+        on('ai-fb-clear-btn',    'click',  function() { window.clearAutoFrameBreak(); });
+        on('mask-toggle-btn',    'click',  function() { window.toggleMaskMode(); });
+        on('brush-size',         'input',  function() { window.updateCursorStyle(); });
+        on('mask-undo-btn',      'click',  function() { window.undoMask(); });
+        on('mask-reset-btn',     'click',  function() { window.resetMask(); });
+        on('recolor-toggle-btn', 'click',  function() { window.toggleRecolorMode(); });
+        on('recolor-size',       'input',  function() { window.updateRecolorBrush(); });
+        on('recolor-color',      'input',  function() { window.updateRecolorBrush(); });
+        on('recolor-undo-btn',   'click',  function() { window.undoRecolor(); });
+        on('recolor-reset-btn',  'click',  function() { window.resetRecolor(); });
+        on('filter-brightness',  'input',  function() { window.updateFilters(); });
+        on('filter-contrast',    'input',  function() { window.updateFilters(); });
+        on('filter-saturation',  'input',  function() { window.updateFilters(); });
+        on('auto-opt-btn-adv',   'click',  function() { window.autoOptimizePrintAdv(); });
+        on('adv-reset-colors-btn','click', function() { window.resetFilters(); });
+        on('adv-guides-btn',     'click',  function() { window.toggleAdvGuides(); });
+        on('zoom-in',            'input',  function() { window.handleZoom(this.value); });
+        on('adv-reset-scale-btn','click',  function() { window.forceFit(); });
+        on('adv-font-family',    'change', function() { window.updateAdvTextAttr('fontFamily', this.value); });
+        on('adv-text-size-in',   'input',  function() { window.updateAdvTextAttr('fontSize', parseInt(this.value, 10)); });
+        on('adv-text-col',       'input',  function() { window.updateAdvTextAttr('fill', this.value); });
+        on('adv-text-stroke',    'input',  function() { window.updateAdvTextAttr('stroke', this.value); });
+        on('adv-add-text-btn',   'click',  function() { window.addAdvText(); });
+        on('adv-delete-btn',     'click',  function() { window.removeAdvActive(); });
+        on('adv-rotate-btn',     'click',  function() { window.transformActive('rotate'); });
+        on('adv-flipx-btn',      'click',  function() { window.transformActive('flipX'); });
+        on('adv-flipy-btn',      'click',  function() { window.transformActive('flipY'); });
+        on('transform-rotation', 'input',  function() { window.transformActive('angle', this.value); });
+        on('adv-reset-rotation-btn','click',function() { window.transformActive('angle', 0); });
+        on('sidebar-print-btn',  'click',  function() { window.openGetPrinted('adv'); });
+        on('sidebar-atc',        'click',  function() { window.downloadDesign('adv'); });
+        on('sidebar-share-btn',  'click',  function() { window.shareDesign('adv'); });
+        on('ws-zoom-in-btn',     'click',  function() { window.workspaceZoom(0.1); });
+        on('ws-zoom-out-btn',    'click',  function() { window.workspaceZoom(-0.1); });
+        on('ws-zoom-reset-btn',  'click',  function() { window.workspaceZoom(0); });
+
+        // ── Share / Get Printed modals ──
+        on('share-copy-btn', 'click', function() { window.copyShareUrl(); });
+        on('print-copy-btn', 'click', function() { window.copyPrintUrl(); });
     };
