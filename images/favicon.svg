@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38">
+	<!-- Background -->
+	<rect width="38" height="38" rx="6" fill="#1a0f2e"/>
+	<!-- Outer mat border -->
+	<rect x="1.5" y="7.5" width="35" height="23" rx="5" ry="5" fill="none" stroke="white" stroke-width="2.5"/>
+	<!-- Inner zone line -->
+	<rect x="6" y="12" width="26" height="14" rx="3" ry="3" fill="none" stroke="white" stroke-width="1.5" opacity="0.6"/>
+	<!-- Center marker -->
+	<circle cx="19" cy="19" r="2.5" fill="white" opacity="0.9"/>
+	<line x1="19" y1="15.5" x2="19" y2="22.5" stroke="white" stroke-width="1" opacity="0.35"/>
+	<line x1="15.5" y1="19" x2="22.5" y2="19" stroke="white" stroke-width="1" opacity="0.35"/>
+</svg>

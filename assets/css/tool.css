@@ -362,6 +362,13 @@
         .action-row-3 .action-btn { flex-direction: row !important; height: 48px !important; font-size: 15px !important; padding: 10px 14px !important; letter-spacing: 0.8px !important; white-space: nowrap !important; gap: 7px !important; min-height: unset !important; }
         /* Hide the flex-grow spacer so action buttons appear right after accordions */
         .sidebar-spacer { display: none !important; }
+        /* iOS: prevent auto-zoom on select/input focus (requires font-size >= 16px) */
+        .ui-select, input[type="text"], input[type="email"], input[type="number"],
+        input[type="url"], textarea { font-size: 16px !important; }
+        /* Zoom toolbar — minimum 44px touch targets on touch screens */
+        #zoom-toolbar button { min-width: 44px !important; min-height: 44px !important; }
+        /* Canvas info bar — slightly larger on mobile for readability */
+        #adv-info-bar { font-size: 11px !important; }
     }
     @media (hover: none) and (pointer: coarse) { #brush-cursor { display: none !important; } }
     
