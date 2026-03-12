@@ -19,11 +19,12 @@
 <script>
 		(function(){
 			var v=Date.now();
-			document.write(
-				'<link rel="stylesheet" href="assets/css/main.css?v='+v+'">'
-				+'<link rel="stylesheet" href="assets/css/custom.css?v='+v+'">'
-				+'<link rel="stylesheet" href="assets/css/tool.css?v='+v+'">'
-			);
+			['main','custom','tool'].forEach(function(n){
+				var l=document.createElement('link');
+				l.rel='stylesheet';
+				l.href='assets/css/'+n+'.css?v='+v;
+				document.head.appendChild(l);
+			});
 		})();
 		</script>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>

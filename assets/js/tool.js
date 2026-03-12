@@ -1,6 +1,8 @@
     fabric.Object.prototype.objectCaching = false;
     fabric.textureSize = 16384;
 
+    var _dbg = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
     // ============================================================
     // WORKER URLS — update these if workers are redeployed
     // CLOUDFLARE_WORKER_URL    — image upscaler (Replicate AI)
@@ -721,7 +723,8 @@
             while (!['succeeded','failed','canceled'].includes(prediction.status)) {
                 if (attempts++ > 30) throw new Error('AI Server timed out.');
                 await new Promise(r => setTimeout(r, 2000));
-                const pollRes = await fetch(`${window.CLOUDFLARE_WORKER_URL}?id=${prediction.id}`);
+                const _u1 = new URL(window.CLOUDFLARE_WORKER_URL); _u1.searchParams.set('id', prediction.id);
+                const pollRes = await fetch(_u1);
                 if (!pollRes.ok) throw new Error('Failed to poll AI status.');
                 prediction = await pollRes.json();
             }
@@ -757,7 +760,7 @@
             }, { crossOrigin: 'anonymous' });
 
         } catch (err) {
-            console.error('Upscale Error:', err);
+            _dbg && console.error('Upscale Error:', err);
             window.showAppAlert("Enhancement Failed", "An unexpected error occurred. Please contact support if this continues.", "error");
             btn.innerHTML = '✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>'; btn.disabled = false;
         }
@@ -1028,7 +1031,7 @@
                 if (isError) {
                     const fb = new Image();
                     fb.onload = () => { window.rbPointsImg = fb; isAdv ? window.renderLayout() : window.renderSimpleLayout(); };
-                    fb.onerror = () => console.error('Failed to load points overlay:', url);
+                    fb.onerror = () => _dbg && console.error('Failed to load points overlay:', url);
                     fb.src = url;
                     return;
                 }
@@ -1119,7 +1122,8 @@
             while (!['succeeded','failed','canceled'].includes(prediction.status)) {
                 if (attempts++ > 30) throw new Error('AI Server timed out.');
                 await new Promise(r => setTimeout(r,2000));
-                const pollRes = await fetch(`${window.CLOUDFLARE_BG_WORKER_URL}?id=${prediction.id}`);
+                const _u2 = new URL(window.CLOUDFLARE_BG_WORKER_URL); _u2.searchParams.set('id', prediction.id);
+                const pollRes = await fetch(_u2);
                 if (!pollRes.ok) throw new Error('Failed to poll AI status.');
                 prediction = await pollRes.json();
             }
@@ -1135,13 +1139,13 @@
             fgImg.onerror = () => {
                 // onerror fires in a callback — can't throw into the outer try/catch,
                 // so handle the failure directly here instead.
-                console.error('Failed to load extracted foreground image.');
+                _dbg && console.error('Failed to load extracted foreground image.');
                 window.showAppAlert("Frame Break Failed", "The AI extracted the subject but the result could not be loaded. Please try again.", "error");
                 btn.innerHTML='✨ AUTO FRAME BREAK<br><span style="font-size:10px;font-weight:normal;">(experimental)</span>'; btn.disabled=false;
             };
             fgImg.src = prediction.output;
         } catch(err) {
-            console.error(err);
+            _dbg && console.error(err);
             window.showAppAlert("Frame Break Failed", "An unexpected error occurred. Please try again or contact support.", "error");
             btn.innerHTML='✨ AUTO FRAME BREAK<br><span style="font-size:10px;font-weight:normal;">(experimental)</span>'; btn.disabled=false;
         }
@@ -1240,10 +1244,10 @@
             fabric.Image.fromURL(APP.activeLayoutUrl, (fabricImg, isError) => {
                 if (isError) {
                     // CORS failed — retry without crossOrigin (recolor mask will be unavailable)
-                    console.warn('Layout image CORS load failed, retrying without crossOrigin:', APP.activeLayoutUrl);
+                    _dbg && console.warn('Layout image CORS load failed, retrying without crossOrigin:', APP.activeLayoutUrl);
                     const fallbackImg = new Image();
                     fallbackImg.onload = () => { APP.cachedLayoutImg = fallbackImg; APP.cachedLayoutUrl = APP.activeLayoutUrl; drawFn(fallbackImg); };
-                    fallbackImg.onerror = () => { console.error('Failed to load layout image:', APP.activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "The game zone image could not be loaded. Please check your R2 bucket has CORS enabled, or try again.", "error"); };
+                    fallbackImg.onerror = () => { _dbg && console.error('Failed to load layout image:', APP.activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "The game zone image could not be loaded. Please check your R2 bucket has CORS enabled, or try again.", "error"); };
                     fallbackImg.src = APP.activeLayoutUrl;
                     return;
                 }
@@ -1612,10 +1616,10 @@
             fabric.Image.fromURL(APP.s_activeLayoutUrl, (fabricImg, isError) => {
                 if (isError) {
                     // CORS failed — retry without crossOrigin
-                    console.warn('Simple layout image CORS load failed, retrying without crossOrigin:', APP.s_activeLayoutUrl);
+                    _dbg && console.warn('Simple layout image CORS load failed, retrying without crossOrigin:', APP.s_activeLayoutUrl);
                     const fallbackImg = new Image();
                     fallbackImg.onload = () => { APP.s_cachedLayoutImg = fallbackImg; lCanvas.dataset.lastUrl = APP.s_activeLayoutUrl; drawFn(fallbackImg); };
-                    fallbackImg.onerror = () => { console.error('Failed to load simple layout image:', APP.s_activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "The game zone image could not be loaded. Please check your R2 bucket has CORS enabled, or try again.", "error"); };
+                    fallbackImg.onerror = () => { _dbg && console.error('Failed to load simple layout image:', APP.s_activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "The game zone image could not be loaded. Please check your R2 bucket has CORS enabled, or try again.", "error"); };
                     fallbackImg.src = APP.s_activeLayoutUrl;
                     return;
                 }
@@ -1673,7 +1677,7 @@
                 btn.disabled = false;
             }, 2500);
         } catch(err) {
-            console.error(err);
+            _dbg && console.error(err);
             window.showAppAlert("Download Error", err.message || "An error occurred. Please try again.", "error");
             btn.innerText = origText; btn.style.background = 'var(--brand-primary)'; btn.disabled = false;
         }
@@ -1785,7 +1789,7 @@
                     '</div>';
                 gridEl.appendChild(card);
             } catch(err) {
-                console.error('Batch error for', file.name, err);
+                _dbg && console.error('Batch error for', file.name, err);
                 var errCard = document.createElement('div');
                 errCard.style.cssText = 'background:rgba(255,71,87,0.15);border-radius:6px;padding:10px;border:1px solid rgba(255,71,87,0.3);text-align:center;';
                 errCard.innerHTML = '<div style="font-size:10px;color:var(--danger-red);">✗ ' + file.name + '<br>Failed</div>';
@@ -1860,7 +1864,7 @@
             btn.textContent = 'DOWNLOADED! ✓'; btn.style.background = 'var(--success-green)';
             setTimeout(function() { btn.textContent = origLabel; btn.style.background = ''; btn.disabled = false; }, 2500);
         } catch(err) {
-            console.error(err);
+            _dbg && console.error(err);
             window.showAppAlert("ZIP Error", "Failed to create ZIP. Please try again.", "error");
             btn.textContent = origLabel; btn.disabled = false;
         }
@@ -1921,7 +1925,7 @@
                     '</div>';
                 gridEl.appendChild(card);
             } catch(err) {
-                console.error('Converter error for', file.name, err);
+                _dbg && console.error('Converter error for', file.name, err);
                 var errCard = document.createElement('div');
                 errCard.style.cssText = 'background:rgba(255,71,87,0.15);border-radius:6px;padding:10px;border:1px solid rgba(255,71,87,0.3);text-align:center;';
                 errCard.innerHTML = '<div style="font-size:10px;color:var(--danger-red);">✗ ' + file.name + '<br>Failed</div>';
@@ -1990,7 +1994,7 @@
             btn.innerText = 'DOWNLOADED! ✓'; btn.style.background = 'var(--success-green)';
             setTimeout(function() { btn.innerText = origText; btn.style.background = ''; btn.disabled = false; }, 2500);
         } catch(err) {
-            console.error(err);
+            _dbg && console.error(err);
             window.showAppAlert("Download Error", "Failed to download. Please try again.", "error");
             btn.innerText = origText; btn.disabled = false;
         }
