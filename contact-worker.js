@@ -5,7 +5,6 @@
  * Environment variable required:
  *   RESEND_API_KEY  — set in Cloudflare dashboard → Workers → Settings → Variables
  *
- * The API key below is the default fallback only; use the env var in production.
  */
 
 const TO_EMAIL   = 'support@rubicongamesupplies.com';
@@ -67,7 +66,8 @@ export default {
       return json({ error: 'Invalid email address' }, 400, origin);
     }
 
-    const apiKey = env.RESEND_API_KEY ?? 're_PVNYdB3i_3mhFGFE4a2UXw1a9kFfij9oz';
+    const apiKey = env.RESEND_API_KEY;
+    if (!apiKey) return json({ error: 'Mail service not configured' }, 503, origin);
 
     const resendPayload = {
       from:     FROM_EMAIL,
