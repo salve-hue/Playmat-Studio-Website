@@ -555,8 +555,19 @@
         document.getElementById('designer-visibility-wrapper').style.display = '';
         window.updateInfoBars(null);
         window.populateGameDropdowns();
-        // Auto-open the Quick Upload tab so the canvas is ready immediately
-        setTimeout(function() { window.switchTab('quick-upload'); }, 0);
+        // Auto-open the Quick Upload tab so the canvas is ready immediately,
+        // unless the page was loaded with #upload hash (Etsy customer link).
+        if (window.location.hash === '#upload') {
+            setTimeout(function() {
+                window.switchTab('host');
+                var toolsSection = document.getElementById('tools');
+                if (toolsSection) { toolsSection.scrollIntoView({ behavior: 'smooth' }); }
+                var banner = document.getElementById('upload-customer-banner');
+                if (banner) { banner.style.display = 'block'; }
+            }, 0);
+        } else {
+            setTimeout(function() { window.switchTab('quick-upload'); }, 0);
+        }
         window.renderHostHistory();
     };
 
