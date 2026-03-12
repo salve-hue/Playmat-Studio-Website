@@ -30,18 +30,26 @@ const EXT_MAP = {
     'image/bmp':  'bmp',
 };
 
-function cors() {
+const ALLOWED_ORIGINS = [
+    'https://playmatstudio.com',
+    'https://www.playmatstudio.com',
+];
+
+function cors(request) {
+    const origin = (request && request.headers.get('Origin')) || '';
+    const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
     return {
-        'Access-Control-Allow-Origin':  '*',
+        'Access-Control-Allow-Origin':  allowedOrigin,
         'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
+        'Vary': 'Origin',
     };
 }
 
-function json(data, status = 200) {
+function json(data, status = 200, request = null) {
     return new Response(JSON.stringify(data), {
         status,
-        headers: { 'Content-Type': 'application/json', ...cors() },
+        headers: { 'Content-Type': 'application/json', ...cors(request) },
     });
 }
 
@@ -58,7 +66,7 @@ export default {
         const path = new URL(request.url).pathname;
 
         if (method === 'OPTIONS') {
-            return new Response(null, { status: 204, headers: cors() });
+            return new Response(null, { status: 204, headers: cors(request) });
         }
 
         if (method === 'POST') {
@@ -66,36 +74,36 @@ export default {
         }
 
         if (method === 'GET' && path.length > 1) {
-            return handleServe(path.slice(1), env);
+            return handleServe(path.slice(1), env, request);
         }
 
         if (method === 'DELETE' && path.length > 1) {
             await env.BUCKET1.delete(PREFIX + path.slice(1));
-            return json({ ok: true });
+            return json({ ok: true }, 200, request);
         }
 
-        return json({ error: 'Not found' }, 404);
+        return json({ error: 'Not found' }, 404, request);
     },
 };
 
 async function handleUpload(request, env) {
     let form;
     try { form = await request.formData(); }
-    catch { return json({ error: 'Invalid form data' }, 400); }
+    catch { return json({ error: 'Invalid form data' }, 400, request); }
 
     const file = form.get('file') || form.get('image');
     if (!file || typeof file === 'string') {
-        return json({ error: 'No file provided. Use field name "file".' }, 400);
+        return json({ error: 'No file provided. Use field name "file".' }, 400, request);
     }
 
     const mime = file.type || '';
     if (!ALLOWED_TYPES.has(mime)) {
-        return json({ error: 'Unsupported type: ' + mime + '. Allowed: JPG, PNG, WEBP, GIF, AVIF, TIFF, BMP.' }, 400);
+        return json({ error: 'Unsupported type: ' + mime + '. Allowed: JPG, PNG, WEBP, GIF, AVIF, TIFF, BMP.' }, 400, request);
     }
 
     const buf = await file.arrayBuffer();
     if (buf.byteLength > MAX_SIZE) {
-        return json({ error: 'File exceeds the 50 MB limit.' }, 413);
+        return json({ error: 'File exceeds the 50 MB limit.' }, 413, request);
     }
 
     const ext       = EXT_MAP[mime] || 'bin';
@@ -110,21 +118,21 @@ async function handleUpload(request, env) {
     });
 
     const fileUrl = new URL('/' + id, request.url).href;
-    return json({ ok: true, url: fileUrl, id, expires: expiresAt });
+    return json({ ok: true, url: fileUrl, id, expires: expiresAt }, 200, request);
 }
 
-async function handleServe(id, env) {
+async function handleServe(id, env, request) {
     if (!/^[\w.-]{1,80}$/.test(id)) {
-        return json({ error: 'Invalid file id' }, 400);
+        return json({ error: 'Invalid file id' }, 400, request);
     }
 
     const obj = await env.BUCKET1.get(PREFIX + id);
-    if (!obj) return json({ error: 'File not found' }, 404);
+    if (!obj) return json({ error: 'File not found' }, 404, request);
 
     const { uploadedAt } = obj.customMetadata || {};
     if (uploadedAt && Date.now() - new Date(uploadedAt).getTime() > TTL_MS) {
         await env.BUCKET1.delete(PREFIX + id);
-        return json({ error: 'This file has expired and been deleted.' }, 410);
+        return json({ error: 'This file has expired and been deleted.' }, 410, request);
     }
 
     const expires = uploadedAt
@@ -136,7 +144,7 @@ async function handleServe(id, env) {
             'Content-Type':  obj.httpMetadata?.contentType || 'application/octet-stream',
             'Cache-Control': 'public, max-age=3600',
             ...(expires ? { 'Expires': expires } : {}),
-            ...cors(),
+            ...cors(request),
         },
     });
 }

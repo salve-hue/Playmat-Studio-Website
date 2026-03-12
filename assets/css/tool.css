@@ -507,4 +507,8 @@
         flex-wrap: wrap;
     }
     .ps-tool-controls .ps-panel-label { margin: 0; white-space: nowrap; }
+
+    /* Modal close buttons — hover state (replaces inline onmouseover/onmouseout) */
+    #share-result-close:hover,
+    #get-printed-close:hover { color: #fff !important; }
 </style>
