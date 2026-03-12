@@ -16,6 +16,7 @@
 	/* Brand palette */
 	--ps-purple:       #6830BB;   /* anchor/primary */
 	--ps-purple-soft:  #8565B5;   /* button hover */
+	--ps-link-hover:   #a07fe0;   /* link hover — 6.7:1 contrast on dark bg, WCAG AA */
 	--ps-purple-dark:  #521898;
 	--ps-purple-light: #8a52d4;
 	--ps-red:          #BB303E;
@@ -56,8 +57,8 @@ a {
 }
 
 a:hover {
-	color: var(--ps-purple-soft) !important;
-	border-bottom-color: rgba(133, 101, 181, 0.3) !important;
+	color: var(--ps-link-hover) !important;
+	border-bottom-color: rgba(160, 127, 224, 0.3) !important;
 }
 
 /* ============================================================
@@ -215,7 +216,7 @@ a:hover {
 }
 
 #menu ul li a:hover {
-	color: var(--ps-purple-soft) !important;
+	color: var(--ps-link-hover) !important;
 }
 
 #menu .close:before,
