@@ -325,7 +325,7 @@
 
     /* ── THREE-BUTTON ACTION ROW (GET PRINTED | DOWNLOAD | SHARE) ── */
     .action-row-3 { display: flex; gap: 8px; margin-bottom: 10px; }
-    .action-row-3 .action-btn { height: auto !important; min-height: 48px; padding: 8px 4px !important; font-size: 11px !important; letter-spacing: 0.3px !important; flex-direction: column !important; gap: 3px !important; white-space: normal !important; line-height: 1.2 !important; }
+    .action-row-3 .action-btn { height: auto !important; min-height: 48px; padding: 8px 4px !important; font-size: 13px !important; letter-spacing: 0.3px !important; flex-direction: column !important; gap: 3px !important; white-space: normal !important; line-height: 1.2 !important; }
     /* Advanced editor sidebar: stack buttons vertically at full width */
     #sidebar .action-row-3 { flex-direction: column; gap: 6px; }
     #sidebar .action-row-3 .action-btn { flex-direction: row !important; height: 44px !important; font-size: 13px !important; padding: 10px 14px !important; letter-spacing: 0.8px !important; white-space: nowrap !important; gap: 7px !important; min-height: unset !important; flex: none !important; width: 100% !important; }
