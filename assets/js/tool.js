@@ -449,7 +449,7 @@
         const sizeGames = sizeName
             ? new Set(LAYOUT_RAW.filter(i => i.size === sizeName).map(i => i.game))
             : new Set(); // no overlays for this size yet — all grayed out
-        const unavailLabel = sizeName ? ' — Standard only' : ' — Playmat only';
+        const unavailLabel = sizeName ? ' — Standard size only' : ' — Standard size only';
         ['s-game-sel', 'game-sel'].forEach(id => {
             const el = document.getElementById(id); if (!el) return;
             const prev = el.value;
@@ -999,7 +999,7 @@
     window.resetRecolor = () => { window.rCanvas.clear(); };
 
     window.addAdvText = () => {
-        const t = new fabric.IText("Double Click", { left:APP.canvasW/2, top:APP.canvasH/2, originX:'center', originY:'center', fill:'#ffffff', stroke:'#000000', strokeWidth:2, fontSize:40, fontFamily:'Rubik' });
+        const t = new fabric.IText("Double Click", { left:APP.canvasW/2, top:APP.canvasH/2, originX:'center', originY:'center', fill:'#ffffff', stroke:'#000000', strokeWidth:2, fontSize:40, fontFamily:'Plus Jakarta Sans' });
         window.canvas.add(t); window.canvas.bringToFront(t); window.canvas.setActiveObject(t); window.canvas.renderAll();
     };
 
@@ -1007,7 +1007,7 @@
         window.syncTransformUI();
         if (e.selected && e.selected[0].type==='i-text') {
             document.getElementById('adv-text-tools').classList.remove('hidden-field');
-            document.getElementById('adv-font-family').value    = e.selected[0].fontFamily||'Rubik';
+            document.getElementById('adv-font-family').value    = e.selected[0].fontFamily||'Plus Jakarta Sans';
             document.getElementById('adv-text-size-in').value   = e.selected[0].fontSize||40;
             document.getElementById('adv-text-col').value       = e.selected[0].fill||'#ffffff';
             document.getElementById('adv-text-stroke').value    = e.selected[0].stroke||'#000000';
@@ -2129,7 +2129,7 @@
                 : '';
             return '<div class="host-hist-item" style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:8px; margin-bottom:8px;">' +
                 '<img src="' + (expired ? '' : escHtml(item.url)) + '" alt="" style="width:48px; height:32px; object-fit:cover; border-radius:4px; background:rgba(255,255,255,0.05); flex-shrink:0;">' +
-                '<span style="flex:1; font-size:12px; color:#f0eeff; font-family:\'Rubik\',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + escHtml(item.name) + '">' + escHtml(item.name || 'Image') + '</span>' +
+                '<span style="flex:1; font-size:12px; color:#f0eeff; font-family:\'Plus Jakarta Sans\',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + escHtml(item.name) + '">' + escHtml(item.name || 'Image') + '</span>' +
                 '<span style="font-size:11px; flex-shrink:0;">' + expLabel + '</span>' +
                 (!expired ? '<button class="action-btn btn-secondary host-hist-btn" data-copy-idx="' + i + '">COPY</button>' : '') +
                 '<button class="action-btn btn-secondary host-hist-btn" data-rm-idx="' + i + '" title="Remove from history">&times;</button>' +
