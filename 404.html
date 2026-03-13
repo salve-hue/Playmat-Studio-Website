@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>404 — Page Not Found | Playmat Studio</title>
+	<link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+	<link rel="apple-touch-icon" href="images/favicon.svg" />
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap');
+		@font-face {
+			font-family: 'Under Subway';
+			src: url('assets/Under Subway.ttf') format('truetype');
+			font-weight: normal;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+		body {
+			background-color: #0b0912;
+			color: #f0eeff;
+			font-family: 'Rubik', sans-serif;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			padding: 2em;
+		}
+
+		.logo-link {
+			display: flex;
+			align-items: center;
+			gap: 0.65em;
+			text-decoration: none;
+			color: #f0eeff;
+			margin-bottom: 3em;
+		}
+
+		.logo-link img {
+			width: 2.5em;
+			height: 2.5em;
+		}
+
+		.logo-link span {
+			font-family: 'Under Subway', 'Rubik', sans-serif;
+			font-weight: normal;
+			font-size: 1.2em;
+			letter-spacing: 0.05em;
+		}
+
+		.error-code {
+			font-size: clamp(6rem, 20vw, 10rem);
+			font-weight: 900;
+			line-height: 1;
+			color: #6830BB;
+			letter-spacing: -0.02em;
+		}
+
+		h1 {
+			font-size: 1.5rem;
+			font-weight: 700;
+			margin: 0.5em 0;
+			letter-spacing: 0.05em;
+			text-transform: uppercase;
+			color: #f0eeff;
+		}
+
+		p {
+			color: #9888c0;
+			font-size: 1rem;
+			line-height: 1.6;
+			max-width: 36em;
+			margin: 0 auto 2em;
+		}
+
+		.home-btn {
+			display: inline-block;
+			background-color: #6830BB;
+			color: #fff;
+			text-decoration: none;
+			font-weight: 700;
+			font-size: 0.9rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			padding: 0.85em 2em;
+			border-radius: 6px;
+			transition: background 0.2s;
+		}
+
+		.home-btn:hover {
+			background-color: #521898;
+		}
+	</style>
+</head>
+<body>
+	<a href="/" class="logo-link">
+		<img src="images/logo.svg" alt="Playmat Studio logo" />
+		<span>Playmat Studio</span>
+	</a>
+
+	<div class="error-code">404</div>
+	<h1>Page Not Found</h1>
+	<p>The page you're looking for doesn't exist or may have moved. Head back to the homepage to get started.</p>
+	<a href="/" class="home-btn">Back to Home</a>
+</body>
+</html>
