@@ -888,7 +888,7 @@ a:hover {
 @media screen and (max-width: 736px) {
 	/* ── HEADER: shrink logo back to single line ── */
 	#header .logo .title {
-		font-size: 0.85em !important;
+		font-size: 0.935em !important;
 		white-space: nowrap !important;
 	}
 	#header .logo .symbol img {
