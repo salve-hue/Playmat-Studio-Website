@@ -686,6 +686,33 @@ a:hover {
 	text-transform: none !important;
 }
 
+#footer .logo {
+	display: flex !important;
+	align-items: center !important;
+	border-bottom: 0 !important;
+	text-decoration: none !important;
+	margin-bottom: 0 !important;
+}
+
+#footer .logo .symbol {
+	margin-right: 0.65em !important;
+	display: flex !important;
+	align-items: center !important;
+}
+
+#footer .logo .symbol img {
+	display: block !important;
+	width: 2.5em !important;
+	height: 2.5em !important;
+}
+
+#footer .logo .title {
+	color: var(--ps-text) !important;
+	font-family: 'Under Subway', 'Plus Jakarta Sans', sans-serif !important;
+	font-weight: normal !important;
+	letter-spacing: 0.05em !important;
+}
+
 #footer p {
 	color: var(--ps-text-muted) !important;
 	font-size: 0.85em !important;
