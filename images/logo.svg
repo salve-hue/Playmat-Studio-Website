@@ -17,11 +17,11 @@
 
   <!-- Back rectangle: green, upper-right -->
   <rect x="26" y="2"  width="90" height="54" rx="7" ry="7" fill="#83BB30"/>
-  <!-- Back-middle rectangle: teal -->
-  <rect x="13" y="15" width="90" height="54" rx="7" ry="7" fill="#30BBAD"/>
-  <!-- Front rectangle: purple, lower-left -->
-  <rect x="0"  y="28" width="90" height="54" rx="7" ry="7" fill="#6830BB"/>
+  <!-- Back-left rectangle: teal, lower-left -->
+  <rect x="0"  y="28" width="90" height="54" rx="7" ry="7" fill="#30BBAD"/>
+  <!-- Front rectangle: purple, centre — rendered on top -->
+  <rect x="13" y="15" width="90" height="54" rx="7" ry="7" fill="#6830BB"/>
 
-  <!-- PS centred on front rect -->
-  <text x="45" y="56" class="ps-text">PS</text>
+  <!-- PS centred on purple rect -->
+  <text x="58" y="43" class="ps-text">PS</text>
 </svg>
