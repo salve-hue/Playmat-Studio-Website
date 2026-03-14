@@ -9,7 +9,7 @@
         font-family: 'Under Subway', sans-serif;
         font-size: 32px;
         fill: #f0eeff;
-        dominant-baseline: central;
+        dominant-baseline: middle;
         text-anchor: middle;
       }
     </style>
@@ -23,5 +23,5 @@
   <rect x="13" y="15" width="90" height="54" rx="7" ry="7" fill="#6830BB"/>
 
   <!-- PS centred on purple rect -->
-  <text x="58" y="43" class="ps-text">PS</text>
+  <text x="58" y="42" class="ps-text">PS</text>
 </svg>
