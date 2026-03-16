@@ -339,6 +339,8 @@
         #adv-backdrop { padding-top: 0 !important; }
         #playmat-tool-root { flex-direction: column; border-radius: 0; box-shadow: none;
                              width: 100%; max-width: 100%; height: auto; max-height: none; }
+        /* Tab-mode height lock must not clip the stacked sidebar on mobile */
+        #adv-backdrop.tab-mode #playmat-tool-root { height: auto !important; overflow: visible !important; }
         #sidebar { width: 100%; order: 2; border-right: none; overflow: visible; flex-shrink: 0; }
         #canvas-column { order: 1; flex-shrink: 0; width: 100%; padding: 10px; padding-top: 120px;
                          height: auto; min-height: 0;
