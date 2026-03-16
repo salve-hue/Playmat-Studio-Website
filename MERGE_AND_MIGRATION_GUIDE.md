@@ -20,10 +20,11 @@
 10. [CSS Architecture](#10-css-architecture)
 11. [JavaScript Architecture](#11-javascript-architecture)
 12. [All Hardcoded Values](#12-all-hardcoded-values)
-13. [Storage Usage](#13-storage-usage)
-14. [External Dependencies](#14-external-dependencies)
-15. [Known Issues & Incomplete Code](#15-known-issues--incomplete-code)
-16. [Shopify Conversion Notes](#16-shopify-conversion-notes)
+13. [`.htaccess` — Security & Cache Configuration](#13-htaccess--security--cache-configuration)
+14. [Storage Usage](#14-storage-usage)
+15. [External Dependencies](#15-external-dependencies)
+16. [Known Issues & Incomplete Code](#16-known-issues--incomplete-code)
+17. [Shopify Conversion Notes](#17-shopify-conversion-notes)
 
 ---
 
@@ -34,6 +35,7 @@
 |------|------|---------|
 | `index.html` | 91 KB | Entire application — SPA, all tools, all modals, inline JS |
 | `404.html` | 2.6 KB | Custom GitHub Pages error page |
+| `.htaccess` | ~1.6 KB | Apache: security headers, cache control, CSP, 404 redirect |
 | `CNAME` | 17 B | GitHub Pages custom domain: `playmatstudio.com` |
 | `robots.txt` | 75 B | Allows all crawlers, points to sitemap |
 | `sitemap.xml` | 278 B | Single-URL sitemap for `playmatstudio.com` |
@@ -42,6 +44,13 @@
 | `TECHNICAL_REFERENCE.md` | 27 KB | Developer reference (pre-existing) |
 | `MERGE_AND_MIGRATION_GUIDE.md` | this file | — |
 | `Playmat_Studio_Technical_Reference.docx` | 49 KB | Word export of technical reference |
+
+### `assets/` (root)
+| File/Dir | Size | Purpose |
+|----------|------|---------|
+| `Under Subway.ttf` | 25 KB | Custom brand font — used in logo and display headings |
+| `webfonts/` | ~200 KB | Font Awesome icon fonts (eot, svg, ttf, woff, woff2 for brands/regular/solid) |
+| `sass/` | — | Phantom template SCSS source (base, components, layout, libs, main.scss) — not compiled on deploy; for reference only |
 
 ### `assets/css/`
 | File | Size | Purpose |
@@ -67,9 +76,10 @@
 |------|---------|
 | `favicon.svg` | SVG favicon |
 | `apple-touch-icon.png` | iOS home screen icon |
-| `logo.svg` | Navigation logo |
-| `og-preview.jpg` | Open Graph social share image |
-| `background.jpg` | Hero/page background texture |
+| `logo.svg` | Navigation logo (header + footer) |
+| `Logo-PS.svg` | Alternate logo asset |
+| `og-preview.jpg` | Open Graph / Twitter Card preview image |
+| `pic01.jpg` – `pic15.jpg` | Phantom template demo images (unused in production) |
 
 ### `audits/`
 | File | Purpose |
@@ -740,7 +750,55 @@ mailto:support@rubicongamesupplies.com
 
 ---
 
-## 13. Storage Usage
+## 13. `.htaccess` — Security & Cache Configuration
+
+The `.htaccess` in the repository root sets all security response headers and cache rules. GitHub Pages does not honour `.htaccess` — these headers must be applied at the CDN/proxy level (e.g. Cloudflare Transform Rules or a Vercel/Netlify config). **When migrating to Shopify, replicate these headers in your app's proxy layer.**
+
+```apache
+# Custom 404
+ErrorDocument 404 /404.html
+
+# Security headers
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-Content-Type-Options "nosniff"
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+Header set Content-Security-Policy "default-src 'self'; \
+  script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; \
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; \
+  font-src 'self' https://fonts.gstatic.com; \
+  img-src 'self' https: data: blob:; \
+  connect-src 'self' \
+    https://playmat-upscaler.salve.workers.dev \
+    https://playmat-removebg.salve.workers.dev \
+    https://files.playmatstudio.com \
+    https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev \
+    https://wsrv.nl https://corsproxy.io \
+    https://contact.playmatstudio.com; \
+  worker-src blob:; object-src 'none'; base-uri 'self';"
+
+# Cache: HTML — never cache
+<FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+</FilesMatch>
+
+# Cache: CSS/JS — 1 year (safe because ?v=<timestamp> cache-busts on each deploy)
+<FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+# Cache: images — 30 days
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+    Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+```
+
+**Note for Shopify:** The CSP `connect-src` list must be extended with your Shopify store domain and any myshopify.com subdomain used. The `style-src 'unsafe-inline'` directive is required because Shopify injects inline styles; this cannot be removed without significant refactoring.
+
+---
+
+## 14. Storage Usage
 
 ### sessionStorage
 | Key | Type | Contents |
@@ -758,7 +816,7 @@ All editor state (canvas objects, filters, overlay selections, eraser paths) is 
 
 ---
 
-## 14. External Dependencies
+## 15. External Dependencies
 
 ### Runtime Dependencies
 | Dependency | Source | Version | SRI Protected |
@@ -781,7 +839,7 @@ All editor state (canvas objects, filters, overlay selections, eraser paths) is 
 
 ---
 
-## 15. Known Issues & Incomplete Code
+## 16. Known Issues & Incomplete Code
 
 ### Dead Code in `restartApp()` (tool.js ~line 506)
 ```javascript
@@ -817,7 +875,7 @@ This indicates the tool was previously adapted from (or prototyped for) Shopify.
 
 ---
 
-## 16. Shopify Conversion Notes
+## 17. Shopify Conversion Notes
 
 ### What a Shopify App Is vs. What This Is
 This is currently a **static website** hosted on GitHub Pages. A Shopify app is either:
