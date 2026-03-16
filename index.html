@@ -30,7 +30,7 @@
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
 <script>
 		(function(){
 			var v=Date.now();
@@ -876,6 +876,7 @@
 						<h2>Links</h2>
 						<ul class="ps-footer-list">
 							<li><a href="#" id="footer-privacy-link">Privacy Policy</a></li>
+							<li><a href="#" id="footer-changelog-link">Changelog</a></li>
 							<li><a href="#how-it-works">How It Works</a></li>
 							<li><a href="#features">Features</a></li>
 							<li><a href="#about">About</a></li>
@@ -959,6 +960,352 @@
 			</div>
 		</div>
 
+		<!-- Changelog Modal -->
+		<div id="changelog-modal">
+			<div class="changelog-box">
+				<div class="changelog-header">
+					<div class="changelog-header-left">
+						<h2>Changelog</h2>
+						<span class="changelog-beta-badge">Beta &mdash; Active Development</span>
+					</div>
+					<button class="changelog-close" id="changelog-close-btn" aria-label="Close">&times;</button>
+				</div>
+				<div class="changelog-body">
+					<div class="cl-timeline">
+						<div class="cl-entry cl-latest">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.7.1b</span>
+								<span class="cl-tag cl-tag-latest">Latest</span>
+								<span class="cl-tag cl-tag-patch">Patch</span>
+								<span class="cl-vdate">March 2026</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Behind-the-scenes maintenance and a full security review. No user-facing changes.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-improved">Improved</p>
+										<ul class="cl-list">
+											<li>Internal documentation updated to reflect the current state of the site</li>
+											<li>Site metadata refreshed following the security review</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-security">Security</p>
+										<ul class="cl-list">
+											<li>Comprehensive internal security review completed across the full codebase</li>
+											<li>Findings catalogued and a remediation plan established; fixes are in progress for the next release</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry cl-major">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.7.0b</span>
+								<span class="cl-tag cl-tag-major">Minor</span>
+								<span class="cl-vdate">February 2026</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Image Hosting tool launched. Get a shareable link for any design in seconds.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li>New <strong>Image Hosting</strong> tool &mdash; upload a design and receive a shareable link instantly</li>
+											<li>Hosted files expire automatically after 7 days</li>
+											<li>Supports files up to 50&thinsp;MB across all common image formats</li>
+											<li>Upload history stored locally in your browser, including expiry dates for each link</li>
+											<li>Share link dialog for easily copying and distributing hosted URLs</li>
+											<li>Direct link to recommended print services added to the editor</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-improved">Improved</p>
+										<ul class="cl-list">
+											<li>Tool navigation updated to accommodate the new fifth tab cleanly at all screen sizes</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry cl-major">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.6.0b</span>
+								<span class="cl-tag cl-tag-major">Minor</span>
+								<span class="cl-vdate">December 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">AI-powered upscaling and background removal arrive in the Advanced Editor.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li><strong>AI Upscaler</strong> &mdash; enhance the resolution of your artwork using cloud AI processing</li>
+											<li><strong>AI Background Removal</strong> &mdash; automatically isolate the subject of your image as a separate layer</li>
+											<li>Confirmation prompt before any AI feature runs, clearly explaining that your image will be processed by an external service</li>
+											<li>Success notification shown on completion of AI processing</li>
+											<li>AI results are returned as a new layer in the editor, leaving original artwork untouched</li>
+											<li>Recolor brush tool &mdash; paint a custom color directly onto any area of your canvas (adjustable brush size, circle or square tip)</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-improved">Improved</p>
+										<ul class="cl-list">
+											<li>Advanced Editor toolbar updated to surface the new AI and brush tools clearly</li>
+											<li>Export now correctly merges all active layers into a single print-ready file</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.5.2b</span>
+								<span class="cl-tag cl-tag-patch">Patch</span>
+								<span class="cl-vdate">November 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Contact form hardening and site-wide security improvements.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-fixed">Fixed</p>
+										<ul class="cl-list">
+											<li>Contact form now properly sanitises all submitted content before processing</li>
+											<li>Field length limits enforced server-side to prevent misuse</li>
+											<li>Contact form status messages now correctly announced to screen readers</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-security">Security</p>
+										<ul class="cl-list">
+											<li>Contact form backend restricted to only accept requests from Playmat Studio domains</li>
+											<li>Security response headers added across the site: clickjacking protection, content-type sniffing prevention, HTTPS enforcement, referrer controls, and permissions policy</li>
+											<li>Browser caching tightened: page content never cached; assets cached aggressively with automatic invalidation on each update</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry cl-major">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.5.0b</span>
+								<span class="cl-tag cl-tag-major">Minor</span>
+								<span class="cl-vdate">October 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Batch Enhance and Format Converter tools added. Process multiple images at once.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li><strong>Batch Enhance</strong> tool &mdash; drag and drop multiple images for automatic color correction in one step</li>
+											<li>Download corrected images individually or all together as a single ZIP archive</li>
+											<li><strong>Format Converter</strong> tool &mdash; convert images between JPG, PNG, and WEBP, individually or in bulk</li>
+											<li>Output format selector with ZIP download option for batch conversions</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-improved">Improved</p>
+										<ul class="cl-list">
+											<li>Tool section restructured to support four separate panels without visual clutter</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.4.1b</span>
+								<span class="cl-tag cl-tag-patch">Patch</span>
+								<span class="cl-vdate">September 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Overlay library expanded with Riftbound points support and three new game templates.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li>Riftbound points overlay configuration &mdash; choose from multiple zone layout variants for different game formats</li>
+											<li>Riftbound points selector available in both editors</li>
+											<li>New overlay templates: Neuroscape, Star Wars: Unlimited, and Grand Archive</li>
+											<li>Total overlay library now exceeds 48 templates</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-fixed">Fixed</p>
+										<ul class="cl-list">
+											<li>Left/right handedness now correctly mirrors overlays in the Quick Upload editor</li>
+											<li>Changing the selected game now correctly resets the format and handedness dropdowns</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry cl-major">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.4.0b</span>
+								<span class="cl-tag cl-tag-major">Minor</span>
+								<span class="cl-vdate">August 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Advanced Editor (Beta) launched &mdash; full canvas editing, text overlays, and multi-format export.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li><strong>Advanced Editor</strong> (Beta) &mdash; a full-featured canvas editor with a split sidebar and floating toolbar</li>
+											<li>Collapsible sidebar panels: Artwork, Game Layout, Adjustments, and Text</li>
+											<li>Text overlay tool with 9 display font choices, fill color, stroke color, size, and on-canvas positioning</li>
+											<li>Color adjustment sliders: brightness, contrast, and saturation</li>
+											<li>Eraser brush for manually removing areas of artwork (adjustable size, circle or square tip)</li>
+											<li>Gradient overlay with adjustable angle and opacity</li>
+											<li>Flip horizontal and flip vertical transformations</li>
+											<li>Export in JPG, PNG, or WEBP &mdash; all at 300&thinsp;DPI with print-resolution metadata embedded in the file</li>
+											<li>Responsive stacked layout on smaller screens</li>
+											<li>In-app help documentation accessible from the editor</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-improved">Improved</p>
+										<ul class="cl-list">
+											<li>Canvas rendering performance tuned for smoother editing with large images</li>
+											<li>Text font library expanded with 9 display typefaces suited to game-themed designs</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry cl-major">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.3.0b</span>
+								<span class="cl-tag cl-tag-major">Minor</span>
+								<span class="cl-vdate">June 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Game overlay system introduced. MTG, Pok&eacute;mon, and One Piece templates available at launch.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li>Game layout overlay system with cascading Game &rarr; Format &rarr; Handedness selectors</li>
+											<li>Launch overlays: Magic: The Gathering (60-Card and Commander), Pok&eacute;mon, and One Piece Card Game</li>
+											<li>Artwork coverage warning &mdash; alerts you if your design doesn&rsquo;t fully cover the printable area including bleed</li>
+											<li>Overlay opacity control in the Quick Upload tool</li>
+											<li>Specialty mat sizes added: Victor, Secundus, Primus, Tiro, Veteranus, and Gladiator</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-improved">Improved</p>
+										<ul class="cl-list">
+											<li>Canvas architecture updated to support a dedicated overlay layer sitting above the artwork</li>
+											<li>Downloaded filenames now include a unique identifier to prevent accidental overwrites</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.2.1b</span>
+								<span class="cl-tag cl-tag-patch">Patch</span>
+								<span class="cl-vdate">May 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Responsive polish, caching improvements, and editor fixes.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-improved">Improved</p>
+										<ul class="cl-list">
+											<li>Stylesheet loading updated to always deliver the latest version &mdash; no more stale styles after an update</li>
+											<li>Mobile navigation behaviour refined at narrower screen widths</li>
+											<li>Back-to-top button now appears only after scrolling down, keeping the page clean on load</li>
+											<li>Low-resolution upload warning added &mdash; alerts you if your image may not print at full quality</li>
+											<li>Consistent in-app error messaging introduced across all tools</li>
+											<li>Import image from URL now available via a dedicated dialog</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-fixed">Fixed</p>
+										<ul class="cl-list">
+											<li>Zoom slider range corrected in the Quick Upload tool</li>
+											<li>Rotate controls now apply correctly to the uploaded artwork in all editors</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry cl-major">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.2.0b</span>
+								<span class="cl-tag cl-tag-major">Minor</span>
+								<span class="cl-vdate">April 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Contact form launched. Social sharing previews and search engine visibility added.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li>Contact form &mdash; messages delivered directly to the support inbox with reply-to set to the sender</li>
+											<li>Social sharing preview image and metadata for richer link previews when shared online</li>
+											<li>App icon for saving the site to a phone or tablet home screen</li>
+											<li>Custom error page for broken or mistyped URLs</li>
+											<li>Site made discoverable to search engines with a sitemap and crawler guidance</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry cl-major">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.1.0b</span>
+								<span class="cl-tag cl-tag-major">Minor</span>
+								<span class="cl-vdate">March 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">Full site structure established. Quick Upload tool launched. Public beta begins.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li>Complete single-page layout: navigation, hero, how-it-works, features, tools, about, contact, and footer</li>
+											<li><strong>Quick Upload</strong> &mdash; upload artwork, zoom, rotate, fit to canvas, enhance or grayscale filter, download at 300&thinsp;DPI</li>
+											<li>Standard, Expanded, and Extended mat sizes</li>
+											<li>Brand identity applied: color system, typography, and icon set</li>
+											<li>Full responsive layout from large desktop down to small mobile screens</li>
+											<li>Off-canvas mobile navigation menu</li>
+											<li>Custom domain live at playmatstudio.com</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="cl-entry">
+							<div class="cl-vheader">
+								<span class="cl-vnum">v1.0.0b</span>
+								<span class="cl-tag cl-tag-initial">Initial</span>
+								<span class="cl-vdate">January 2025</span>
+							</div>
+							<div class="cl-card">
+								<p class="cl-summary">First build. Site scaffolded and brand foundations established.</p>
+								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li>Initial project structure created and deployed</li>
+											<li>Brand color palette and visual identity established</li>
+											<li>Core layout framework in place</li>
+											<li>Hosting and custom domain configured</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div><!-- /.cl-timeline -->
+				</div><!-- /.changelog-body -->
+			</div><!-- /.changelog-box -->
+		</div><!-- /#changelog-modal -->
+
 		<script>
 			// Back-to-top visibility
 			(function(){
@@ -974,6 +1321,33 @@
 				// Close privacy modal on backdrop click
 				document.getElementById('privacy-modal').addEventListener('click', function(e){
 					if(e.target === this) this.style.display = 'none';
+				});
+
+				// Changelog modal
+				var clModal     = document.getElementById('changelog-modal');
+				var clOpenBtn   = document.getElementById('footer-changelog-link');
+				var clCloseBtn  = document.getElementById('changelog-close-btn');
+
+				clOpenBtn.addEventListener('click', function(e){
+					e.preventDefault();
+					clModal.style.display = 'flex';
+					document.body.style.overflow = 'hidden';
+				});
+				clCloseBtn.addEventListener('click', function(){
+					clModal.style.display = 'none';
+					document.body.style.overflow = '';
+				});
+				clModal.addEventListener('click', function(e){
+					if(e.target === this){
+						this.style.display = 'none';
+						document.body.style.overflow = '';
+					}
+				});
+				document.addEventListener('keydown', function(e){
+					if(e.key === 'Escape' && clModal.style.display === 'flex'){
+						clModal.style.display = 'none';
+						document.body.style.overflow = '';
+					}
 				});
 			})();
 		</script>
