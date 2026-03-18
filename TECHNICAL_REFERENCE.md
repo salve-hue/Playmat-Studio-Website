@@ -247,7 +247,7 @@ Defined in `custom.css` (`:root`) and `tool.css`:
 |---|---|---|
 | `#header` | `<header>` | Fixed nav; contains logo + nav links + hamburger |
 | `#menu` | `<nav>` | Off-canvas mobile nav (shown ≤980px) |
-| `#main` | `<section>` | Hero: "Design. Print. Play." tagline + CTA |
+| `#main` | `<section>` | Hero: "Your Custom Playmat Starts Here" tagline + CTA |
 | `#how-it-works` | `<section>` | 3-step process overview |
 | `#features` | `<section>` | 6-tile feature grid (uses `.tiles` CSS grid) |
 | `#tools` | `<section>` | Inline tool embed (NOT an iframe) |
@@ -487,7 +487,7 @@ fabric.textureSize = 16384;                      // Max texture size
 ## 11. SEO, Meta & Social Tags
 
 ```html
-<title>Playmat Studio — Design. Print. Play.</title>
+<title>Playmat Studio — Your Custom Playmat Starts Here</title>
 <meta name="description" content="Free browser-based tools to design, enhance,
   and download print-ready game mat artwork. No installs. No account. No cost." />
 
@@ -498,7 +498,7 @@ fabric.textureSize = 16384;                      // Max texture size
 <!-- Open Graph -->
 <meta property="og:type"        content="website" />
 <meta property="og:url"         content="https://playmatstudio.com/" />
-<meta property="og:title"       content="Playmat Studio — Design. Print. Play." />
+<meta property="og:title"       content="Playmat Studio — Your Custom Playmat Starts Here" />
 <meta property="og:description" content="..." />
 <meta property="og:image"       content="https://playmatstudio.com/images/og-preview.jpg" />
 
