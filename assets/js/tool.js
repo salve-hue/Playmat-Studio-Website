@@ -365,7 +365,7 @@
         if (btn.dataset.active === 'true') { window.resetFilters(); return; }
         document.getElementById('filter-brightness').value = 0.12;
         document.getElementById('filter-contrast').value   = 0.08;
-        document.getElementById('filter-saturation').value = 0.15;
+        document.getElementById('filter-saturation').value = 0.07;
         window.updateFilters();
         btn.dataset.active   = 'true';
         btn.style.background = 'var(--brand-hover)';
@@ -385,7 +385,7 @@
         const art = window.sCanvas.getObjects().find(o => o.name === 'art');
         if (!art) return;
         let filterStr = '';
-        if (APP.s_filters.enhance)   filterStr += 'brightness(112%) contrast(108%) saturate(115%) ';
+        if (APP.s_filters.enhance)   filterStr += 'brightness(112%) contrast(108%) saturate(107%) ';
         if (APP.s_filters.grayscale) filterStr += 'grayscale(100%) ';
         art.customFilterStr = filterStr.trim();
         art._render = function(ctx) {
@@ -1837,7 +1837,7 @@
                     c.width  = img.naturalWidth  || img.width;
                     c.height = img.naturalHeight || img.height;
                     var ctx  = c.getContext('2d');
-                    ctx.filter = 'brightness(112%) contrast(108%) saturate(115%)';
+                    ctx.filter = 'brightness(112%) contrast(108%) saturate(107%)';
                     ctx.drawImage(img, 0, 0);
                     c.toBlob(function(b) {
                         if (b) resolve(b); else reject(new Error('Canvas export failed'));
