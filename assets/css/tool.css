@@ -184,8 +184,8 @@
     /* Let the tool section break out of the page's .inner max-width */
     #tools > .inner { max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 auto !important; }
     #tools > .inner > header.ps-section-header { max-width: 68em; margin-left: auto; margin-right: auto; padding: 0 2em; }
-    /* Give the tool itself 90% width, centered */
-    #designer-visibility-wrapper { width: 90% !important; margin: 0 auto !important; display: block; }
+    /* Give the tool itself 90% viewport width, centered — vw units bypass all parent constraints */
+    #designer-visibility-wrapper { width: 90vw !important; max-width: 90vw !important; margin-left: auto !important; margin-right: auto !important; }
     
     /* UI Components */
     .ui-select { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); color: var(--brand-text-pri); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; transition: border 0.3s; cursor: pointer; }
