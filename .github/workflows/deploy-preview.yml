@@ -28,11 +28,12 @@ jobs:
           mkdir -p deploy
           # Main site goes to root
           cp -r main-site/. deploy/
-          rm -rf deploy/.github
+          rm -rf deploy/.github deploy/.git
           # Feature branch goes to /preview/
           mkdir -p deploy/preview
           cp -r feature/. deploy/preview/
-          rm -rf deploy/preview/.github
+          # Remove .git so gh-pages action doesn't treat preview/ as a submodule
+          rm -rf deploy/preview/.git deploy/preview/.github
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
