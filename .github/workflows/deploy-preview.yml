@@ -12,15 +12,32 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout feature branch
         uses: actions/checkout@v4
+        with:
+          path: feature
 
-      - name: Deploy preview to gh-pages/preview/
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-site
+
+      - name: Assemble deployment directory
+        run: |
+          mkdir -p deploy
+          # Main site goes to root
+          cp -r main-site/. deploy/
+          rm -rf deploy/.github
+          # Feature branch goes to /preview/
+          mkdir -p deploy/preview
+          cp -r feature/. deploy/preview/
+          rm -rf deploy/preview/.github
+
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./deploy
           publish_branch: gh-pages
-          destination_dir: preview
-          keep_files: true
-          exclude_assets: '.github'
+          cname: playmatstudio.com
