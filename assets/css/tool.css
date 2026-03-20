@@ -179,7 +179,7 @@
         --app-width: 85%;
     }
     
-    .designer-container-wrap { width: 100%; padding: 24px 0; display: flex; justify-content: center; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; color: var(--brand-text-pri); }
+    .designer-container-wrap { width: 100%; padding: 24px 0; display: flex; flex-direction: column; align-items: stretch; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; color: var(--brand-text-pri); }
 
     /* Let the tool section break out of the page's .inner max-width, while keeping the heading centered */
     #tools > .inner { max-width: none !important; padding-left: 5% !important; padding-right: 5% !important; }

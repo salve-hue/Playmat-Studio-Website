@@ -1402,11 +1402,18 @@
 		</div><!-- /#changelog-modal -->
 
 		<script>
-			// Back-to-top visibility
+			// Back-to-top visibility — only show after user scrolls past the editor
 			(function(){
 				var btn = document.getElementById('back-to-top');
+				var toolsEl = document.getElementById('tools');
+				var _threshold = 800;
+				function _calcThreshold(){
+					if(toolsEl){ var r = toolsEl.getBoundingClientRect(); _threshold = r.bottom + window.pageYOffset; }
+				}
+				_calcThreshold();
+				window.addEventListener('resize', _calcThreshold, {passive:true});
 				window.addEventListener('scroll', function(){
-					if(window.scrollY > 400){ btn.classList.add('visible'); }
+					if(window.scrollY > _threshold){ btn.classList.add('visible'); }
 					else { btn.classList.remove('visible'); }
 				}, {passive:true});
 				btn.addEventListener('click', function(e){
