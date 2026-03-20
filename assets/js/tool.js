@@ -2621,6 +2621,8 @@
 
         // ── Clipboard paste: Ctrl+V / ⌘V to load artwork from clipboard ──
         document.addEventListener('paste', function(e) {
+            // Don't intercept paste while user is editing a text object on the canvas
+            if (window.canvas && window.canvas.getActiveObject()?.isEditing) return;
             const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
             if (!items) return;
             for (const item of items) {
