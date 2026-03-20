@@ -477,10 +477,18 @@ a:hover {
 }
 
 .ps-tools .inner {
-	max-width: 1440px !important;
+	max-width: 100% !important;
 	width: 100% !important;
 	margin: 0 auto !important;
-	padding: 0 1em !important;
+	padding: 0 !important;
+}
+
+/* Tool container: 90% page width, centered */
+#designer-visibility-wrapper {
+	width: 90% !important;
+	max-width: 90% !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
 }
 
 /* (outer tab nav removed — tool has its own tab bar) */
