@@ -409,6 +409,7 @@
         'filter-brightness': v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
         'filter-contrast':   v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
         'filter-saturation': v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-vibrance':   v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
         'filter-hue':        v => (v > 0 ? '+' : '') + Math.round(v) + '°',
         'filter-blur':       v => parseFloat(v).toFixed(1) + 'px',
         'filter-shadows':    v => (v > 0 ? '+' : '') + Math.round(v),
@@ -431,7 +432,7 @@
     };
 
     window.resetFilters = function() {
-        ['filter-brightness','filter-contrast','filter-saturation','filter-hue','filter-blur','filter-shadows','filter-warmth','filter-vignette'].forEach(id => {
+        ['filter-brightness','filter-contrast','filter-saturation','filter-vibrance','filter-hue','filter-blur','filter-shadows','filter-warmth','filter-vignette','filter-grayscale'].forEach(id => {
             const el = document.getElementById(id); if (el) el.value = 0;
         });
         const btnAdv = document.getElementById('auto-opt-btn-adv');
@@ -451,10 +452,12 @@
         const b  = parseFloat(document.getElementById('filter-brightness')?.value || 0);
         const c  = parseFloat(document.getElementById('filter-contrast')?.value   || 0);
         const s  = parseFloat(document.getElementById('filter-saturation')?.value || 0);
+        const vb = parseFloat(document.getElementById('filter-vibrance')?.value   || 0);
         const h  = parseFloat(document.getElementById('filter-hue')?.value        || 0);
         const bl = parseFloat(document.getElementById('filter-blur')?.value       || 0);
         const sh = parseFloat(document.getElementById('filter-shadows')?.value    || 0);
         const wm = parseFloat(document.getElementById('filter-warmth')?.value     || 0);
+        const gr = parseFloat(document.getElementById('filter-grayscale')?.value  || 0);
         const art = window.canvas.getObjects().find(o => o.name === 'art');
         if (art) {
             let f = '';
@@ -472,6 +475,10 @@
             // Warmth: positive = sepia-warm tint, negative = cool hue shift
             if (wm > 0) f += `sepia(${(wm * 0.5).toFixed(1)}%) saturate(${(100 + wm * 0.3).toFixed(1)}%) `;
             if (wm < 0) f += `hue-rotate(${(wm * 0.6).toFixed(1)}deg) saturate(${(100 - wm * 0.2).toFixed(1)}%) `;
+            // Vibrance: selective saturation boost/cut layered on top of saturation
+            if (vb !== 0) f += `saturate(${Math.max(0, 100 + vb * 100).toFixed(1)}%) `;
+            // Grayscale: for B&W preset (driven by hidden input, not a visible slider)
+            if (gr > 0) f += `grayscale(${(gr * 100).toFixed(0)}%) `;
             art.customFilterStr = f.trim();
             art._render = function(ctx) {
                 if (this.customFilterStr) { ctx.save(); ctx.filter = this.customFilterStr; fabric.Image.prototype._render.call(this, ctx); ctx.restore(); }
@@ -1227,21 +1234,23 @@
     // --- FILTER PRESETS ---
     window.applyFilterPreset = function(name) {
         const presets = {
-            vibrant:  { brightness: 0,     contrast: 0.1,  saturation: 0.3,  hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0   },
-            faded:    { brightness: 0,     contrast: -0.1, saturation: -0.3, hue: 0,   blur: 0,   shadows: 20,  vignette: 15, warmth: 0   },
-            velvet:   { brightness: -0.05, contrast: 0.15, saturation: -0.1, hue: 0,   blur: 0,   shadows: -15, vignette: 35, warmth: 10  },
-            vintage:  { brightness: -0.05, contrast: 0,    saturation: -0.2, hue: 15,  blur: 0,   shadows: 10,  vignette: 25, warmth: 40  },
-            frosted:  { brightness: 0.05,  contrast: -0.05,saturation: -0.2, hue: 10,  blur: 1.5, shadows: 0,   vignette: 0,  warmth: -35 },
-            golden:   { brightness: 0.05,  contrast: 0.05, saturation: 0.1,  hue: 0,   blur: 0,   shadows: 15,  vignette: 20, warmth: 65  },
-            ink:      { brightness: 0,     contrast: 0.25, saturation: -0.45,hue: 0,   blur: 0,   shadows: -20, vignette: 30, warmth: 0   },
-            neutral:  { brightness: 0,     contrast: 0,    saturation: 0,    hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0   },
+            vibrant:  { brightness: 0,     contrast: 0.1,  saturation: 0.2,  vibrance: 0.2,  hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0,   grayscale: 0 },
+            faded:    { brightness: 0,     contrast: -0.1, saturation: -0.3, vibrance: 0,    hue: 0,   blur: 0,   shadows: 20,  vignette: 15, warmth: 0,   grayscale: 0 },
+            velvet:   { brightness: -0.05, contrast: 0.15, saturation: -0.1, vibrance: 0,    hue: 0,   blur: 0,   shadows: -15, vignette: 35, warmth: 10,  grayscale: 0 },
+            vintage:  { brightness: -0.05, contrast: 0,    saturation: -0.2, vibrance: 0,    hue: 15,  blur: 0,   shadows: 10,  vignette: 25, warmth: 40,  grayscale: 0 },
+            frosted:  { brightness: 0.05,  contrast: -0.05,saturation: -0.2, vibrance: 0,    hue: 10,  blur: 1.5, shadows: 0,   vignette: 0,  warmth: -35, grayscale: 0 },
+            golden:   { brightness: 0.05,  contrast: 0.05, saturation: 0.1,  vibrance: 0.15, hue: 0,   blur: 0,   shadows: 15,  vignette: 20, warmth: 65,  grayscale: 0 },
+            ink:      { brightness: 0,     contrast: 0.25, saturation: -0.45,vibrance: 0,    hue: 0,   blur: 0,   shadows: -20, vignette: 30, warmth: 0,   grayscale: 0 },
+            bw:       { brightness: 0,     contrast: 0.1,  saturation: 0,    vibrance: 0,    hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0,   grayscale: 1 },
+            neutral:  { brightness: 0,     contrast: 0,    saturation: 0,    vibrance: 0,    hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0,   grayscale: 0 },
         };
         const p = presets[name]; if (!p) return;
         const map = {
-            brightness: 'filter-brightness', contrast: 'filter-contrast',
-            saturation: 'filter-saturation', hue:      'filter-hue',
-            blur:       'filter-blur',       shadows:  'filter-shadows',
-            vignette:   'filter-vignette',   warmth:   'filter-warmth',
+            brightness: 'filter-brightness', contrast:   'filter-contrast',
+            saturation: 'filter-saturation', vibrance:   'filter-vibrance',
+            hue:        'filter-hue',        blur:       'filter-blur',
+            shadows:    'filter-shadows',    vignette:   'filter-vignette',
+            warmth:     'filter-warmth',     grayscale:  'filter-grayscale',
         };
         Object.entries(map).forEach(([key, id]) => {
             const el = document.getElementById(id); if (el) el.value = p[key];
@@ -2624,6 +2633,7 @@
         on('filter-brightness',  'input',  function() { window.updateFilters(); });
         on('filter-contrast',    'input',  function() { window.updateFilters(); });
         on('filter-saturation',  'input',  function() { window.updateFilters(); });
+        on('filter-vibrance',    'input',  function() { window.updateFilters(); });
         on('filter-hue',         'input',  function() { window.updateFilters(); });
         on('filter-blur',        'input',  function() { window.updateFilters(); });
         on('filter-shadows',     'input',  function() { window.updateFilters(); });

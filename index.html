@@ -556,25 +556,26 @@
 
 					    <div id="adv-backdrop">
 					    <div id="playmat-tool-root">
-					        <div id="sidebar">
-					            <div class="studio-title-wrap">
-					                <h2 class="studio-title">Playmat Studio</h2>
+					        <div id="editor-top-bar">
+					            <div class="etb-group">
+					                <button class="action-btn" id="adv-upload-file-btn">📁 UPLOAD FILE</button>
+					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;">
+					                <button class="action-btn btn-secondary" id="adv-paste-url-btn">🔗 PASTE URL</button>
+					            </div>
+					            <div class="etb-title">
+					                <span style="font-size:15px; color:#30BBAD; text-transform:uppercase; letter-spacing:2px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;">Playmat Studio</span>
 					                <span class="studio-subtitle">Advanced Editor <span class="beta-badge" style="font-size:9px; vertical-align:middle;">BETA</span></span>
 					            </div>
-
-					            <div class="sidebar-header">
-					                <button class="action-btn btn-secondary" style="margin:0;" id="adv-restart-btn">RESTART</button>
-					                <button id="fs-toggle-btn" class="action-btn" style="margin:0; background: var(--brand-hover);">FULL SCREEN</button>
+					            <div class="etb-group">
+					                <button class="action-btn btn-secondary" id="adv-restart-btn">↺ RESTART</button>
+					                <button id="fs-toggle-btn" class="action-btn" style="background: var(--brand-hover);">⛶ FULL SCREEN</button>
 					            </div>
+					        </div>
+					        <div id="editor-main">
+					        <div id="sidebar">
 
 					            <button class="acc-btn" data-acc="acc-size">ARTWORK <span>▼</span></button>
 					            <div id="acc-size" class="acc-content" style="display:block;">
-					                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
-					                    <button class="action-btn" id="adv-upload-file-btn">📁 UPLOAD FILE</button>
-					                    <button class="action-btn btn-secondary" style="font-size:12px;" id="adv-paste-url-btn">🔗 PASTE URL</button>
-					                </div>
-
-					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;">
 
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
 					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality</label>
@@ -738,6 +739,14 @@
 
 					                        <div class="adj-item">
 					                            <div class="adj-header">
+					                                <span class="adj-name">Vibrance <span class="adj-tip" title="Boosts muted colors while leaving already-vivid tones largely unchanged.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-vibrance">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-vibrance',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-vibrance" min="-0.5" max="0.5" step="0.01" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
 					                                <span class="adj-name">Hue Shift <span class="adj-tip" title="Rotates all colors around the color wheel by the given number of degrees.">?</span></span>
 					                                <div class="adj-right"><span class="adj-val" id="val-filter-hue">0°</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-hue',0)">↺</button></div>
 					                            </div>
@@ -787,7 +796,9 @@
 					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('frosted')">Frosted</button>
 					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('golden')">Golden</button>
 					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('ink')">Ink</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('bw')">B&amp;W</button>
 					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('neutral')">Neutral</button>
+					                            <input type="range" id="filter-grayscale" min="0" max="1" step="1" value="0" style="display:none;" aria-hidden="true">
 					                        </div>
 					                    </div>
 
@@ -889,6 +900,7 @@
 					                <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
 					            </div>
 					        </div>
+					        </div><!-- /#editor-main -->
 					    </div>
 					    <div class="version-tag" style="color:rgba(255,255,255,0.2); z-index:10001;">v1.7.1</div>
 					    </div><!-- /#adv-backdrop -->

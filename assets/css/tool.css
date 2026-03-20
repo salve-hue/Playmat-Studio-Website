@@ -182,8 +182,8 @@
     .designer-container-wrap { width: 100%; padding: 24px 0; display: flex; justify-content: center; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; color: var(--brand-text-pri); }
 
     /* Let the tool section break out of the page's .inner max-width, while keeping the heading centered */
-    #tools > .inner { max-width: none !important; padding-left: 0 !important; padding-right: 0 !important; }
-    #tools > .inner > header.ps-section-header { max-width: 68em; margin-left: auto; margin-right: auto; padding-left: 2.5em; padding-right: 2.5em; }
+    #tools > .inner { max-width: none !important; padding-left: 5% !important; padding-right: 5% !important; }
+    #tools > .inner > header.ps-section-header { max-width: 68em; margin-left: auto; margin-right: auto; }
     
     /* UI Components */
     .ui-select { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); color: var(--brand-text-pri); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; transition: border 0.3s; cursor: pointer; }
@@ -233,8 +233,18 @@
     .landing-label { color: var(--brand-hover); font-size: 14px; font-weight: bold; letter-spacing: 1px; display: block; margin-bottom: 8px; }
 
     /* --- ADVANCED EDITOR --- */
-    #playmat-tool-root { display: flex; width: 100%; height: clamp(650px, 90vh, 1050px); background: #181228; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; flex-direction: row; }
+    #playmat-tool-root { display: flex; width: 100%; height: clamp(650px, 90vh, 1050px); background: #181228; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; flex-direction: column; }
     .app-fullscreen-mode { position: fixed !important; top: 2% !important; left: 2% !important; width: 96vw !important; height: 96vh !important; max-width: none !important; max-height: none !important; z-index: 10000 !important; border-radius: 6px !important; }
+
+    /* ── EDITOR TOP BAR ── */
+    #editor-top-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: rgba(0,0,0,0.35); border-bottom: 1px solid rgba(104,48,187,0.3); flex-shrink: 0; gap: 12px; }
+    .etb-group { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+    .etb-title { display: flex; flex-direction: column; align-items: center; flex: 0 1 auto; min-width: 0; gap: 2px; }
+    #editor-top-bar .action-btn { width: auto; padding: 7px 14px; font-size: 11px !important; letter-spacing: 0.5px; white-space: nowrap; }
+
+    /* ── EDITOR MAIN (sidebar + canvas side-by-side) ── */
+    #editor-main { display: flex; flex-direction: row; flex: 1; min-height: 0; overflow: hidden; }
+
     #sidebar { width: 300px; border-right: 1px solid rgba(104,48,187,0.25); overflow-y: auto; overflow-x: hidden; scrollbar-width: none; background: #181228; flex-shrink: 0; z-index: 20; display: flex; flex-direction: column; }
     #sidebar::-webkit-scrollbar { display: none; }
     /* Sidebar action buttons: keep text from overflowing the fixed 300px panel */
@@ -323,7 +333,7 @@
 
     /* --- SIMPLE LIGHTBOX --- */
     #simple-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 999999; justify-content: center; align-items: flex-start; padding: 20px; padding-top: max(20px, calc(var(--adv-nav-offset, 80px) + 20px)); box-sizing: border-box; overflow-y: auto; }
-    #simple-modal { background: var(--brand-bg); width: 100%; max-width: 900px; max-height: 95vh; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); position: relative; }
+    #simple-modal { background: var(--brand-bg); width: 100%; max-width: min(1400px, 95vw); max-height: 95vh; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); position: relative; }
     #simple-header { padding: 15px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
     #simple-canvas-wrap { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 20px; background: #0b0912; overflow: auto; min-height: 200px; position: relative; }
     #simple-canvas-inner { position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
@@ -352,10 +362,12 @@
 
         /* Advanced editor — stack canvas above sidebar, both scroll together */
         #adv-backdrop { padding-top: 0 !important; }
-        #playmat-tool-root { flex-direction: column; border-radius: 0; box-shadow: none;
-                             width: 100%; max-width: 100%; height: auto; max-height: none; }
+        #playmat-tool-root { border-radius: 0; box-shadow: none; width: 100%; max-width: 100%; height: auto; max-height: none; }
         /* Tab-mode height lock must not clip the stacked sidebar on mobile */
         #adv-backdrop.tab-mode #playmat-tool-root { height: auto !important; overflow: visible !important; }
+        #editor-top-bar { flex-wrap: wrap; gap: 8px; }
+        #editor-top-bar .etb-title { order: -1; flex: 0 0 100%; text-align: center; }
+        #editor-main { flex-direction: column; overflow: visible; }
         #sidebar { width: 100%; order: 2; border-right: none; overflow: visible; flex-shrink: 0; }
         #canvas-column { order: 1; flex-shrink: 0; width: 100%; padding: 10px; padding-top: 120px;
                          height: auto; min-height: 0;
