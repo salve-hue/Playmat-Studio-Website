@@ -183,7 +183,7 @@
 
     /* Tool section: remove .inner max-width constraint so the wrapper can be 90% of page */
     html body #wrapper #tools > div.inner {
-        max-width: 100% !important;
+        max-width: none !important;
         width: 100% !important;
         padding-left: 0 !important;
         padding-right: 0 !important;

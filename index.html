@@ -38,14 +38,14 @@
 		<style>
 			/* Force tool section to full width and tool wrapper to 90% — beats external CSS */
 			#wrapper > section#tools > div.inner {
-				max-width: 100% !important;
+				max-width: none !important;
 				width: 100% !important;
 				padding-left: 0 !important;
 				padding-right: 0 !important;
 			}
 			#designer-visibility-wrapper {
 				width: 90% !important;
-				max-width: 90% !important;
+				max-width: none !important;
 				margin-left: auto !important;
 				margin-right: auto !important;
 				box-sizing: border-box !important;
@@ -1418,13 +1418,13 @@
 		</div><!-- /#changelog-modal -->
 
 		<script>
-			// Back-to-top visibility — only show after user scrolls past the editor
+			// Back-to-top visibility — only show after user scrolls past the About section
 			(function(){
 				var btn = document.getElementById('back-to-top');
-				var toolsEl = document.getElementById('tools');
+				var aboutEl = document.getElementById('about');
 				var _threshold = 800;
 				function _calcThreshold(){
-					if(toolsEl){ var r = toolsEl.getBoundingClientRect(); _threshold = r.bottom + window.pageYOffset; }
+					if(aboutEl){ var r = aboutEl.getBoundingClientRect(); _threshold = r.bottom + window.pageYOffset; }
 				}
 				_calcThreshold();
 				window.addEventListener('resize', _calcThreshold, {passive:true});
