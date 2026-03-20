@@ -1184,16 +1184,41 @@
             if (art)    window.canvas.bringForward(img);
             if (guides) window.canvas.bringToFront(guides);
             window.canvas.setActiveObject(img);
+            window.canvas.uniformScaling = true;
             window.canvas.renderAll();
+            const lockBtn  = document.getElementById('adv-overlay-lock-btn');
             const clearBtn = document.getElementById('adv-overlay-clear-btn');
+            if (lockBtn)  { lockBtn.classList.remove('hidden-field'); lockBtn.dataset.locked = 'true'; lockBtn.textContent = '🔒 Proportions Locked'; lockBtn.style.borderColor = ''; lockBtn.style.color = ''; }
             if (clearBtn) clearBtn.classList.remove('hidden-field');
         });
     };
 
+    window.toggleOverlayLock = function() {
+        const btn = document.getElementById('adv-overlay-lock-btn');
+        if (!btn) return;
+        const locked = btn.dataset.locked === 'true';
+        if (locked) {
+            window.canvas.uniformScaling = false;
+            btn.dataset.locked = 'false';
+            btn.textContent = '↔ Free Resize';
+            btn.style.borderColor = 'var(--brand-hover)';
+            btn.style.color = 'var(--brand-hover)';
+        } else {
+            window.canvas.uniformScaling = true;
+            btn.dataset.locked = 'true';
+            btn.textContent = '🔒 Proportions Locked';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+        }
+    };
+
     window.clearAdvOverlay = function() {
         window.canvas.getObjects().forEach(o => { if (o.name === 'overlay') window.canvas.remove(o); });
+        window.canvas.uniformScaling = true;
         window.canvas.renderAll();
+        const lockBtn  = document.getElementById('adv-overlay-lock-btn');
         const clearBtn = document.getElementById('adv-overlay-clear-btn');
+        if (lockBtn)  lockBtn.classList.add('hidden-field');
         if (clearBtn) clearBtn.classList.add('hidden-field');
         const inp = document.getElementById('adv-overlay-file-in');
         if (inp) inp.value = '';
@@ -2634,6 +2659,7 @@
         // Custom overlay
         on('adv-overlay-upload-btn', 'click', function() { document.getElementById('adv-overlay-file-in').click(); });
         on('adv-overlay-file-in',    'change',function() { window.loadAdvOverlay(this.files[0]); });
+        on('adv-overlay-lock-btn',   'click', function() { window.toggleOverlayLock(); });
         on('adv-overlay-clear-btn',  'click', function() { window.clearAdvOverlay(); });
         on('adv-rotate-btn',     'click',  function() { window.transformActive('rotate'); });
         on('adv-flipx-btn',      'click',  function() { window.transformActive('flipX'); });

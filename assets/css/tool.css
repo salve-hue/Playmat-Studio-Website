@@ -254,8 +254,8 @@
     .adj-tip { display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border-radius: 50%; border: 1px solid currentColor; font-size: 9px; cursor: help; opacity: 0.55; line-height: 1; flex-shrink: 0; }
     .adj-right { display: flex; align-items: center; gap: 5px; }
     .adj-val { font-size: 10px; color: var(--brand-text-sec); font-variant-numeric: tabular-nums; min-width: 32px; text-align: right; opacity: 0.8; }
-    .adj-reset { background: transparent; border: none; color: var(--brand-text-sec); cursor: pointer; font-size: 13px; padding: 0 1px; opacity: 0.45; line-height: 1; transition: opacity 0.15s, color 0.15s; }
-    .adj-reset:hover { opacity: 1; color: var(--brand-hover); }
+    .adj-reset { background: rgba(48,187,173,0.07); border: 1px solid rgba(48,187,173,0.28); border-radius: 4px; color: var(--brand-hover); cursor: pointer; font-size: 11px; width: 22px; height: 22px; padding: 0; display: inline-flex; align-items: center; justify-content: center; opacity: 0.55; line-height: 1; transition: opacity 0.15s, background 0.15s; flex-shrink: 0; }
+    .adj-reset:hover { opacity: 1; background: rgba(48,187,173,0.2); }
     .btn-eraser.active { background: #BB303E !important; box-shadow: 0 0 12px rgba(187,48,62,0.4); border-color: #BB303E !important; }
     .btn-recolor.active { background: #83BB30 !important; box-shadow: 0 0 12px rgba(131,187,48,0.4); border-color: #83BB30 !important; }
     #canvas-column { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px; background: #0b0912; position: relative; overflow: auto; cursor: default; }
