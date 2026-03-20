@@ -483,13 +483,7 @@ a:hover {
 	padding: 0 !important;
 }
 
-/* Tool container: 90% page width, centered */
-#designer-visibility-wrapper {
-	width: 90% !important;
-	max-width: 90% !important;
-	margin-left: auto !important;
-	margin-right: auto !important;
-}
+/* Tool container width/centering set via inline style on the element */
 
 /* (outer tab nav removed — tool has its own tab bar) */
 
