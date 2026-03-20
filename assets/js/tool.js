@@ -406,14 +406,14 @@
 
     // Formats a slider value for display next to the slider
     const _adjFmt = {
-        'filter-brightness': v => (v >= 0 ? '+' : '') + Math.round(v * 100) + '%',
-        'filter-contrast':   v => (v >= 0 ? '+' : '') + Math.round(v * 100) + '%',
-        'filter-saturation': v => (v >= 0 ? '+' : '') + Math.round(v * 100) + '%',
-        'filter-hue':        v => (v >= 0 ? '+' : '') + Math.round(v) + '°',
+        'filter-brightness': v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-contrast':   v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-saturation': v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-hue':        v => (v > 0 ? '+' : '') + Math.round(v) + '°',
         'filter-blur':       v => parseFloat(v).toFixed(1) + 'px',
-        'filter-shadows':    v => (v >= 0 ? '+' : '') + Math.round(v),
+        'filter-shadows':    v => (v > 0 ? '+' : '') + Math.round(v),
         'filter-vignette':   v => Math.round(v) + '%',
-        'filter-warmth':     v => (v >= 0 ? '+' : '') + Math.round(v),
+        'filter-warmth':     v => (v > 0 ? '+' : '') + Math.round(v),
     };
     window.syncSliderDisplays = function() {
         Object.keys(_adjFmt).forEach(id => {

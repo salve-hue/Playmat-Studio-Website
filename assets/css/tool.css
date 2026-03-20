@@ -179,7 +179,11 @@
         --app-width: 85%;
     }
     
-    .designer-container-wrap { width: 100%; padding: 40px 0; display: flex; justify-content: center; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; color: var(--brand-text-pri); }
+    .designer-container-wrap { width: 100%; padding: 24px 0; display: flex; justify-content: center; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; color: var(--brand-text-pri); }
+
+    /* Let the tool section break out of the page's .inner max-width, while keeping the heading centered */
+    #tools > .inner { max-width: none !important; padding-left: 0 !important; padding-right: 0 !important; }
+    #tools > .inner > header.ps-section-header { max-width: 68em; margin-left: auto; margin-right: auto; padding-left: 2.5em; padding-right: 2.5em; }
     
     /* UI Components */
     .ui-select { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); color: var(--brand-text-pri); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; transition: border 0.3s; cursor: pointer; }
@@ -229,10 +233,12 @@
     .landing-label { color: var(--brand-hover); font-size: 14px; font-weight: bold; letter-spacing: 1px; display: block; margin-bottom: 8px; }
 
     /* --- ADVANCED EDITOR --- */
-    #playmat-tool-root { display: flex; width: 100%; max-width: 1400px; height: 90vh; max-height: 900px; background: #181228; border-radius: 6px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; flex-direction: row; }
+    #playmat-tool-root { display: flex; width: 100%; height: clamp(650px, 90vh, 1050px); background: #181228; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; flex-direction: row; }
     .app-fullscreen-mode { position: fixed !important; top: 2% !important; left: 2% !important; width: 96vw !important; height: 96vh !important; max-width: none !important; max-height: none !important; z-index: 10000 !important; border-radius: 6px !important; }
     #sidebar { width: 300px; border-right: 1px solid rgba(104,48,187,0.25); overflow-y: auto; overflow-x: hidden; scrollbar-width: none; background: #181228; flex-shrink: 0; z-index: 20; display: flex; flex-direction: column; }
     #sidebar::-webkit-scrollbar { display: none; }
+    /* Sidebar action buttons: keep text from overflowing the fixed 300px panel */
+    #sidebar .action-btn { font-size: 11px !important; letter-spacing: 0.5px; padding: 9px 10px; }
 
     .studio-title-wrap { padding: 16px 15px; text-align: center; background: rgba(104,48,187,0.15); border-bottom: 1px solid rgba(104,48,187,0.25); }
     .studio-title { margin:0; font-size:18px; color:#30BBAD; text-transform:uppercase; letter-spacing:2px; font-family:'Plus Jakarta Sans', sans-serif; font-weight:700; }
@@ -254,7 +260,7 @@
     .adj-tip { display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border-radius: 50%; border: 1px solid currentColor; font-size: 9px; cursor: help; opacity: 0.55; line-height: 1; flex-shrink: 0; }
     .adj-right { display: flex; align-items: center; gap: 5px; }
     .adj-val { font-size: 10px; color: var(--brand-text-sec); font-variant-numeric: tabular-nums; min-width: 32px; text-align: right; opacity: 0.8; }
-    .adj-reset { background: rgba(48,187,173,0.07); border: 1px solid rgba(48,187,173,0.28); border-radius: 4px; color: var(--brand-hover); cursor: pointer; font-size: 11px; width: 22px; height: 22px; padding: 0; display: inline-flex; align-items: center; justify-content: center; opacity: 0.55; line-height: 1; transition: opacity 0.15s, background 0.15s; flex-shrink: 0; }
+    .adj-reset { background: rgba(48,187,173,0.07); border: 1px solid rgba(48,187,173,0.28); border-radius: 4px; color: var(--brand-hover); cursor: pointer; font-size: 14px; width: 22px; height: 22px; padding: 0; display: grid; place-items: center; opacity: 0.55; line-height: 1; transition: opacity 0.15s, background 0.15s; flex-shrink: 0; }
     .adj-reset:hover { opacity: 1; background: rgba(48,187,173,0.2); }
     .btn-eraser.active { background: #BB303E !important; box-shadow: 0 0 12px rgba(187,48,62,0.4); border-color: #BB303E !important; }
     .btn-recolor.active { background: #83BB30 !important; box-shadow: 0 0 12px rgba(131,187,48,0.4); border-color: #83BB30 !important; }
@@ -370,7 +376,7 @@
         .action-row-3 { flex-wrap: wrap; }
         .action-row-3 > button:first-child { order: 3; flex: 0 0 100% !important; }
         .action-row-3 > button:not(:first-child) { flex: 1; }
-        .action-row-3 .action-btn { flex-direction: row !important; height: 48px !important; font-size: 15px !important; padding: 10px 14px !important; letter-spacing: 0.8px !important; white-space: nowrap !important; gap: 7px !important; min-height: unset !important; }
+        .action-row-3 .action-btn { flex-direction: row !important; height: 48px !important; font-size: 12px !important; padding: 10px 14px !important; letter-spacing: 0.6px !important; white-space: nowrap !important; gap: 7px !important; min-height: unset !important; }
         /* Hide the flex-grow spacer so action buttons appear right after accordions */
         .sidebar-spacer { display: none !important; }
         /* iOS: prevent auto-zoom on select/input focus (requires font-size >= 16px) */
