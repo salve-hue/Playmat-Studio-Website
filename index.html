@@ -590,6 +590,14 @@
 					                        <input type="text" id="bg-color-hex" value="#000000" class="ui-select" style="margin:0; width:80px; padding:8px; font-family:monospace;">
 					                    </div>
 					                </div>
+
+					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 6px; font-weight: bold; text-transform: uppercase;">Custom Overlay</label>
+					                    <p style="font-size:11px; color:var(--brand-text-sec); line-height:1.4; margin:0 0 10px;">Upload a PNG/image to layer over your artwork — drag &amp; resize freely on the canvas.</p>
+					                    <button class="action-btn btn-secondary" id="adv-overlay-upload-btn" style="width:100%;">📐 UPLOAD OVERLAY</button>
+					                    <input type="file" id="adv-overlay-file-in" accept="image/*" style="display:none;">
+					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; border-color:var(--danger-red); color:var(--danger-red);" id="adv-overlay-clear-btn">🗑️ REMOVE OVERLAY</button>
+					                </div>
 					            </div>
 
 					            <button class="acc-btn" data-acc="acc-layouts">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
@@ -710,7 +718,34 @@
 
 					                        <label style="margin-top:10px;">Saturation</label>
 					                        <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0">
+
+					                        <label style="margin-top:10px;">Hue Shift</label>
+					                        <input type="range" id="filter-hue" min="-180" max="180" step="1" value="0">
+
+					                        <label style="margin-top:10px;">Blur</label>
+					                        <input type="range" id="filter-blur" min="0" max="20" step="0.5" value="0">
+
+					                        <label style="margin-top:10px;">Shadows</label>
+					                        <input type="range" id="filter-shadows" min="-100" max="100" step="1" value="0">
+
+					                        <label style="margin-top:10px;">Vignette</label>
+					                        <input type="range" id="filter-vignette" min="0" max="100" step="1" value="0">
+
+					                        <label style="margin-top:10px;">Warmth</label>
+					                        <input type="range" id="filter-warmth" min="-100" max="100" step="1" value="0">
 					                    </div>
+
+					                    <div style="margin-top:15px; margin-bottom:5px;">
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Presets</label>
+					                        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vibrant')">Vibrant</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('muted')">Muted</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('cinematic')">Cinematic</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vintage')">Vintage</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('neutral')">Neutral</button>
+					                        </div>
+					                    </div>
+
 					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn">RESET COLORS</button>
 					                    <button class="action-btn btn-secondary" style="margin-top:8px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">SHOW/HIDE PRINT GUIDES</button>
 					                </div>
@@ -732,7 +767,16 @@
 					                            <option value="Rubik">Rubik</option> <option value="Bangers">Bangers</option> <option value="Oswald">Oswald</option> <option value="Permanent Marker">Marker</option> <option value="Cinzel">Cinzel</option> <option value="Pacifico">Pacifico</option>
 					                        </select>
 					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Font Size</label>
-					                        <input type="range" id="adv-text-size-in" min="10" max="200" value="40" style="width:100%; margin-bottom:15px;">
+					                        <input type="range" id="adv-text-size-in" min="10" max="200" value="40" style="width:100%; margin-bottom:12px;">
+					                        <div style="display:flex; gap:6px; margin-bottom:12px;">
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:14px; font-weight:bold;" id="adv-text-bold-btn">B</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:14px; font-style:italic;" id="adv-text-italic-btn"><i>I</i></button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-left" title="Align Left">&#8676;</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-center" title="Align Center">&#8801;</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-right" title="Align Right">&#8677;</button>
+					                        </div>
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline Width</label>
+					                        <input type="range" id="adv-text-stroke-width" min="0" max="20" step="0.5" value="2" style="width:100%; margin-bottom:12px;">
 					                        <div style="display:flex; gap:10px;">
 					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Fill</label><input type="color" id="adv-text-col" class="color-swatch" value="#ffffff"></div>
 					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline</label><input type="color" id="adv-text-stroke" class="color-swatch" value="#000000"></div>
@@ -786,6 +830,7 @@
 					                <canvas id="main-canvas"></canvas>
 					                <canvas id="layout-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; opacity: 1;"></canvas>
 					                <canvas id="fg-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 20; opacity: 1;"></canvas>
+				                <canvas id="vignette-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 50; opacity: 1;"></canvas>
 					                <div id="recolor-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; mask-size: 100% 100%; -webkit-mask-size: 100% 100%;">
 					                    <canvas id="recolor-canvas"></canvas>
 					                </div>
