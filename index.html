@@ -710,38 +710,81 @@
 					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px;">🪄 AUTO-OPTIMIZE FOR PRINT</button>
 
 					                    <div class="slider-row" style="margin-top:0;">
-					                        <label>Brightness</label>
-					                        <input type="range" id="filter-brightness" min="-0.3" max="0.3" step="0.01" value="0">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Brightness <span class="adj-tip" title="Lightens or darkens the overall image.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-brightness">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-brightness',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-brightness" min="-0.3" max="0.3" step="0.01" value="0">
+					                        </div>
 
-					                        <label style="margin-top:10px;">Contrast</label>
-					                        <input type="range" id="filter-contrast" min="-0.3" max="0.3" step="0.01" value="0">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Contrast <span class="adj-tip" title="Increases or decreases the difference between light and dark areas.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-contrast">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-contrast',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-contrast" min="-0.3" max="0.3" step="0.01" value="0">
+					                        </div>
 
-					                        <label style="margin-top:10px;">Saturation</label>
-					                        <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Saturation <span class="adj-tip" title="Boosts or reduces the intensity and richness of colors.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-saturation">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-saturation',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0">
+					                        </div>
 
-					                        <label style="margin-top:10px;">Hue Shift</label>
-					                        <input type="range" id="filter-hue" min="-180" max="180" step="1" value="0">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Hue Shift <span class="adj-tip" title="Rotates all colors around the color wheel by the given number of degrees.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-hue">0°</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-hue',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-hue" min="-180" max="180" step="1" value="0">
+					                        </div>
 
-					                        <label style="margin-top:10px;">Blur</label>
-					                        <input type="range" id="filter-blur" min="0" max="20" step="0.5" value="0">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Blur <span class="adj-tip" title="Softens the image by blurring fine detail and hard edges.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-blur">0px</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-blur',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-blur" min="0" max="20" step="0.5" value="0">
+					                        </div>
 
-					                        <label style="margin-top:10px;">Shadows</label>
-					                        <input type="range" id="filter-shadows" min="-100" max="100" step="1" value="0">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Shadows <span class="adj-tip" title="Lifts (positive) or crushes (negative) the dark tones in the image.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-shadows">0</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-shadows',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-shadows" min="-100" max="100" step="1" value="0">
+					                        </div>
 
-					                        <label style="margin-top:10px;">Vignette</label>
-					                        <input type="range" id="filter-vignette" min="0" max="100" step="1" value="0">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Vignette <span class="adj-tip" title="Darkens the corners and edges of the image to draw focus inward.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-vignette">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-vignette',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-vignette" min="0" max="100" step="1" value="0">
+					                        </div>
 
-					                        <label style="margin-top:10px;">Warmth</label>
-					                        <input type="range" id="filter-warmth" min="-100" max="100" step="1" value="0">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Warmth <span class="adj-tip" title="Shifts the image toward warm golden tones (positive) or cool blue tones (negative).">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-warmth">0</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-warmth',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-warmth" min="-100" max="100" step="1" value="0">
+					                        </div>
 					                    </div>
 
 					                    <div style="margin-top:15px; margin-bottom:5px;">
 					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Presets</label>
 					                        <div style="display:flex; flex-wrap:wrap; gap:6px;">
 					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vibrant')">Vibrant</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('muted')">Muted</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('cinematic')">Cinematic</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('faded')">Faded</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('velvet')">Velvet</button>
 					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vintage')">Vintage</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('frosted')">Frosted</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('golden')">Golden</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('ink')">Ink</button>
 					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('neutral')">Neutral</button>
 					                        </div>
 					                    </div>

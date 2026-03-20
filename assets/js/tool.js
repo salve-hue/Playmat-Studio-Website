@@ -404,6 +404,32 @@
         window.updateBleedWarnings(window.sCanvas);
     };
 
+    // Formats a slider value for display next to the slider
+    const _adjFmt = {
+        'filter-brightness': v => (v >= 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-contrast':   v => (v >= 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-saturation': v => (v >= 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-hue':        v => (v >= 0 ? '+' : '') + Math.round(v) + '°',
+        'filter-blur':       v => parseFloat(v).toFixed(1) + 'px',
+        'filter-shadows':    v => (v >= 0 ? '+' : '') + Math.round(v),
+        'filter-vignette':   v => Math.round(v) + '%',
+        'filter-warmth':     v => (v >= 0 ? '+' : '') + Math.round(v),
+    };
+    window.syncSliderDisplays = function() {
+        Object.keys(_adjFmt).forEach(id => {
+            const el = document.getElementById(id);
+            const disp = document.getElementById('val-' + id);
+            if (el && disp) disp.textContent = _adjFmt[id](parseFloat(el.value));
+        });
+    };
+    window.resetSingleFilter = function(id, defaultVal) {
+        const el = document.getElementById(id); if (!el) return;
+        el.value = defaultVal;
+        const disp = document.getElementById('val-' + id);
+        if (disp) disp.textContent = _adjFmt[id] ? _adjFmt[id](defaultVal) : defaultVal;
+        if (id === 'filter-vignette') window.updateVignette(); else window.updateFilters();
+    };
+
     window.resetFilters = function() {
         ['filter-brightness','filter-contrast','filter-saturation','filter-hue','filter-blur','filter-shadows','filter-warmth','filter-vignette'].forEach(id => {
             const el = document.getElementById(id); if (el) el.value = 0;
@@ -416,6 +442,7 @@
             if (btn) { btn.style.background = 'transparent'; btn.style.color = 'var(--brand-text-pri)'; }
         });
         window.updateFilters();
+        window.syncSliderDisplays();
         if (window.sCanvas) window.applySimpleFiltersCore();
     };
 
@@ -454,6 +481,7 @@
             window.renderForeground();
         }
         window.updateVignette();
+        window.syncSliderDisplays();
     };
 
     window.updateVignette = function() {
@@ -1174,11 +1202,14 @@
     // --- FILTER PRESETS ---
     window.applyFilterPreset = function(name) {
         const presets = {
-            vibrant:  { brightness: 0,     contrast: 0.1,  saturation: 0.3,  hue: 0,   blur: 0, shadows: 0,   vignette: 0,  warmth: 0  },
-            muted:    { brightness: 0,     contrast: -0.1, saturation: -0.3, hue: 0,   blur: 0, shadows: 20,  vignette: 15, warmth: 0  },
-            cinematic:{ brightness: -0.05, contrast: 0.15, saturation: -0.1, hue: 0,   blur: 0, shadows: -15, vignette: 35, warmth: 10 },
-            vintage:  { brightness: -0.05, contrast: 0,    saturation: -0.2, hue: 15,  blur: 0, shadows: 10,  vignette: 25, warmth: 40 },
-            neutral:  { brightness: 0,     contrast: 0,    saturation: 0,    hue: 0,   blur: 0, shadows: 0,   vignette: 0,  warmth: 0  },
+            vibrant:  { brightness: 0,     contrast: 0.1,  saturation: 0.3,  hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0   },
+            faded:    { brightness: 0,     contrast: -0.1, saturation: -0.3, hue: 0,   blur: 0,   shadows: 20,  vignette: 15, warmth: 0   },
+            velvet:   { brightness: -0.05, contrast: 0.15, saturation: -0.1, hue: 0,   blur: 0,   shadows: -15, vignette: 35, warmth: 10  },
+            vintage:  { brightness: -0.05, contrast: 0,    saturation: -0.2, hue: 15,  blur: 0,   shadows: 10,  vignette: 25, warmth: 40  },
+            frosted:  { brightness: 0.05,  contrast: -0.05,saturation: -0.2, hue: 10,  blur: 1.5, shadows: 0,   vignette: 0,  warmth: -35 },
+            golden:   { brightness: 0.05,  contrast: 0.05, saturation: 0.1,  hue: 0,   blur: 0,   shadows: 15,  vignette: 20, warmth: 65  },
+            ink:      { brightness: 0,     contrast: 0.25, saturation: -0.45,hue: 0,   blur: 0,   shadows: -20, vignette: 30, warmth: 0   },
+            neutral:  { brightness: 0,     contrast: 0,    saturation: 0,    hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0   },
         };
         const p = presets[name]; if (!p) return;
         const map = {
@@ -1193,6 +1224,7 @@
         const autoBtn = document.getElementById('auto-opt-btn-adv');
         if (autoBtn) { autoBtn.dataset.active = 'false'; autoBtn.style.background = 'transparent'; autoBtn.style.color = 'var(--brand-hover)'; }
         window.updateFilters();
+        window.syncSliderDisplays();
     };
 
     window.forceFit = function() {
@@ -2571,7 +2603,7 @@
         on('filter-blur',        'input',  function() { window.updateFilters(); });
         on('filter-shadows',     'input',  function() { window.updateFilters(); });
         on('filter-warmth',      'input',  function() { window.updateFilters(); });
-        on('filter-vignette',    'input',  function() { window.updateVignette(); });
+        on('filter-vignette',    'input',  function() { window.updateVignette(); window.syncSliderDisplays(); });
         on('auto-opt-btn-adv',   'click',  function() { window.autoOptimizePrintAdv(); });
         on('adv-reset-colors-btn','click', function() { window.resetFilters(); });
         on('adv-guides-btn',     'click',  function() { window.toggleAdvGuides(); });
