@@ -35,6 +35,22 @@
 		<link rel="stylesheet" href="assets/css/main.css?v=7" />
 		<link rel="stylesheet" href="assets/css/custom.css?v=7" />
 		<link rel="stylesheet" href="assets/css/tool.css?v=7" />
+		<style>
+			/* Force tool section to full width and tool wrapper to 90% — beats external CSS */
+			#wrapper > section#tools > div.inner {
+				max-width: 100% !important;
+				width: 100% !important;
+				padding-left: 0 !important;
+				padding-right: 0 !important;
+			}
+			#designer-visibility-wrapper {
+				width: 90% !important;
+				max-width: 90% !important;
+				margin-left: auto !important;
+				margin-right: auto !important;
+				box-sizing: border-box !important;
+			}
+		</style>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<!-- Tool dependencies -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
