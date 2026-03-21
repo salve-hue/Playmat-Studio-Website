@@ -538,10 +538,8 @@
     // --- ACCORDION ---
     window.toggleAcc = (id, forceOpen = false) => {
         const target = document.getElementById(id);
-        if (forceOpen) { document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none'); target.style.display = 'block'; return; }
-        const isOpen = target.style.display === 'block';
-        document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none');
-        if (!isOpen) target.style.display = 'block';
+        if (forceOpen) { target.style.display = 'block'; return; }
+        target.style.display = target.style.display === 'block' ? 'none' : 'block';
     };
 
     window.updateLandingVars = () => {
@@ -649,7 +647,7 @@
                 if (banner) { banner.style.display = 'block'; }
             }, 100);
         } else {
-            setTimeout(function() { window.switchTab('quick-upload'); }, 0);
+            setTimeout(function() { window.switchTab('adv-editor'); }, 0);
         }
         window.renderHostHistory();
         window.initEventListeners();
@@ -1896,20 +1894,9 @@
 
     // ── TAB NAVIGATION ──────────────────────────────────────────
     window.switchTab = function(tabId) {
-        var bd      = document.getElementById('simple-backdrop');
         var rabd    = document.getElementById('adv-backdrop');
-        var quPanel = document.getElementById('tab-panel-quick-upload');
         var aePanel = document.getElementById('tab-panel-adv-editor');
         var dvw     = document.getElementById('designer-visibility-wrapper');
-
-        // Restore simple-backdrop if leaving quick-upload
-        if (bd.classList.contains('tab-mode') && tabId !== 'quick-upload') {
-            bd.classList.remove('tab-mode');
-            bd.style.display = 'none';
-            // Re-insert before adv-backdrop (which is still in designer-visibility-wrapper at this point)
-            if (rabd && rabd.parentNode) rabd.parentNode.insertBefore(bd, rabd);
-            else if (dvw) dvw.appendChild(bd);
-        }
 
         // Restore adv-backdrop if leaving adv-editor
         if (rabd.classList.contains('tab-mode') && tabId !== 'adv-editor') {
@@ -1927,20 +1914,7 @@
         var panel = document.getElementById('tab-panel-' + tabId);
         if (panel) panel.classList.add('active');
 
-        // Quick Upload: move simple-backdrop into tab panel and show inline
-        if (tabId === 'quick-upload') {
-            quPanel.appendChild(bd);
-            bd.classList.add('tab-mode');
-            bd.style.display = 'block';
-            requestAnimationFrame(function() {
-                window.initSimpleCanvas();
-                window.updateInfoBars(null);
-                window.populateGameDropdowns();
-            });
-            return;
-        }
-
-        // Advanced Editor: move adv-backdrop into tab panel and show inline
+        // Playmat Studio: move adv-backdrop into tab panel and show inline
         if (tabId === 'adv-editor') {
             aePanel.appendChild(rabd);
             rabd.classList.add('tab-mode');
@@ -1949,7 +1923,6 @@
                 window.initCanvas();
                 window.updateInfoBars(null);
                 window.populateGameDropdowns();
-                window.toggleAcc('acc-size', true);
             });
             return;
         }

@@ -368,18 +368,14 @@
 					        </div>
 
 					        <div class="tool-tab-bar">
-					            <button class="tool-tab-btn active" data-tab="quick-upload">&#x26A1;&#xFE0F; QUICK UPLOAD</button>
-					            <button class="tool-tab-btn" data-tab="adv-editor">&#x270F;&#xFE0F; ADVANCED EDITOR</button>
+					            <button class="tool-tab-btn active" data-tab="adv-editor">&#x1F3AE; PLAYMAT STUDIO</button>
 					            <button class="tool-tab-btn" data-tab="batch">&#x2728; BATCH ENHANCE</button>
 					            <button class="tool-tab-btn" data-tab="converter">&#x1F504; FORMAT CONVERTER</button>
 					            <button class="tool-tab-btn" data-tab="host">&#x2601; IMAGE HOST</button>
 					        </div>
 
-					        <!-- Quick Upload: editor launches immediately when this tab is clicked via switchTab() -->
-					        <div id="tab-panel-quick-upload" class="tool-tab-panel active"></div>
-
-					        <!-- Advanced Editor: editor launches immediately when this tab is clicked via switchTab() -->
-					        <div id="tab-panel-adv-editor" class="tool-tab-panel"></div>
+					        <!-- Playmat Studio editor: editor launches immediately when this tab is clicked via switchTab() -->
+					        <div id="tab-panel-adv-editor" class="tool-tab-panel active"></div>
 
 					        <!-- Batch Enhance -->
 					        <div id="tab-panel-batch" class="tool-tab-panel">
@@ -606,7 +602,7 @@
 					            </div>
 
 					            <button class="acc-btn" data-acc="acc-layouts">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
-					            <div id="acc-layouts" class="acc-content">
+					            <div id="acc-layouts" class="acc-content" style="display:block;">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
 					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -714,7 +710,7 @@
 					            </div>
 
 					            <button class="acc-btn" data-acc="acc-art">ADJUSTMENTS <span>▼</span></button>
-					            <div id="acc-art" class="acc-content">
+					            <div id="acc-art" class="acc-content" style="display:block;">
 
 					                <div class="inner-panel">
 					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
