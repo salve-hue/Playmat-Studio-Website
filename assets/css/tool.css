@@ -105,6 +105,16 @@
         max-height: none !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
         overflow: visible !important;
+        height: auto !important;
+    }
+    #simple-backdrop.tab-mode #simple-canvas-wrap {
+        overflow: visible !important;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+    #simple-backdrop.tab-mode #simple-tools {
+        overflow-y: visible !important;
+        overflow: visible !important;
     }
     #simple-backdrop.tab-mode .version-tag { display: none; }
 
