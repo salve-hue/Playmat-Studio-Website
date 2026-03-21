@@ -36,15 +36,16 @@
 		<link rel="stylesheet" href="assets/css/custom.css?v=8" />
 		<link rel="stylesheet" href="assets/css/tool.css?v=8" />
 		<style>
+			/* Contain the breakout so it never causes horizontal scroll */
+			section#tools { overflow-x: clip !important; }
 			/*
-			 * Viewport-breakout technique: makes #designer-visibility-wrapper
-			 * escape the template's centered max-width container entirely.
-			 * width: 90vw is absolute (viewport-relative, ignores parent width).
-			 * margin-left: calc(50% - 45vw) re-centers it against the viewport.
+			 * Viewport-breakout: width/margin use vw units so the tool is always
+			 * exactly 90% of the browser window, regardless of the template's
+			 * centered max-width container. max-width: 90vw caps it there too.
 			 */
 			#designer-visibility-wrapper {
 				width: 90vw !important;
-				max-width: none !important;
+				max-width: 90vw !important;
 				margin-left: calc(50% - 45vw) !important;
 				margin-right: 0 !important;
 				box-sizing: border-box !important;
@@ -1471,13 +1472,13 @@
 		</script>
 
 		<script>
-		// Force tool wrapper to 90vw — JS setProperty with 'important' beats all CSS
+		// Force tool wrapper to 90vw — always 90% of browser window, no more
 		(function(){
 			function applyToolWidth(){
 				var el = document.getElementById('designer-visibility-wrapper');
 				if (!el) return;
 				el.style.setProperty('width', '90vw', 'important');
-				el.style.setProperty('max-width', 'none', 'important');
+				el.style.setProperty('max-width', '90vw', 'important');
 				el.style.setProperty('margin-left', 'calc(50% - 45vw)', 'important');
 				el.style.setProperty('margin-right', '0', 'important');
 				el.style.setProperty('position', 'relative', 'important');
@@ -1488,6 +1489,7 @@
 			} else {
 				applyToolWidth();
 			}
+			window.addEventListener('resize', applyToolWidth, {passive: true});
 		})();
 
 		// Contact form — submit via Resend worker
