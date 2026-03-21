@@ -295,7 +295,8 @@
     /* Large canvas mode — editor box expands to fit full-width canvas */
     #playmat-tool-root.size-mode-large { height: auto !important; max-height: none !important; }
     #playmat-tool-root.size-mode-large #editor-main { flex: none; height: auto; overflow: visible; }
-    #playmat-tool-root.size-mode-large #canvas-column { height: auto; overflow: visible; align-self: flex-start; justify-content: flex-start; }
+    #playmat-tool-root.size-mode-large #canvas-column { height: auto; overflow: visible; justify-content: flex-start; }
+    #playmat-tool-root.size-mode-large #sidebar { align-self: stretch; }
     #canvas-wrapper { position: relative; line-height: 0; box-shadow: 0 0 40px rgba(0,0,0,0.6); transform-origin: center center; transition: transform 0.2s; cursor: none; }
     .compass { width: 24px; height: 24px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: var(--brand-hover); }
     #zoom-toolbar { position: absolute; top: 14px; right: 14px; background: rgba(11,9,18,0.75); padding: 6px 10px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 10; display: flex; gap: 6px; align-items: center; border: 1px solid rgba(104,48,187,0.3); }
