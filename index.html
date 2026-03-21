@@ -1471,6 +1471,25 @@
 		</script>
 
 		<script>
+		// Force tool wrapper to 90vw — JS setProperty with 'important' beats all CSS
+		(function(){
+			function applyToolWidth(){
+				var el = document.getElementById('designer-visibility-wrapper');
+				if (!el) return;
+				el.style.setProperty('width', '90vw', 'important');
+				el.style.setProperty('max-width', 'none', 'important');
+				el.style.setProperty('margin-left', 'calc(50% - 45vw)', 'important');
+				el.style.setProperty('margin-right', '0', 'important');
+				el.style.setProperty('position', 'relative', 'important');
+				el.style.setProperty('box-sizing', 'border-box', 'important');
+			}
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', applyToolWidth);
+			} else {
+				applyToolWidth();
+			}
+		})();
+
 		// Contact form — submit via Resend worker
 		(function(){
 			var CONTACT_WORKER = 'https://contact.playmatstudio.com';
