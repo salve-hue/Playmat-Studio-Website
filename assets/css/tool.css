@@ -103,8 +103,9 @@
     #simple-backdrop.tab-mode #simple-modal {
         max-width: none !important;
         max-height: none !important;
+        height: max(320px, calc(100vh - 460px)) !important;
+        overflow: hidden !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
-        overflow: visible !important;
     }
     #simple-backdrop.tab-mode .version-tag { display: none; }
 
