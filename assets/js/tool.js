@@ -1103,7 +1103,7 @@
         // If the column hasn't painted yet (clientWidth===0), defer one frame so we
         // get a real measurement rather than falling back to the 250px minimum,
         // which would make forceFit calculate the wrong scale and crop the image.
-        if (measuredW <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
+        if (measuredW <= 0 || col.clientHeight <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
         const aspect = conf.w / conf.h;
         const mode = APP.canvasSizeMode || 'auto';
         const sizeMap = { s: 380, m: 560, l: 750 };
@@ -2587,14 +2587,17 @@
         // ── Advanced editor ──
         on('adv-restart-btn',    'click', function() { window.restartApp(); });
         on('fs-toggle-btn',      'click', function() { window.toggleFullScreen(); });
-        document.querySelectorAll('.canvas-sz-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                APP.canvasSizeMode = this.dataset.sz;
+        var szCont = document.getElementById('canvas-size-btns');
+        if (szCont) {
+            szCont.addEventListener('click', function(e) {
+                var btn = e.target.closest('.canvas-sz-btn');
+                if (!btn) return;
+                APP.canvasSizeMode = btn.dataset.sz;
                 document.querySelectorAll('.canvas-sz-btn').forEach(function(b) { b.classList.remove('canvas-sz-active'); });
-                this.classList.add('canvas-sz-active');
+                btn.classList.add('canvas-sz-active');
                 window.changeSize();
             });
-        });
+        }
         on('adv-upload-file-btn','click', function() { window.triggerUpload(); });
         on('adv-paste-url-btn',  'click', function() { window.promptPasteUrl(); });
         on('ai-upscale-btn-adv', 'click', function() { window.confirmAutoUpscale(true); });
