@@ -32,23 +32,23 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link rel="preload" href="assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
-		<link rel="stylesheet" href="assets/css/main.css?v=7" />
-		<link rel="stylesheet" href="assets/css/custom.css?v=7" />
-		<link rel="stylesheet" href="assets/css/tool.css?v=7" />
+		<link rel="stylesheet" href="assets/css/main.css?v=8" />
+		<link rel="stylesheet" href="assets/css/custom.css?v=8" />
+		<link rel="stylesheet" href="assets/css/tool.css?v=8" />
 		<style>
-			/* Force tool section to full width and tool wrapper to 90% — beats external CSS */
-			#wrapper > section#tools > div.inner {
-				max-width: none !important;
-				width: 100% !important;
-				padding-left: 0 !important;
-				padding-right: 0 !important;
-			}
+			/*
+			 * Viewport-breakout technique: makes #designer-visibility-wrapper
+			 * escape the template's centered max-width container entirely.
+			 * width: 90vw is absolute (viewport-relative, ignores parent width).
+			 * margin-left: calc(50% - 45vw) re-centers it against the viewport.
+			 */
 			#designer-visibility-wrapper {
-				width: 90% !important;
+				width: 90vw !important;
 				max-width: none !important;
-				margin-left: auto !important;
-				margin-right: auto !important;
+				margin-left: calc(50% - 45vw) !important;
+				margin-right: 0 !important;
 				box-sizing: border-box !important;
+				position: relative !important;
 			}
 		</style>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
@@ -348,7 +348,7 @@
 					    </div>
 					</div>
 
-					<div id="designer-visibility-wrapper" style="display:none; width:90%; max-width:90%; margin-left:auto; margin-right:auto; box-sizing:border-box;"><div class="designer-container-wrap">
+					<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
 
 					    <div id="landing-ui">
 					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>

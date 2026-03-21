@@ -181,21 +181,10 @@
     
     .designer-container-wrap { width: 100%; padding: 24px 0; display: flex; flex-direction: column; align-items: stretch; background: transparent; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; color: var(--brand-text-pri); }
 
-    /* Tool section: remove .inner max-width constraint so the wrapper can be 90% of page */
+    /* Allow the viewport-breakout on #designer-visibility-wrapper to overflow .inner */
     html body #wrapper #tools > div.inner {
-        max-width: none !important;
-        width: 100% !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        box-sizing: border-box !important;
+        overflow: visible !important;
     }
-    html body #wrapper #tools > div.inner > header.ps-section-header {
-        max-width: 68em;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 2em;
-    }
-    /* #designer-visibility-wrapper width/centering is set via inline style on the element */
     
     /* UI Components */
     .ui-select { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); color: var(--brand-text-pri); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; transition: border 0.3s; cursor: pointer; }
