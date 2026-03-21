@@ -60,6 +60,7 @@
         // Mat size is set once from the Liquid schema setting — no runtime changes needed.
         // (Shopify cart integration removed in standalone build)PageQty().
         activeSizeKey:     'standard', // overridden by product ID detection below
+        canvasSizeMode:    'auto',
         s_filters:         { enhance: false, grayscale: false },
         activePointsUrl:   null,
         _bleedConfirmCallback: null,
@@ -1096,14 +1097,25 @@
 
     window.changeSize = function() {
         const conf=SIZE_DB[APP.activeSizeKey], col=document.getElementById('canvas-column');
-        const isMobile=window.innerWidth<=900, padding=isMobile?20:80;
-        const measuredW = col.clientWidth - padding;
+        const isMobile=window.innerWidth<=900;
+        const hPad=isMobile?20:80, vPad=isMobile?20:64;
+        const measuredW = col.clientWidth - hPad;
         // If the column hasn't painted yet (clientWidth===0), defer one frame so we
         // get a real measurement rather than falling back to the 250px minimum,
         // which would make forceFit calculate the wrong scale and crop the image.
         if (measuredW <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
-        APP.canvasW = Math.max(measuredW, 250);
-        APP.canvasH = APP.canvasW / (conf.w / conf.h);
+        const aspect = conf.w / conf.h;
+        const mode = APP.canvasSizeMode || 'auto';
+        const sizeMap = { s: 380, m: 560, l: 750 };
+        let targetW = (mode === 'auto') ? Math.max(measuredW, 250) : (sizeMap[mode] || Math.max(measuredW, 250));
+        let targetH = targetW / aspect;
+        // Constrain to available height so the canvas never overflows (no scrolling)
+        const infoBar = document.getElementById('adv-info-bar');
+        const infoH = infoBar ? (infoBar.getBoundingClientRect().height || 40) : 40;
+        const maxH = col.clientHeight - vPad - infoH - 8;
+        if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
+        APP.canvasW = targetW;
+        APP.canvasH = targetH;
         window.canvas.setDimensions({ width:APP.canvasW, height:APP.canvasH });
         window.rCanvas.setDimensions({ width:APP.canvasW, height:APP.canvasH });
         const vCanvas = document.getElementById('vignette-canvas');
@@ -2575,6 +2587,14 @@
         // ── Advanced editor ──
         on('adv-restart-btn',    'click', function() { window.restartApp(); });
         on('fs-toggle-btn',      'click', function() { window.toggleFullScreen(); });
+        document.querySelectorAll('.canvas-sz-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                APP.canvasSizeMode = this.dataset.sz;
+                document.querySelectorAll('.canvas-sz-btn').forEach(function(b) { b.classList.remove('canvas-sz-active'); });
+                this.classList.add('canvas-sz-active');
+                window.changeSize();
+            });
+        });
         on('adv-upload-file-btn','click', function() { window.triggerUpload(); });
         on('adv-paste-url-btn',  'click', function() { window.promptPasteUrl(); });
         on('ai-upscale-btn-adv', 'click', function() { window.confirmAutoUpscale(true); });

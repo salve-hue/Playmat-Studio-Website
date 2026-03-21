@@ -287,7 +287,11 @@
     .adj-reset:hover { opacity: 1; background: rgba(48,187,173,0.2); }
     .btn-eraser.active { background: #BB303E !important; box-shadow: 0 0 12px rgba(187,48,62,0.4); border-color: #BB303E !important; }
     .btn-recolor.active { background: #83BB30 !important; box-shadow: 0 0 12px rgba(131,187,48,0.4); border-color: #83BB30 !important; }
-    #canvas-column { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px; background: #0b0912; position: relative; overflow: auto; cursor: default; }
+    #canvas-size-btns { display: flex; align-items: center; gap: 4px; }
+    .canvas-sz-label { color: var(--brand-text-sec); font-size: 10px; font-weight: bold; letter-spacing: 1px; white-space: nowrap; }
+    .canvas-sz-btn { padding: 5px 9px !important; font-size: 10px !important; min-width: 0 !important; letter-spacing: 0.5px; }
+    .canvas-sz-btn.canvas-sz-active { background: var(--brand-hover) !important; border-color: var(--brand-hover) !important; color: #fff !important; }
+    #canvas-column { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px; background: #0b0912; position: relative; overflow: hidden; cursor: default; }
     #canvas-wrapper { position: relative; line-height: 0; box-shadow: 0 0 40px rgba(0,0,0,0.6); transform-origin: center center; transition: transform 0.2s; cursor: none; }
     .compass { width: 24px; height: 24px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: var(--brand-hover); }
     #zoom-toolbar { position: absolute; top: 14px; right: 14px; background: rgba(11,9,18,0.75); padding: 6px 10px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 10; display: flex; gap: 6px; align-items: center; border: 1px solid rgba(104,48,187,0.3); }
