@@ -477,6 +477,9 @@ a:hover {
 }
 
 .ps-tools .inner {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	max-width: none !important;
 	overflow: visible !important;
 }
 

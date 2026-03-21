@@ -36,20 +36,19 @@
 		<link rel="stylesheet" href="assets/css/custom.css?v=8" />
 		<link rel="stylesheet" href="assets/css/tool.css?v=8" />
 		<style>
-			/* Contain the breakout so it never causes horizontal scroll */
-			section#tools { overflow-x: clip !important; }
-			/*
-			 * Viewport-breakout: width/margin use vw units so the tool is always
-			 * exactly 90% of the browser window, regardless of the template's
-			 * centered max-width container. max-width: 90vw caps it there too.
-			 */
+			/* Remove the template padding so the tool inner fills the full width */
+			#wrapper > section#tools > div.inner {
+				padding-left: 0 !important;
+				padding-right: 0 !important;
+				max-width: none !important;
+			}
+			/* Tool fills the full inner width edge to edge */
 			#designer-visibility-wrapper {
-				width: 100vw !important;
-				max-width: 100vw !important;
-				margin-left: calc(50% - 50vw) !important;
+				width: 100% !important;
+				max-width: 100% !important;
+				margin-left: 0 !important;
 				margin-right: 0 !important;
 				box-sizing: border-box !important;
-				position: relative !important;
 			}
 		</style>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
@@ -1477,11 +1476,10 @@
 			function applyToolWidth(){
 				var el = document.getElementById('designer-visibility-wrapper');
 				if (!el) return;
-				el.style.setProperty('width', '100vw', 'important');
-				el.style.setProperty('max-width', '100vw', 'important');
-				el.style.setProperty('margin-left', 'calc(50% - 50vw)', 'important');
+				el.style.setProperty('width', '100%', 'important');
+				el.style.setProperty('max-width', '100%', 'important');
+				el.style.setProperty('margin-left', '0', 'important');
 				el.style.setProperty('margin-right', '0', 'important');
-				el.style.setProperty('position', 'relative', 'important');
 				el.style.setProperty('box-sizing', 'border-box', 'important');
 			}
 			if (document.readyState === 'loading') {
