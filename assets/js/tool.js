@@ -1099,21 +1099,27 @@
         const conf=SIZE_DB[APP.activeSizeKey], col=document.getElementById('canvas-column');
         const isMobile=window.innerWidth<=900;
         const hPad=isMobile?20:80, vPad=isMobile?20:64;
-        const measuredW = col.clientWidth - hPad;
-        // If the column hasn't painted yet (clientWidth===0), defer one frame so we
-        // get a real measurement rather than falling back to the 250px minimum,
-        // which would make forceFit calculate the wrong scale and crop the image.
-        if (measuredW <= 0 || col.clientHeight <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
-        const aspect = conf.w / conf.h;
         const mode = APP.canvasSizeMode || 'auto';
-        const sizeMap = { s: 380, m: 560, l: 750 };
-        let targetW = (mode === 'auto') ? Math.max(measuredW, 250) : (sizeMap[mode] || Math.max(measuredW, 250));
+        const root = document.getElementById('playmat-tool-root');
+        // Large mode: let the editor box grow to fit the canvas — no height cap
+        if (mode === 'l') { if (root) root.classList.add('size-mode-large'); }
+        else               { if (root) root.classList.remove('size-mode-large'); }
+        const measuredW = col.clientWidth - hPad;
+        // Defer until the column has been painted and has real dimensions
+        if (measuredW <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
+        if (mode !== 'l' && col.clientHeight <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
+        const aspect = conf.w / conf.h;
+        // S=560, M=750, auto/L=full column width
+        const sizeMap = { s: 560, m: 750 };
+        let targetW = (mode === 'auto' || mode === 'l') ? Math.max(measuredW, 250) : (sizeMap[mode] || Math.max(measuredW, 250));
         let targetH = targetW / aspect;
-        // Constrain to available height so the canvas never overflows (no scrolling)
-        const infoBar = document.getElementById('adv-info-bar');
-        const infoH = infoBar ? (infoBar.getBoundingClientRect().height || 40) : 40;
-        const maxH = col.clientHeight - vPad - infoH - 8;
-        if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
+        // For non-large modes, constrain height so the canvas never overflows or causes scrolling
+        if (mode !== 'l') {
+            const infoBar = document.getElementById('adv-info-bar');
+            const infoH = infoBar ? (infoBar.getBoundingClientRect().height || 40) : 40;
+            const maxH = col.clientHeight - vPad - infoH - 8;
+            if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
+        }
         APP.canvasW = targetW;
         APP.canvasH = targetH;
         window.canvas.setDimensions({ width:APP.canvasW, height:APP.canvasH });
