@@ -36,18 +36,12 @@
 		<link rel="stylesheet" href="assets/css/custom.css?v=8" />
 		<link rel="stylesheet" href="assets/css/tool.css?v=8" />
 		<style>
-			/* Remove the template padding so the tool inner fills the full width */
-			#wrapper > section#tools > div.inner {
-				padding-left: 0 !important;
-				padding-right: 0 !important;
-				max-width: none !important;
-			}
-			/* Tool fills the full inner width edge to edge */
+			/* Tool is now a direct child of section#tools (outside .inner),
+			   so width:100% naturally fills the full viewport width */
 			#designer-visibility-wrapper {
 				width: 100% !important;
 				max-width: 100% !important;
-				margin-left: 0 !important;
-				margin-right: 0 !important;
+				margin: 0 !important;
 				box-sizing: border-box !important;
 			}
 		</style>
@@ -347,8 +341,9 @@
 					        </div>
 					    </div>
 					</div>
+			</div><!-- /.inner -->
 
-					<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
+			<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
 
 					    <div id="landing-ui">
 					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>
@@ -925,7 +920,6 @@
 
 					<!-- ═══ END TOOL HTML ════════════════════════════════════════ -->
 
-				</div>
 			</section>
 
 			<!-- About -->
@@ -1478,8 +1472,7 @@
 				if (!el) return;
 				el.style.setProperty('width', '100%', 'important');
 				el.style.setProperty('max-width', '100%', 'important');
-				el.style.setProperty('margin-left', '0', 'important');
-				el.style.setProperty('margin-right', '0', 'important');
+				el.style.setProperty('margin', '0', 'important');
 				el.style.setProperty('box-sizing', 'border-box', 'important');
 			}
 			if (document.readyState === 'loading') {
