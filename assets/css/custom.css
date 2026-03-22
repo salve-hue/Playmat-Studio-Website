@@ -477,13 +477,11 @@ a:hover {
 }
 
 .ps-tools .inner {
-	padding-left: 0 !important;
-	padding-right: 0 !important;
-	max-width: none !important;
-	overflow: visible !important;
+	max-width: 1440px !important;
+	width: 100% !important;
+	margin: 0 auto !important;
+	padding: 0 1em !important;
 }
-
-/* #designer-visibility-wrapper uses viewport-breakout in index.html <style> block */
 
 /* (outer tab nav removed — tool has its own tab bar) */
 

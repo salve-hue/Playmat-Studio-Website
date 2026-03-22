@@ -32,19 +32,9 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link rel="preload" href="assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
-		<link rel="stylesheet" href="assets/css/main.css?v=9" />
-		<link rel="stylesheet" href="assets/css/custom.css?v=9" />
-		<link rel="stylesheet" href="assets/css/tool.css?v=9" />
-		<style>
-			/* Tool is now a direct child of section#tools (outside .inner),
-			   so width:100% naturally fills the full viewport width */
-			#designer-visibility-wrapper {
-				width: 100% !important;
-				max-width: 100% !important;
-				margin: 0 !important;
-				box-sizing: border-box !important;
-			}
-		</style>
+		<link rel="stylesheet" href="assets/css/main.css?v=4" />
+		<link rel="stylesheet" href="assets/css/custom.css?v=4" />
+		<link rel="stylesheet" href="assets/css/tool.css?v=4" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<!-- Tool dependencies -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
@@ -341,9 +331,8 @@
 					        </div>
 					    </div>
 					</div>
-			</div><!-- /.inner -->
 
-			<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
+					<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
 
 					    <div id="landing-ui">
 					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>
@@ -368,14 +357,18 @@
 					        </div>
 
 					        <div class="tool-tab-bar">
-					            <button class="tool-tab-btn active" data-tab="adv-editor">&#x1F3AE; PLAYMAT STUDIO</button>
+					            <button class="tool-tab-btn active" data-tab="quick-upload">&#x26A1;&#xFE0F; QUICK UPLOAD</button>
+					            <button class="tool-tab-btn" data-tab="adv-editor">&#x270F;&#xFE0F; ADVANCED EDITOR</button>
 					            <button class="tool-tab-btn" data-tab="batch">&#x2728; BATCH ENHANCE</button>
 					            <button class="tool-tab-btn" data-tab="converter">&#x1F504; FORMAT CONVERTER</button>
 					            <button class="tool-tab-btn" data-tab="host">&#x2601; IMAGE HOST</button>
 					        </div>
 
-					        <!-- Playmat Studio editor: editor launches immediately when this tab is clicked via switchTab() -->
-					        <div id="tab-panel-adv-editor" class="tool-tab-panel active"></div>
+					        <!-- Quick Upload: editor launches immediately when this tab is clicked via switchTab() -->
+					        <div id="tab-panel-quick-upload" class="tool-tab-panel active"></div>
+
+					        <!-- Advanced Editor: editor launches immediately when this tab is clicked via switchTab() -->
+					        <div id="tab-panel-adv-editor" class="tool-tab-panel"></div>
 
 					        <!-- Batch Enhance -->
 					        <div id="tab-panel-batch" class="tool-tab-panel">
@@ -563,36 +556,28 @@
 
 					    <div id="adv-backdrop">
 					    <div id="playmat-tool-root">
-					        <div id="editor-top-bar">
-					            <div class="etb-group">
-					                <button class="action-btn" id="adv-upload-file-btn">📁 UPLOAD FILE</button>
-					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;">
-					                <button class="action-btn btn-secondary" id="adv-paste-url-btn">🔗 PASTE URL</button>
-					            </div>
-					            <div class="etb-title">
-					                <span style="font-size:15px; color:#30BBAD; text-transform:uppercase; letter-spacing:2px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;">Playmat Studio</span>
+					        <div id="sidebar">
+					            <div class="studio-title-wrap">
+					                <h2 class="studio-title">Playmat Studio</h2>
 					                <span class="studio-subtitle">Advanced Editor <span class="beta-badge" style="font-size:9px; vertical-align:middle;">BETA</span></span>
 					            </div>
-					            <div class="etb-group">
-					                <div id="canvas-size-btns">
-					                    <span class="canvas-sz-label">CANVAS:</span>
-					                    <button class="action-btn btn-secondary canvas-sz-btn canvas-sz-active" data-sz="auto">AUTO</button>
-					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="s">S</button>
-					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="m">M</button>
-					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="l">L</button>
-					                </div>
-					                <button class="action-btn btn-secondary" id="adv-restart-btn">↺ RESTART</button>
-					                <button id="fs-toggle-btn" class="action-btn" style="background: var(--brand-hover);">⛶ FULL SCREEN</button>
+
+					            <div class="sidebar-header">
+					                <button class="action-btn btn-secondary" style="margin:0;" id="adv-restart-btn">RESTART</button>
+					                <button id="fs-toggle-btn" class="action-btn" style="margin:0; background: var(--brand-hover);">FULL SCREEN</button>
 					            </div>
-					        </div>
-					        <div id="editor-main">
-					        <div id="sidebar">
 
 					            <button class="acc-btn" data-acc="acc-size">ARTWORK <span>▼</span></button>
 					            <div id="acc-size" class="acc-content" style="display:block;">
+					                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
+					                    <button class="action-btn" id="adv-upload-file-btn">📁 UPLOAD FILE</button>
+					                    <button class="action-btn btn-secondary" style="font-size:12px;" id="adv-paste-url-btn">🔗 PASTE URL</button>
+					                </div>
+
+					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;">
 
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality <span class="info-tooltip" data-tip="AI upscaling improves low-resolution artwork before printing. Works best on images that look blurry or pixelated. Results may vary depending on the source image.">?</span></label>
+					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality</label>
 					                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); line-height: 1.2; width: 100%;">
 					                        ✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>
 					                    </button>
@@ -605,11 +590,10 @@
 					                        <input type="text" id="bg-color-hex" value="#000000" class="ui-select" style="margin:0; width:80px; padding:8px; font-family:monospace;">
 					                    </div>
 					                </div>
-
 					            </div>
 
 					            <button class="acc-btn" data-acc="acc-layouts">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
-					            <div id="acc-layouts" class="acc-content" style="display:block;">
+					            <div id="acc-layouts" class="acc-content">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
 					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -705,117 +689,28 @@
 					                        </div>
 					                    </div>
 					                </div>
-
-					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 6px; font-weight: bold; text-transform: uppercase;">Custom Overlay</label>
-					                    <p style="font-size:11px; color:var(--brand-text-sec); line-height:1.4; margin:0 0 10px;">Upload a PNG/image to layer over your artwork — drag &amp; resize freely on the canvas.</p>
-					                    <button class="action-btn btn-secondary" id="adv-overlay-upload-btn" style="width:100%;">📐 UPLOAD OVERLAY</button>
-					                    <input type="file" id="adv-overlay-file-in" accept="image/*" style="display:none;">
-					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; font-size:11px; padding:7px;" id="adv-overlay-lock-btn">🔒 Proportions Locked</button>
-					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; border-color:var(--danger-red); color:var(--danger-red);" id="adv-overlay-clear-btn">🗑️ REMOVE OVERLAY</button>
-					                </div>
 					            </div>
 
 					            <button class="acc-btn" data-acc="acc-art">ADJUSTMENTS <span>▼</span></button>
-					            <div id="acc-art" class="acc-content" style="display:block;">
+					            <div id="acc-art" class="acc-content">
 
 					                <div class="inner-panel">
 					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
-					                    <p style="font-size:11px; color:var(--brand-text-pri); line-height:1.4; margin-bottom:15px; margin-top:0; opacity:0.8;">
+					                    <p style="font-size:11px; color:var(--brand-text-sec); line-height:1.4; margin-bottom:15px; margin-top:0;">
 					                        Images on digital screens look much brighter than physical ink. Use our Auto-Optimize tool to perfectly calibrate your art for printing!
 					                    </p>
 					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px;">🪄 AUTO-OPTIMIZE FOR PRINT</button>
 
 					                    <div class="slider-row" style="margin-top:0;">
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Brightness <span class="adj-tip" title="Lightens or darkens the overall image.">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-brightness">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-brightness',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-brightness" min="-0.3" max="0.3" step="0.01" value="0">
-					                        </div>
+					                        <label>Brightness</label>
+					                        <input type="range" id="filter-brightness" min="-0.3" max="0.3" step="0.01" value="0">
 
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Contrast <span class="adj-tip" title="Increases or decreases the difference between light and dark areas.">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-contrast">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-contrast',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-contrast" min="-0.3" max="0.3" step="0.01" value="0">
-					                        </div>
+					                        <label style="margin-top:10px;">Contrast</label>
+					                        <input type="range" id="filter-contrast" min="-0.3" max="0.3" step="0.01" value="0">
 
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Saturation <span class="adj-tip" title="Boosts or reduces the intensity and richness of colors.">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-saturation">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-saturation',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0">
-					                        </div>
-
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Vibrance <span class="adj-tip" title="Boosts muted colors while leaving already-vivid tones largely unchanged.">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-vibrance">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-vibrance',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-vibrance" min="-0.5" max="0.5" step="0.01" value="0">
-					                        </div>
-
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Hue Shift <span class="adj-tip" title="Rotates all colors around the color wheel by the given number of degrees.">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-hue">0°</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-hue',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-hue" min="-180" max="180" step="1" value="0">
-					                        </div>
-
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Blur <span class="adj-tip" title="Softens the image by blurring fine detail and hard edges.">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-blur">0px</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-blur',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-blur" min="0" max="20" step="0.5" value="0">
-					                        </div>
-
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Shadows <span class="adj-tip" title="Lifts (positive) or crushes (negative) the dark tones in the image.">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-shadows">0</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-shadows',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-shadows" min="-100" max="100" step="1" value="0">
-					                        </div>
-
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Vignette <span class="adj-tip" title="Darkens the corners and edges of the image to draw focus inward.">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-vignette">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-vignette',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-vignette" min="0" max="100" step="1" value="0">
-					                        </div>
-
-					                        <div class="adj-item">
-					                            <div class="adj-header">
-					                                <span class="adj-name">Warmth <span class="adj-tip" title="Shifts the image toward warm golden tones (positive) or cool blue tones (negative).">?</span></span>
-					                                <div class="adj-right"><span class="adj-val" id="val-filter-warmth">0</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-warmth',0)">↺</button></div>
-					                            </div>
-					                            <input type="range" id="filter-warmth" min="-100" max="100" step="1" value="0">
-					                        </div>
+					                        <label style="margin-top:10px;">Saturation</label>
+					                        <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0">
 					                    </div>
-
-					                    <div style="margin-top:15px; margin-bottom:5px;">
-					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Presets</label>
-					                        <div style="display:flex; flex-wrap:wrap; gap:6px;">
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vibrant')">Vibrant</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('faded')">Faded</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('velvet')">Velvet</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vintage')">Vintage</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('frosted')">Frosted</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('golden')">Golden</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('ink')">Ink</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('bw')">B&amp;W</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('neutral')">Neutral</button>
-					                            <input type="range" id="filter-grayscale" min="0" max="1" step="1" value="0" style="display:none;" aria-hidden="true">
-					                        </div>
-					                    </div>
-
 					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn">RESET COLORS</button>
 					                    <button class="action-btn btn-secondary" style="margin-top:8px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">SHOW/HIDE PRINT GUIDES</button>
 					                </div>
@@ -837,16 +732,7 @@
 					                            <option value="Rubik">Rubik</option> <option value="Bangers">Bangers</option> <option value="Oswald">Oswald</option> <option value="Permanent Marker">Marker</option> <option value="Cinzel">Cinzel</option> <option value="Pacifico">Pacifico</option>
 					                        </select>
 					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Font Size</label>
-					                        <input type="range" id="adv-text-size-in" min="10" max="200" value="40" style="width:100%; margin-bottom:12px;">
-					                        <div style="display:flex; gap:6px; margin-bottom:12px;">
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:14px; font-weight:bold;" id="adv-text-bold-btn">B</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:14px; font-style:italic;" id="adv-text-italic-btn"><i>I</i></button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-left" title="Align Left">&#8676;</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-center" title="Align Center">&#8801;</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-right" title="Align Right">&#8677;</button>
-					                        </div>
-					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline Width</label>
-					                        <input type="range" id="adv-text-stroke-width" min="0" max="20" step="0.5" value="2" style="width:100%; margin-bottom:12px;">
+					                        <input type="range" id="adv-text-size-in" min="10" max="200" value="40" style="width:100%; margin-bottom:15px;">
 					                        <div style="display:flex; gap:10px;">
 					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Fill</label><input type="color" id="adv-text-col" class="color-swatch" value="#ffffff"></div>
 					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline</label><input type="color" id="adv-text-stroke" class="color-swatch" value="#000000"></div>
@@ -872,6 +758,20 @@
 
 					            <div class="sidebar-spacer" style="flex-grow: 1;"></div>
 
+					            <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+					                <div id="adv-bleed-warning" class="bleed-warning-banner">
+					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
+					                    Scale your artwork to fill the entire canvas including the red bleed area.
+					                </div>
+					                <div class="action-row-3">
+					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; GET PRINTED</button>
+					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; DOWNLOAD</button>
+					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; SHARE</button>
+					                </div>
+					                <div style="text-align:center; padding-top: 15px;">
+					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
+					                </div>
+					            </div>
 					        </div>
 
 					        <div id="canvas-column">
@@ -886,7 +786,6 @@
 					                <canvas id="main-canvas"></canvas>
 					                <canvas id="layout-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; opacity: 1;"></canvas>
 					                <canvas id="fg-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 20; opacity: 1;"></canvas>
-				                <canvas id="vignette-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 50; opacity: 1;"></canvas>
 					                <div id="recolor-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; mask-size: 100% 100%; -webkit-mask-size: 100% 100%;">
 					                    <canvas id="recolor-canvas"></canvas>
 					                </div>
@@ -899,22 +798,7 @@
 					                <span><span class="info-red">Red area:</span> Bleed — your art <strong>must</strong> cover this fully, right to the canvas edge</span>
 					                <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
 					            </div>
-					            <div id="adv-canvas-actions">
-					                <div id="adv-bleed-warning" class="bleed-warning-banner">
-					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
-					                    Scale your artwork to fill the entire canvas including the red bleed area.
-					                </div>
-					                <div class="action-row-3">
-					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; GET PRINTED</button>
-					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; DOWNLOAD</button>
-					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; SHARE</button>
-					                </div>
-					                <div style="text-align:center; padding-top: 12px;">
-					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
-					                </div>
-					            </div>
 					        </div>
-					        </div><!-- /#editor-main -->
 					    </div>
 					    <div class="version-tag" style="color:rgba(255,255,255,0.2); z-index:10001;">v1.7.1</div>
 					    </div><!-- /#adv-backdrop -->
@@ -923,6 +807,7 @@
 
 					<!-- ═══ END TOOL HTML ════════════════════════════════════════ -->
 
+				</div>
 			</section>
 
 			<!-- About -->
@@ -1415,18 +1300,11 @@
 		</div><!-- /#changelog-modal -->
 
 		<script>
-			// Back-to-top visibility — only show after user scrolls past the About section
+			// Back-to-top visibility
 			(function(){
 				var btn = document.getElementById('back-to-top');
-				var aboutEl = document.getElementById('about');
-				var _threshold = 800;
-				function _calcThreshold(){
-					if(aboutEl){ var r = aboutEl.getBoundingClientRect(); _threshold = r.bottom + window.pageYOffset; }
-				}
-				_calcThreshold();
-				window.addEventListener('resize', _calcThreshold, {passive:true});
 				window.addEventListener('scroll', function(){
-					if(window.scrollY > _threshold){ btn.classList.add('visible'); }
+					if(window.scrollY > 400){ btn.classList.add('visible'); }
 					else { btn.classList.remove('visible'); }
 				}, {passive:true});
 				btn.addEventListener('click', function(e){
@@ -1468,24 +1346,6 @@
 		</script>
 
 		<script>
-		// Force tool wrapper to 90vw — always 90% of browser window, no more
-		(function(){
-			function applyToolWidth(){
-				var el = document.getElementById('designer-visibility-wrapper');
-				if (!el) return;
-				el.style.setProperty('width', '100%', 'important');
-				el.style.setProperty('max-width', '100%', 'important');
-				el.style.setProperty('margin', '0', 'important');
-				el.style.setProperty('box-sizing', 'border-box', 'important');
-			}
-			if (document.readyState === 'loading') {
-				document.addEventListener('DOMContentLoaded', applyToolWidth);
-			} else {
-				applyToolWidth();
-			}
-			window.addEventListener('resize', applyToolWidth, {passive: true});
-		})();
-
 		// Contact form — submit via Resend worker
 		(function(){
 			var CONTACT_WORKER = 'https://contact.playmatstudio.com';

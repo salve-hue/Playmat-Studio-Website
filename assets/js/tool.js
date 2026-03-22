@@ -60,7 +60,6 @@
         // Mat size is set once from the Liquid schema setting — no runtime changes needed.
         // (Shopify cart integration removed in standalone build)PageQty().
         activeSizeKey:     'standard', // overridden by product ID detection below
-        canvasSizeMode:    'auto',
         s_filters:         { enhance: false, grayscale: false },
         activePointsUrl:   null,
         _bleedConfirmCallback: null,
@@ -405,35 +404,8 @@
         window.updateBleedWarnings(window.sCanvas);
     };
 
-    // Formats a slider value for display next to the slider
-    const _adjFmt = {
-        'filter-brightness': v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
-        'filter-contrast':   v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
-        'filter-saturation': v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
-        'filter-vibrance':   v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
-        'filter-hue':        v => (v > 0 ? '+' : '') + Math.round(v) + '°',
-        'filter-blur':       v => parseFloat(v).toFixed(1) + 'px',
-        'filter-shadows':    v => (v > 0 ? '+' : '') + Math.round(v),
-        'filter-vignette':   v => Math.round(v) + '%',
-        'filter-warmth':     v => (v > 0 ? '+' : '') + Math.round(v),
-    };
-    window.syncSliderDisplays = function() {
-        Object.keys(_adjFmt).forEach(id => {
-            const el = document.getElementById(id);
-            const disp = document.getElementById('val-' + id);
-            if (el && disp) disp.textContent = _adjFmt[id](parseFloat(el.value));
-        });
-    };
-    window.resetSingleFilter = function(id, defaultVal) {
-        const el = document.getElementById(id); if (!el) return;
-        el.value = defaultVal;
-        const disp = document.getElementById('val-' + id);
-        if (disp) disp.textContent = _adjFmt[id] ? _adjFmt[id](defaultVal) : defaultVal;
-        if (id === 'filter-vignette') window.updateVignette(); else window.updateFilters();
-    };
-
     window.resetFilters = function() {
-        ['filter-brightness','filter-contrast','filter-saturation','filter-vibrance','filter-hue','filter-blur','filter-shadows','filter-warmth','filter-vignette','filter-grayscale'].forEach(id => {
+        ['filter-brightness','filter-contrast','filter-saturation'].forEach(id => {
             const el = document.getElementById(id); if (el) el.value = 0;
         });
         const btnAdv = document.getElementById('auto-opt-btn-adv');
@@ -444,42 +416,20 @@
             if (btn) { btn.style.background = 'transparent'; btn.style.color = 'var(--brand-text-pri)'; }
         });
         window.updateFilters();
-        window.syncSliderDisplays();
         if (window.sCanvas) window.applySimpleFiltersCore();
     };
 
     window.updateFilters = function() {
         if (!window.canvas) return;
-        const b  = parseFloat(document.getElementById('filter-brightness')?.value || 0);
-        const c  = parseFloat(document.getElementById('filter-contrast')?.value   || 0);
-        const s  = parseFloat(document.getElementById('filter-saturation')?.value || 0);
-        const vb = parseFloat(document.getElementById('filter-vibrance')?.value   || 0);
-        const h  = parseFloat(document.getElementById('filter-hue')?.value        || 0);
-        const bl = parseFloat(document.getElementById('filter-blur')?.value       || 0);
-        const sh = parseFloat(document.getElementById('filter-shadows')?.value    || 0);
-        const wm = parseFloat(document.getElementById('filter-warmth')?.value     || 0);
-        const gr = parseFloat(document.getElementById('filter-grayscale')?.value  || 0);
+        const b = parseFloat(document.getElementById('filter-brightness')?.value || 0);
+        const c = parseFloat(document.getElementById('filter-contrast')?.value   || 0);
+        const s = parseFloat(document.getElementById('filter-saturation')?.value || 0);
         const art = window.canvas.getObjects().find(o => o.name === 'art');
         if (art) {
             let f = '';
-            if (b  !== 0) f += `brightness(${100 + b * 100}%) `;
-            if (c  !== 0) f += `contrast(${100 + c * 100}%) `;
-            if (s  !== 0) f += `saturate(${100 + s * 100}%) `;
-            if (h  !== 0) f += `hue-rotate(${h}deg) `;
-            if (bl !== 0) f += `blur(${bl}px) `;
-            // Shadows: positive = lift (bright+low-contrast), negative = crush (dark+high-contrast)
-            if (sh !== 0) {
-                const bAdj = 1 + sh * 0.0015;
-                const cAdj = 1 - sh * 0.0008;
-                f += `brightness(${(bAdj * 100).toFixed(1)}%) contrast(${(cAdj * 100).toFixed(1)}%) `;
-            }
-            // Warmth: positive = sepia-warm tint, negative = cool hue shift
-            if (wm > 0) f += `sepia(${(wm * 0.5).toFixed(1)}%) saturate(${(100 + wm * 0.3).toFixed(1)}%) `;
-            if (wm < 0) f += `hue-rotate(${(wm * 0.6).toFixed(1)}deg) saturate(${(100 - wm * 0.2).toFixed(1)}%) `;
-            // Vibrance: selective saturation boost/cut layered on top of saturation
-            if (vb !== 0) f += `saturate(${Math.max(0, 100 + vb * 100).toFixed(1)}%) `;
-            // Grayscale: for B&W preset (driven by hidden input, not a visible slider)
-            if (gr > 0) f += `grayscale(${(gr * 100).toFixed(0)}%) `;
+            if (b !== 0) f += `brightness(${100 + b * 100}%) `;
+            if (c !== 0) f += `contrast(${100 + c * 100}%) `;
+            if (s !== 0) f += `saturate(${100 + s * 100}%) `;
             art.customFilterStr = f.trim();
             art._render = function(ctx) {
                 if (this.customFilterStr) { ctx.save(); ctx.filter = this.customFilterStr; fabric.Image.prototype._render.call(this, ctx); ctx.restore(); }
@@ -488,25 +438,6 @@
             window.canvas.requestRenderAll();
             window.renderForeground();
         }
-        window.updateVignette();
-        window.syncSliderDisplays();
-    };
-
-    window.updateVignette = function() {
-        const vCanvas = document.getElementById('vignette-canvas');
-        if (!vCanvas) return;
-        const strength = parseFloat(document.getElementById('filter-vignette')?.value || 0);
-        const w = vCanvas.width, h = vCanvas.height;
-        const ctx = vCanvas.getContext('2d');
-        ctx.clearRect(0, 0, w, h);
-        if (strength <= 0 || w <= 0 || h <= 0) return;
-        const alpha = strength / 100;
-        const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w, h) * 0.7);
-        grad.addColorStop(0,   'rgba(0,0,0,0)');
-        grad.addColorStop(0.5, `rgba(0,0,0,${(alpha * 0.3).toFixed(3)})`);
-        grad.addColorStop(1,   `rgba(0,0,0,${(alpha * 0.95).toFixed(3)})`);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
     };
 
     // --- GAME DROPDOWNS ---
@@ -539,8 +470,10 @@
     // --- ACCORDION ---
     window.toggleAcc = (id, forceOpen = false) => {
         const target = document.getElementById(id);
-        if (forceOpen) { target.style.display = 'block'; return; }
-        target.style.display = target.style.display === 'block' ? 'none' : 'block';
+        if (forceOpen) { document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none'); target.style.display = 'block'; return; }
+        const isOpen = target.style.display === 'block';
+        document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none');
+        if (!isOpen) target.style.display = 'block';
     };
 
     window.updateLandingVars = () => {
@@ -648,7 +581,7 @@
                 if (banner) { banner.style.display = 'block'; }
             }, 100);
         } else {
-            setTimeout(function() { window.switchTab('adv-editor'); }, 0);
+            setTimeout(function() { window.switchTab('quick-upload'); }, 0);
         }
         window.renderHostHistory();
         window.initEventListeners();
@@ -895,7 +828,10 @@
         const conf = SIZE_DB[APP.activeSizeKey];
         const wrap = document.getElementById('simple-canvas-wrap');
         const maxW = wrap.clientWidth - 40;
-        const maxH = wrap.clientHeight - 40;
+        const modalMaxH = window.innerHeight * 0.95;
+        const headerH   = document.getElementById('simple-header').getBoundingClientRect().height || 50;
+        const toolsH    = document.getElementById('simple-tools').getBoundingClientRect().height  || 250;
+        const maxH      = modalMaxH - headerH - toolsH - 40;
         let cW = maxW, cH = cW / (conf.w / conf.h);
         if (cH > maxH && maxH > 100) { cH = maxH; cW = cH * (conf.w / conf.h); }
         APP.canvasW = cW; APP.canvasH = cH;
@@ -1070,23 +1006,11 @@
     window.handleSelection = (e) => {
         window.syncTransformUI();
         if (e.selected && e.selected[0].type==='i-text') {
-            const obj = e.selected[0];
             document.getElementById('adv-text-tools').classList.remove('hidden-field');
-            document.getElementById('adv-font-family').value        = obj.fontFamily||'Plus Jakarta Sans';
-            document.getElementById('adv-text-size-in').value       = obj.fontSize||40;
-            document.getElementById('adv-text-col').value           = obj.fill||'#ffffff';
-            document.getElementById('adv-text-stroke').value        = obj.stroke||'#000000';
-            document.getElementById('adv-text-stroke-width').value  = obj.strokeWidth != null ? obj.strokeWidth : 2;
-            // Bold / Italic active state
-            const boldBtn   = document.getElementById('adv-text-bold-btn');
-            const italicBtn = document.getElementById('adv-text-italic-btn');
-            if (boldBtn)   boldBtn.style.background   = obj.fontWeight==='bold'   ? 'var(--brand-hover)' : '';
-            if (italicBtn) italicBtn.style.background = obj.fontStyle==='italic'  ? 'var(--brand-hover)' : '';
-            // Alignment active state
-            ['left','center','right'].forEach(align => {
-                const btn = document.getElementById('adv-text-align-' + align);
-                if (btn) btn.style.background = (obj.textAlign||'left')===align ? 'var(--brand-hover)' : '';
-            });
+            document.getElementById('adv-font-family').value    = e.selected[0].fontFamily||'Plus Jakarta Sans';
+            document.getElementById('adv-text-size-in').value   = e.selected[0].fontSize||40;
+            document.getElementById('adv-text-col').value       = e.selected[0].fill||'#ffffff';
+            document.getElementById('adv-text-stroke').value    = e.selected[0].stroke||'#000000';
         } else { document.getElementById('adv-text-tools').classList.add('hidden-field'); }
     };
     window.updateAdvTextAttr = (attr, val) => { const obj=window.canvas.getActiveObject(); if(obj) { obj.set(attr,val); window.canvas.requestRenderAll(); if(attr==='fontFamily') setTimeout(()=>window.canvas.requestRenderAll(),150); } };
@@ -1094,56 +1018,20 @@
 
     window.changeSize = function() {
         const conf=SIZE_DB[APP.activeSizeKey], col=document.getElementById('canvas-column');
-        const isMobile=window.innerWidth<=900;
-        const hPad=isMobile?20:80, vPad=isMobile?20:64;
-        const mode = APP.canvasSizeMode || 'auto';
-        const root = document.getElementById('playmat-tool-root');
-        // Large mode: let the editor box grow to fit the canvas — no height cap
-        if (mode === 'l') { if (root) root.classList.add('size-mode-large'); }
-        else               { if (root) root.classList.remove('size-mode-large'); }
-        const measuredW = col.clientWidth - hPad;
-        // Defer until the column has been painted and has real dimensions
+        const isMobile=window.innerWidth<=900, padding=isMobile?20:80;
+        const measuredW = col.clientWidth - padding;
+        // If the column hasn't painted yet (clientWidth===0), defer one frame so we
+        // get a real measurement rather than falling back to the 250px minimum,
+        // which would make forceFit calculate the wrong scale and crop the image.
         if (measuredW <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
-        if (mode !== 'l' && col.clientHeight <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
-        const aspect = conf.w / conf.h;
-        let targetW, targetH;
-        if (mode === 'l') {
-            targetW = Math.max(measuredW, 250);
-            targetH = targetW / aspect;
-        } else {
-            // Measure the fixed elements that share canvas-column with the canvas
-            const infoBar  = document.getElementById('adv-info-bar');
-            const infoH    = infoBar  ? (infoBar.offsetHeight  || 40)  : 40;
-            const actionsBar = document.getElementById('adv-canvas-actions');
-            const actionsH = actionsBar ? (actionsBar.offsetHeight || 120) : 120;
-            const maxH = col.clientHeight - vPad - infoH - actionsH - 24; // 16px canvas-wrapper margin-bottom + 8px safety
-            if (mode === 'auto') {
-                // Auto: fill available width, cap height so nothing overflows
-                targetW = Math.max(measuredW, 250);
-                targetH = targetW / aspect;
-                if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
-            } else {
-                // S = 80% of max-fit height (was M), M = 90% (between old M and L)
-                const fracs = { s: 0.80, m: 0.90 };
-                targetH = Math.round(maxH * (fracs[mode] || 1));
-                targetW = Math.round(targetH * aspect);
-                // Cap width to available column width
-                if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
-                // Safety cap
-                if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = Math.round(targetH * aspect); }
-            }
-        }
-        APP.canvasW = targetW;
-        APP.canvasH = targetH;
+        APP.canvasW = Math.max(measuredW, 250);
+        APP.canvasH = APP.canvasW / (conf.w / conf.h);
         window.canvas.setDimensions({ width:APP.canvasW, height:APP.canvasH });
         window.rCanvas.setDimensions({ width:APP.canvasW, height:APP.canvasH });
-        const vCanvas = document.getElementById('vignette-canvas');
-        if (vCanvas) { vCanvas.width = APP.canvasW; vCanvas.height = APP.canvasH; }
         document.getElementById('canvas-wrapper').style.width  = APP.canvasW + 'px';
         document.getElementById('canvas-wrapper').style.height = APP.canvasH + 'px';
         window.drawAdvGuides(APP.canvasW, APP.canvasH, conf.w);
         window.forceFit(); if(APP.activeLayoutUrl) window.renderLayout(); window.renderForeground();
-        window.updateVignette();
     };
 
     window.toggleAdvGuides = () => { const g=window.canvas.getObjects().find(o=>o.name==='guides'); if(g) { g.visible=!g.visible; window.canvas.renderAll(); } };
@@ -1195,99 +1083,6 @@
             });
         };
         r.readAsDataURL(input.files[0]);
-    };
-
-    // --- CUSTOM OVERLAY ---
-    window.loadAdvOverlay = function(file) {
-        if (!file) return;
-        const url = URL.createObjectURL(file);
-        fabric.Image.fromURL(url, function(img) {
-            window.canvas.getObjects().forEach(o => { if (o.name === 'overlay') window.canvas.remove(o); });
-            const scaleX = APP.canvasW / img.width;
-            const scaleY = APP.canvasH / img.height;
-            img.set({
-                name: 'overlay',
-                left: APP.canvasW / 2, top: APP.canvasH / 2,
-                originX: 'center', originY: 'center',
-                scaleX: Math.min(scaleX, scaleY) * 1,
-                scaleY: Math.min(scaleX, scaleY) * 1,
-                selectable: true, hasControls: true,
-            });
-            window.canvas.add(img);
-            // Place overlay above art but below guides
-            const art    = window.canvas.getObjects().find(o => o.name === 'art');
-            const guides = window.canvas.getObjects().find(o => o.name === 'guides');
-            if (art)    window.canvas.bringForward(img);
-            if (guides) window.canvas.bringToFront(guides);
-            window.canvas.setActiveObject(img);
-            window.canvas.uniformScaling = true;
-            window.canvas.renderAll();
-            const lockBtn  = document.getElementById('adv-overlay-lock-btn');
-            const clearBtn = document.getElementById('adv-overlay-clear-btn');
-            if (lockBtn)  { lockBtn.classList.remove('hidden-field'); lockBtn.dataset.locked = 'true'; lockBtn.textContent = '🔒 Proportions Locked'; lockBtn.style.borderColor = ''; lockBtn.style.color = ''; }
-            if (clearBtn) clearBtn.classList.remove('hidden-field');
-        });
-    };
-
-    window.toggleOverlayLock = function() {
-        const btn = document.getElementById('adv-overlay-lock-btn');
-        if (!btn) return;
-        const locked = btn.dataset.locked === 'true';
-        if (locked) {
-            window.canvas.uniformScaling = false;
-            btn.dataset.locked = 'false';
-            btn.textContent = '↔ Free Resize';
-            btn.style.borderColor = 'var(--brand-hover)';
-            btn.style.color = 'var(--brand-hover)';
-        } else {
-            window.canvas.uniformScaling = true;
-            btn.dataset.locked = 'true';
-            btn.textContent = '🔒 Proportions Locked';
-            btn.style.borderColor = '';
-            btn.style.color = '';
-        }
-    };
-
-    window.clearAdvOverlay = function() {
-        window.canvas.getObjects().forEach(o => { if (o.name === 'overlay') window.canvas.remove(o); });
-        window.canvas.uniformScaling = true;
-        window.canvas.renderAll();
-        const lockBtn  = document.getElementById('adv-overlay-lock-btn');
-        const clearBtn = document.getElementById('adv-overlay-clear-btn');
-        if (lockBtn)  lockBtn.classList.add('hidden-field');
-        if (clearBtn) clearBtn.classList.add('hidden-field');
-        const inp = document.getElementById('adv-overlay-file-in');
-        if (inp) inp.value = '';
-    };
-
-    // --- FILTER PRESETS ---
-    window.applyFilterPreset = function(name) {
-        const presets = {
-            vibrant:  { brightness: 0,     contrast: 0.1,  saturation: 0.2,  vibrance: 0.2,  hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0,   grayscale: 0 },
-            faded:    { brightness: 0,     contrast: -0.1, saturation: -0.3, vibrance: 0,    hue: 0,   blur: 0,   shadows: 20,  vignette: 15, warmth: 0,   grayscale: 0 },
-            velvet:   { brightness: -0.05, contrast: 0.15, saturation: -0.1, vibrance: 0,    hue: 0,   blur: 0,   shadows: -15, vignette: 35, warmth: 10,  grayscale: 0 },
-            vintage:  { brightness: -0.05, contrast: 0,    saturation: -0.2, vibrance: 0,    hue: 15,  blur: 0,   shadows: 10,  vignette: 25, warmth: 40,  grayscale: 0 },
-            frosted:  { brightness: 0.05,  contrast: -0.05,saturation: -0.2, vibrance: 0,    hue: 10,  blur: 1.5, shadows: 0,   vignette: 0,  warmth: -35, grayscale: 0 },
-            golden:   { brightness: 0.05,  contrast: 0.05, saturation: 0.1,  vibrance: 0.15, hue: 0,   blur: 0,   shadows: 15,  vignette: 20, warmth: 65,  grayscale: 0 },
-            ink:      { brightness: 0,     contrast: 0.25, saturation: -0.45,vibrance: 0,    hue: 0,   blur: 0,   shadows: -20, vignette: 30, warmth: 0,   grayscale: 0 },
-            bw:       { brightness: 0,     contrast: 0.1,  saturation: 0,    vibrance: 0,    hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0,   grayscale: 1 },
-            neutral:  { brightness: 0,     contrast: 0,    saturation: 0,    vibrance: 0,    hue: 0,   blur: 0,   shadows: 0,   vignette: 0,  warmth: 0,   grayscale: 0 },
-        };
-        const p = presets[name]; if (!p) return;
-        const map = {
-            brightness: 'filter-brightness', contrast:   'filter-contrast',
-            saturation: 'filter-saturation', vibrance:   'filter-vibrance',
-            hue:        'filter-hue',        blur:       'filter-blur',
-            shadows:    'filter-shadows',    vignette:   'filter-vignette',
-            warmth:     'filter-warmth',     grayscale:  'filter-grayscale',
-        };
-        Object.entries(map).forEach(([key, id]) => {
-            const el = document.getElementById(id); if (el) el.value = p[key];
-        });
-        const autoBtn = document.getElementById('auto-opt-btn-adv');
-        if (autoBtn) { autoBtn.dataset.active = 'false'; autoBtn.style.background = 'transparent'; autoBtn.style.color = 'var(--brand-hover)'; }
-        window.updateFilters();
-        window.syncSliderDisplays();
     };
 
     window.forceFit = function() {
@@ -1693,20 +1488,6 @@
             }
         }
 
-        // Draw vignette overlay at print resolution
-        if (isAdv) {
-            const vigStrength = parseFloat(document.getElementById('filter-vignette')?.value || 0);
-            if (vigStrength > 0) {
-                const alpha = vigStrength / 100;
-                const grad = mCtx.createRadialGradient(printW/2, printH/2, 0, printW/2, printH/2, Math.max(printW, printH) * 0.7);
-                grad.addColorStop(0,   'rgba(0,0,0,0)');
-                grad.addColorStop(0.5, `rgba(0,0,0,${(alpha * 0.3).toFixed(3)})`);
-                grad.addColorStop(1,   `rgba(0,0,0,${(alpha * 0.95).toFixed(3)})`);
-                mCtx.fillStyle = grad;
-                mCtx.fillRect(0, 0, printW, printH);
-            }
-        }
-
         if(g) g.visible=wasVisible; activeCanvas.renderAll();
 
         return new Promise((resolve,reject) => {
@@ -1925,9 +1706,20 @@
 
     // ── TAB NAVIGATION ──────────────────────────────────────────
     window.switchTab = function(tabId) {
+        var bd      = document.getElementById('simple-backdrop');
         var rabd    = document.getElementById('adv-backdrop');
+        var quPanel = document.getElementById('tab-panel-quick-upload');
         var aePanel = document.getElementById('tab-panel-adv-editor');
         var dvw     = document.getElementById('designer-visibility-wrapper');
+
+        // Restore simple-backdrop if leaving quick-upload
+        if (bd.classList.contains('tab-mode') && tabId !== 'quick-upload') {
+            bd.classList.remove('tab-mode');
+            bd.style.display = 'none';
+            // Re-insert before adv-backdrop (which is still in designer-visibility-wrapper at this point)
+            if (rabd && rabd.parentNode) rabd.parentNode.insertBefore(bd, rabd);
+            else if (dvw) dvw.appendChild(bd);
+        }
 
         // Restore adv-backdrop if leaving adv-editor
         if (rabd.classList.contains('tab-mode') && tabId !== 'adv-editor') {
@@ -1945,7 +1737,20 @@
         var panel = document.getElementById('tab-panel-' + tabId);
         if (panel) panel.classList.add('active');
 
-        // Playmat Studio: move adv-backdrop into tab panel and show inline
+        // Quick Upload: move simple-backdrop into tab panel and show inline
+        if (tabId === 'quick-upload') {
+            quPanel.appendChild(bd);
+            bd.classList.add('tab-mode');
+            bd.style.display = 'block';
+            requestAnimationFrame(function() {
+                window.initSimpleCanvas();
+                window.updateInfoBars(null);
+                window.populateGameDropdowns();
+            });
+            return;
+        }
+
+        // Advanced Editor: move adv-backdrop into tab panel and show inline
         if (tabId === 'adv-editor') {
             aePanel.appendChild(rabd);
             rabd.classList.add('tab-mode');
@@ -1954,6 +1759,7 @@
                 window.initCanvas();
                 window.updateInfoBars(null);
                 window.populateGameDropdowns();
+                window.toggleAcc('acc-size', true);
             });
             return;
         }
@@ -2606,17 +2412,6 @@
         // ── Advanced editor ──
         on('adv-restart-btn',    'click', function() { window.restartApp(); });
         on('fs-toggle-btn',      'click', function() { window.toggleFullScreen(); });
-        var szCont = document.getElementById('canvas-size-btns');
-        if (szCont) {
-            szCont.addEventListener('click', function(e) {
-                var btn = e.target.closest('.canvas-sz-btn');
-                if (!btn) return;
-                APP.canvasSizeMode = btn.dataset.sz;
-                document.querySelectorAll('.canvas-sz-btn').forEach(function(b) { b.classList.remove('canvas-sz-active'); });
-                btn.classList.add('canvas-sz-active');
-                window.changeSize();
-            });
-        }
         on('adv-upload-file-btn','click', function() { window.triggerUpload(); });
         on('adv-paste-url-btn',  'click', function() { window.promptPasteUrl(); });
         on('ai-upscale-btn-adv', 'click', function() { window.confirmAutoUpscale(true); });
@@ -2648,44 +2443,17 @@
         on('filter-brightness',  'input',  function() { window.updateFilters(); });
         on('filter-contrast',    'input',  function() { window.updateFilters(); });
         on('filter-saturation',  'input',  function() { window.updateFilters(); });
-        on('filter-vibrance',    'input',  function() { window.updateFilters(); });
-        on('filter-hue',         'input',  function() { window.updateFilters(); });
-        on('filter-blur',        'input',  function() { window.updateFilters(); });
-        on('filter-shadows',     'input',  function() { window.updateFilters(); });
-        on('filter-warmth',      'input',  function() { window.updateFilters(); });
-        on('filter-vignette',    'input',  function() { window.updateVignette(); window.syncSliderDisplays(); });
         on('auto-opt-btn-adv',   'click',  function() { window.autoOptimizePrintAdv(); });
         on('adv-reset-colors-btn','click', function() { window.resetFilters(); });
         on('adv-guides-btn',     'click',  function() { window.toggleAdvGuides(); });
         on('zoom-in',            'input',  function() { window.handleZoom(this.value); });
         on('adv-reset-scale-btn','click',  function() { window.forceFit(); });
-        on('adv-font-family',       'change', function() { window.updateAdvTextAttr('fontFamily', this.value); });
-        on('adv-text-size-in',      'input',  function() { window.updateAdvTextAttr('fontSize', parseInt(this.value, 10)); });
-        on('adv-text-col',          'input',  function() { window.updateAdvTextAttr('fill', this.value); });
-        on('adv-text-stroke',       'input',  function() { window.updateAdvTextAttr('stroke', this.value); });
-        on('adv-text-stroke-width', 'input',  function() { window.updateAdvTextAttr('strokeWidth', parseFloat(this.value)); });
-        on('adv-text-bold-btn',     'click',  function() {
-            const obj = window.canvas.getActiveObject(); if (!obj) return;
-            const isBold = obj.fontWeight === 'bold';
-            window.updateAdvTextAttr('fontWeight', isBold ? 'normal' : 'bold');
-            this.style.background = isBold ? '' : 'var(--brand-hover)';
-        });
-        on('adv-text-italic-btn',   'click',  function() {
-            const obj = window.canvas.getActiveObject(); if (!obj) return;
-            const isItalic = obj.fontStyle === 'italic';
-            window.updateAdvTextAttr('fontStyle', isItalic ? 'normal' : 'italic');
-            this.style.background = isItalic ? '' : 'var(--brand-hover)';
-        });
-        on('adv-text-align-left',   'click',  function() { window.updateAdvTextAttr('textAlign','left');   ['left','center','right'].forEach(a=>{const b=document.getElementById('adv-text-align-'+a);if(b)b.style.background=a==='left'?'var(--brand-hover)':''}); });
-        on('adv-text-align-center', 'click',  function() { window.updateAdvTextAttr('textAlign','center'); ['left','center','right'].forEach(a=>{const b=document.getElementById('adv-text-align-'+a);if(b)b.style.background=a==='center'?'var(--brand-hover)':''}); });
-        on('adv-text-align-right',  'click',  function() { window.updateAdvTextAttr('textAlign','right');  ['left','center','right'].forEach(a=>{const b=document.getElementById('adv-text-align-'+a);if(b)b.style.background=a==='right'?'var(--brand-hover)':''}); });
-        on('adv-add-text-btn',      'click',  function() { window.addAdvText(); });
-        on('adv-delete-btn',        'click',  function() { window.removeAdvActive(); });
-        // Custom overlay
-        on('adv-overlay-upload-btn', 'click', function() { document.getElementById('adv-overlay-file-in').click(); });
-        on('adv-overlay-file-in',    'change',function() { window.loadAdvOverlay(this.files[0]); });
-        on('adv-overlay-lock-btn',   'click', function() { window.toggleOverlayLock(); });
-        on('adv-overlay-clear-btn',  'click', function() { window.clearAdvOverlay(); });
+        on('adv-font-family',    'change', function() { window.updateAdvTextAttr('fontFamily', this.value); });
+        on('adv-text-size-in',   'input',  function() { window.updateAdvTextAttr('fontSize', parseInt(this.value, 10)); });
+        on('adv-text-col',       'input',  function() { window.updateAdvTextAttr('fill', this.value); });
+        on('adv-text-stroke',    'input',  function() { window.updateAdvTextAttr('stroke', this.value); });
+        on('adv-add-text-btn',   'click',  function() { window.addAdvText(); });
+        on('adv-delete-btn',     'click',  function() { window.removeAdvActive(); });
         on('adv-rotate-btn',     'click',  function() { window.transformActive('rotate'); });
         on('adv-flipx-btn',      'click',  function() { window.transformActive('flipX'); });
         on('adv-flipy-btn',      'click',  function() { window.transformActive('flipY'); });
@@ -2701,19 +2469,4 @@
         // ── Share / Get Printed modals ──
         on('share-copy-btn', 'click', function() { window.copyShareUrl(); });
         on('print-copy-btn', 'click', function() { window.copyPrintUrl(); });
-
-        // ── Clipboard paste: Ctrl+V / ⌘V to load artwork from clipboard ──
-        document.addEventListener('paste', function(e) {
-            // Don't intercept paste while user is editing a text object on the canvas
-            if (window.canvas && window.canvas.getActiveObject()?.isEditing) return;
-            const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
-            if (!items) return;
-            for (const item of items) {
-                if (item.type.startsWith('image/')) {
-                    const file = item.getAsFile();
-                    if (file) window.handleUpload({ files: [file] });
-                    break;
-                }
-            }
-        });
     };
