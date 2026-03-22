@@ -363,6 +363,9 @@
     .bleed-warning-banner { display: none; background: rgba(255,71,87,0.15); border: 1px solid rgba(255,71,87,0.5); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: #ff4757; font-weight: 600; line-height: 1.5; text-align: center; }
     .bleed-warning-banner.visible { display: block; }
 
+    /* --- FULLSCREEN BACKDROP BLUR --- */
+    #fs-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 999998; }
+
     /* --- ADVANCED EDITOR LIGHTBOX --- */
     #adv-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.92); z-index: 999999; justify-content: center; align-items: flex-start; padding: 20px; padding-top: max(20px, calc(var(--adv-nav-offset, 80px) + 20px)); box-sizing: border-box; overflow-y: auto; }
 
