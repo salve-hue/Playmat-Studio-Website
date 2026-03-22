@@ -924,8 +924,8 @@
         const btn  = document.getElementById('fs-toggle-btn');
         const bd   = document.getElementById('fs-backdrop');
         root.classList.toggle('app-fullscreen-mode');
-        if (root.classList.contains('app-fullscreen-mode')) { bd.style.display='block'; btn.innerText='EXIT FULL SCREEN'; btn.style.background='var(--danger-red)'; }
-        else { bd.style.display='none'; btn.innerText='FULL SCREEN'; btn.style.background='var(--brand-hover)'; }
+        if (root.classList.contains('app-fullscreen-mode')) { bd.style.display='block'; btn.innerText='EXIT FULL SCREEN'; btn.style.background='var(--danger-red)'; document.body.style.overflow='hidden'; }
+        else { bd.style.display='none'; btn.innerText='FULL SCREEN'; btn.style.background='var(--brand-hover)'; document.body.style.overflow=''; }
         setTimeout(() => window.changeSize(), 350);
     };
 
@@ -936,9 +936,11 @@
         if (modal.classList.contains('simple-fullscreen-mode')) {
             btn.innerText = '⛶ EXIT FULL SCREEN';
             btn.style.background = 'var(--danger-red)';
+            document.body.style.overflow = 'hidden';
         } else {
             btn.innerText = '⛶ FULL SCREEN';
             btn.style.background = 'var(--brand-hover)';
+            document.body.style.overflow = '';
         }
     };
 
