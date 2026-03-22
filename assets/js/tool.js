@@ -895,11 +895,7 @@
         const conf = SIZE_DB[APP.activeSizeKey];
         const wrap = document.getElementById('simple-canvas-wrap');
         const maxW = wrap.clientWidth - 40;
-        const modalMaxH = window.innerHeight * 0.95;
-        const headerH   = document.getElementById('simple-header').getBoundingClientRect().height || 50;
-        const infoBarH  = document.getElementById('simple-info-bar').getBoundingClientRect().height || 80;
-        const toolsH    = document.getElementById('simple-tools').getBoundingClientRect().height  || 250;
-        const maxH      = modalMaxH - headerH - infoBarH - toolsH - 40;
+        const maxH = wrap.clientHeight - 40;
         let cW = maxW, cH = cW / (conf.w / conf.h);
         if (cH > maxH && maxH > 100) { cH = maxH; cW = cH * (conf.w / conf.h); }
         APP.canvasW = cW; APP.canvasH = cH;
