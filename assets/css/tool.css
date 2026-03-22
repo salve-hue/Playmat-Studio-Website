@@ -338,6 +338,15 @@
         color: #fff !important;
     }
 
+    /* --- INFO TOOLTIP --- */
+    .info-tooltip { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.15); color: var(--brand-text-sec); font-size: 9px; font-weight: bold; cursor: default; vertical-align: middle; margin-left: 5px; position: relative; font-style: normal; text-transform: none; letter-spacing: 0; line-height: 1; }
+    .info-tooltip:hover::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); background: #1a1428; color: var(--brand-text); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 8px 12px; font-size: 11px; font-weight: normal; line-height: 1.5; white-space: normal; width: 220px; z-index: 999; box-shadow: 0 4px 16px rgba(0,0,0,0.5); pointer-events: none; }
+    .info-tooltip:hover::before { content: ''; position: absolute; left: 50%; bottom: calc(100% + 1px); transform: translateX(-50%); border: 5px solid transparent; border-top-color: rgba(255,255,255,0.15); z-index: 999; }
+
+    /* --- CANVAS ACTIONS BAR --- */
+    #adv-canvas-actions { width: 100%; padding: 14px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.06); }
+    #adv-canvas-actions .action-row-3 { max-width: 640px; margin: 0 auto; }
+
     /* --- CANVAS INFO BAR --- */
     .canvas-info-bar { text-align: center; padding: 8px 20px; font-size: 12px; font-family: 'Plus Jakarta Sans', monospace; color: var(--brand-text-sec); background: rgba(0,0,0,0.25); border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.8; letter-spacing: 0.3px; }
     .canvas-info-bar span { margin: 0 10px; white-space: nowrap; }
