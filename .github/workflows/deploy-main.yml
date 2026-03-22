@@ -13,14 +13,32 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main branch
         uses: actions/checkout@v4
+        with:
+          path: main-site
+
+      - name: Checkout gh-pages to preserve preview/
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages-current
+
+      - name: Assemble deployment directory
+        run: |
+          mkdir -p deploy
+          # Main site goes to root
+          cp -r main-site/. deploy/
+          rm -rf deploy/.github deploy/.git
+          # Restore existing preview/ from gh-pages so it isn't wiped
+          if [ -d gh-pages-current/preview ]; then
+            cp -r gh-pages-current/preview deploy/preview
+          fi
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./deploy
           publish_branch: gh-pages
           cname: playmatstudio.com
-          exclude_assets: '.github'
