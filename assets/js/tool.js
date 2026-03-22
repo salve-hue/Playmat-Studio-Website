@@ -1116,7 +1116,7 @@
             const infoH    = infoBar  ? (infoBar.offsetHeight  || 40)  : 40;
             const actionsBar = document.getElementById('adv-canvas-actions');
             const actionsH = actionsBar ? (actionsBar.offsetHeight || 120) : 120;
-            const maxH = col.clientHeight - vPad - infoH - actionsH - 8;
+            const maxH = col.clientHeight - vPad - infoH - actionsH - 24; // 16px canvas-wrapper margin-bottom + 8px safety
             if (mode === 'auto') {
                 // Auto: fill available width, cap height so nothing overflows
                 targetW = Math.max(measuredW, 250);
