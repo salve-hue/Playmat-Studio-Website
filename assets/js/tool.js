@@ -1123,8 +1123,8 @@
                 targetH = targetW / aspect;
                 if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
             } else {
-                // S = 60% of max-fit height, M = 80% — always distinct and always in-bounds
-                const fracs = { s: 0.60, m: 0.80 };
+                // S = 80% of max-fit height (was M), M = 90% (between old M and L)
+                const fracs = { s: 0.80, m: 0.90 };
                 targetH = Math.round(maxH * (fracs[mode] || 1));
                 targetW = Math.round(targetH * aspect);
                 // Cap width to available column width
