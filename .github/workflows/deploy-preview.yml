@@ -1,0 +1,47 @@
+name: Deploy Preview
+
+on:
+  push:
+    branches:
+      - preview
+      - 'claude/**'
+
+permissions:
+  contents: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          path: feature
+
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-site
+
+      - name: Assemble deployment directory
+        run: |
+          mkdir -p deploy
+          # Main site goes to root
+          cp -r main-site/. deploy/
+          rm -rf deploy/.github deploy/.git
+          # Feature branch goes to /preview/
+          mkdir -p deploy/preview
+          cp -r feature/. deploy/preview/
+          # Remove .git so gh-pages action doesn't treat preview/ as a submodule
+          rm -rf deploy/preview/.git deploy/preview/.github
+          # Prevent preview from being indexed by search engines
+          printf 'User-agent: *\nDisallow: /\n' > deploy/preview/robots.txt
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
+          publish_branch: gh-pages
+          cname: playmatstudio.com
