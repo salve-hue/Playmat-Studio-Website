@@ -921,6 +921,23 @@
 
     window._fsOrigParent = null;
     window._fsOrigNextSibling = null;
+    window._fsOrigStyle = '';
+
+    function _applyFsStyles(el) {
+        var props = [
+            ['position','fixed'],['top','5vh'],['left','5vw'],['width','90vw'],
+            ['height','90vh'],['max-width','90vw'],['max-height','90vh'],
+            ['right','auto'],['bottom','auto'],['margin','0'],
+            ['box-sizing','border-box'],['z-index','999999'],['border-radius','6px']
+        ];
+        props.forEach(function(p){ el.style.setProperty(p[0], p[1], 'important'); });
+    }
+    function _clearFsStyles(el) {
+        ['position','top','left','width','height','max-width','max-height',
+         'right','bottom','margin','box-sizing','z-index','border-radius'].forEach(function(p){
+            el.style.removeProperty(p);
+        });
+    }
 
     window.toggleFullScreen = function() {
         const root = document.getElementById('playmat-tool-root');
@@ -928,10 +945,11 @@
         const bd   = document.getElementById('fs-backdrop');
         const entering = !root.classList.contains('app-fullscreen-mode');
         if (entering) {
-            // Store original DOM position, then move to body so position:fixed is viewport-relative
             window._fsOrigParent = root.parentNode;
             window._fsOrigNextSibling = root.nextSibling;
+            window._fsOrigStyle = root.getAttribute('style') || '';
             document.body.appendChild(root);
+            _applyFsStyles(root);
             root.classList.add('app-fullscreen-mode');
             bd.style.display = 'block';
             btn.innerText = 'EXIT FULL SCREEN';
@@ -939,7 +957,8 @@
             document.body.style.overflow = 'hidden';
         } else {
             root.classList.remove('app-fullscreen-mode');
-            // Restore original DOM position
+            _clearFsStyles(root);
+            if (window._fsOrigStyle) { root.setAttribute('style', window._fsOrigStyle); }
             if (window._fsOrigParent) {
                 window._fsOrigParent.insertBefore(root, window._fsOrigNextSibling || null);
             }
@@ -953,6 +972,7 @@
 
     window._sfsOrigParent = null;
     window._sfsOrigNextSibling = null;
+    window._sfsOrigStyle = '';
 
     window.toggleSimpleFullScreen = function() {
         const modal = document.getElementById('simple-modal');
@@ -961,13 +981,17 @@
         if (entering) {
             window._sfsOrigParent = modal.parentNode;
             window._sfsOrigNextSibling = modal.nextSibling;
+            window._sfsOrigStyle = modal.getAttribute('style') || '';
             document.body.appendChild(modal);
+            _applyFsStyles(modal);
             modal.classList.add('simple-fullscreen-mode');
             btn.innerText = '⛶ EXIT FULL SCREEN';
             btn.style.background = 'var(--danger-red)';
             document.body.style.overflow = 'hidden';
         } else {
             modal.classList.remove('simple-fullscreen-mode');
+            _clearFsStyles(modal);
+            if (window._sfsOrigStyle) { modal.setAttribute('style', window._sfsOrigStyle); }
             if (window._sfsOrigParent) {
                 window._sfsOrigParent.insertBefore(modal, window._sfsOrigNextSibling || null);
             }
