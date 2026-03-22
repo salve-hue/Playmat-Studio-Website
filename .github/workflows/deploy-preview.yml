@@ -1,0 +1,53 @@
+name: Deploy Preview
+
+on:
+  push:
+    branches:
+      - preview
+      - 'claude/**'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          path: branch-site
+
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-site
+
+      - name: Assemble site
+        run: |
+          mkdir -p deploy
+          cp -r main-site/. deploy/
+          rm -rf deploy/.git deploy/.github
+          mkdir -p deploy/preview
+          cp -r branch-site/. deploy/preview/
+          rm -rf deploy/preview/.git deploy/preview/.github deploy/preview/CNAME
+          printf 'User-agent: *\nDisallow: /\n' > deploy/preview/robots.txt
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./deploy
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
