@@ -1117,11 +1117,10 @@
         if (mode !== 'l') {
             const infoBar = document.getElementById('adv-info-bar');
             const infoH = infoBar ? (infoBar.getBoundingClientRect().height || 40) : 40;
-            const actionsBar = document.getElementById('adv-canvas-actions');
-            const actionsRaw = actionsBar ? actionsBar.offsetHeight : 0;
-            // If actions bar hasn't laid out yet, defer to next frame
-            if (actionsBar && actionsRaw === 0) { requestAnimationFrame(() => window.changeSize()); return; }
-            const actionsH = Math.max(actionsRaw, 110);
+            // Fixed height of #adv-canvas-actions (padding 28px + buttons 48px + gap 10px + disclaimer 30px + border 1px)
+            // Add extra if bleed warning is visible (~70px)
+            const bleedEl = document.getElementById('adv-bleed-warning');
+            const actionsH = 117 + (bleedEl && bleedEl.classList.contains('visible') ? 70 : 0);
             const maxH = col.clientHeight - vPad - infoH - actionsH - 8;
             if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
         }
