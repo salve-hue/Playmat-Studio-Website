@@ -30,7 +30,7 @@ jobs:
       - name: Checkout claude branch (for preview/)
         uses: actions/checkout@v4
         with:
-          ref: claude/document-page-overview-o7u0M
+          ref: preview
           path: claude-site
 
       - name: Assemble site
