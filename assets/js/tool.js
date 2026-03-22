@@ -1116,9 +1116,9 @@
         // For non-large modes, constrain height so the canvas never overflows or causes scrolling
         if (mode !== 'l') {
             const infoBar = document.getElementById('adv-info-bar');
-            const infoH = infoBar ? (infoBar.getBoundingClientRect().height || 40) : 40;
+            const infoH = infoBar ? (infoBar.offsetHeight || 40) : 40;
             const actionsBar = document.getElementById('adv-canvas-actions');
-            const actionsH = actionsBar ? (actionsBar.getBoundingClientRect().height || 0) : 0;
+            const actionsH = actionsBar ? (actionsBar.offsetHeight || 110) : 0;
             const maxH = col.clientHeight - vPad - infoH - actionsH - 8;
             if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
         }
