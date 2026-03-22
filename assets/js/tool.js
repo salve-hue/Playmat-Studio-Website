@@ -919,25 +919,58 @@
     window.forceSimpleFit      = ()   => { const img = window.sCanvas.getObjects().find(o=>o.name==='art'); if(!img) return; const el=img.getElement(); const srcW=(el&&el.naturalWidth)||img.width; const srcH=(el&&el.naturalHeight)||img.height; APP.s_baseArtScale = Math.max(APP.canvasW/srcW, APP.canvasH/srcH); img.scale(APP.s_baseArtScale).set({ left:APP.canvasW/2, top:APP.canvasH/2, angle:0 }); document.getElementById('s-zoom-in').value=1; window.sCanvas.renderAll(); window.updateBleedWarnings(window.sCanvas); };
     window.triggerUpload       = ()   => { document.getElementById('adv-file-in').click(); };
 
+    window._fsOrigParent = null;
+    window._fsOrigNextSibling = null;
+
     window.toggleFullScreen = function() {
         const root = document.getElementById('playmat-tool-root');
         const btn  = document.getElementById('fs-toggle-btn');
         const bd   = document.getElementById('fs-backdrop');
-        root.classList.toggle('app-fullscreen-mode');
-        if (root.classList.contains('app-fullscreen-mode')) { bd.style.display='block'; btn.innerText='EXIT FULL SCREEN'; btn.style.background='var(--danger-red)'; document.body.style.overflow='hidden'; }
-        else { bd.style.display='none'; btn.innerText='FULL SCREEN'; btn.style.background='var(--brand-hover)'; document.body.style.overflow=''; }
+        const entering = !root.classList.contains('app-fullscreen-mode');
+        if (entering) {
+            // Store original DOM position, then move to body so position:fixed is viewport-relative
+            window._fsOrigParent = root.parentNode;
+            window._fsOrigNextSibling = root.nextSibling;
+            document.body.appendChild(root);
+            root.classList.add('app-fullscreen-mode');
+            bd.style.display = 'block';
+            btn.innerText = 'EXIT FULL SCREEN';
+            btn.style.background = 'var(--danger-red)';
+            document.body.style.overflow = 'hidden';
+        } else {
+            root.classList.remove('app-fullscreen-mode');
+            // Restore original DOM position
+            if (window._fsOrigParent) {
+                window._fsOrigParent.insertBefore(root, window._fsOrigNextSibling || null);
+            }
+            bd.style.display = 'none';
+            btn.innerText = 'FULL SCREEN';
+            btn.style.background = 'var(--brand-hover)';
+            document.body.style.overflow = '';
+        }
         setTimeout(() => window.changeSize(), 350);
     };
+
+    window._sfsOrigParent = null;
+    window._sfsOrigNextSibling = null;
 
     window.toggleSimpleFullScreen = function() {
         const modal = document.getElementById('simple-modal');
         const btn   = document.getElementById('s-fs-toggle-btn');
-        modal.classList.toggle('simple-fullscreen-mode');
-        if (modal.classList.contains('simple-fullscreen-mode')) {
+        const entering = !modal.classList.contains('simple-fullscreen-mode');
+        if (entering) {
+            window._sfsOrigParent = modal.parentNode;
+            window._sfsOrigNextSibling = modal.nextSibling;
+            document.body.appendChild(modal);
+            modal.classList.add('simple-fullscreen-mode');
             btn.innerText = '⛶ EXIT FULL SCREEN';
             btn.style.background = 'var(--danger-red)';
             document.body.style.overflow = 'hidden';
         } else {
+            modal.classList.remove('simple-fullscreen-mode');
+            if (window._sfsOrigParent) {
+                window._sfsOrigParent.insertBefore(modal, window._sfsOrigNextSibling || null);
+            }
             btn.innerText = '⛶ FULL SCREEN';
             btn.style.background = 'var(--brand-hover)';
             document.body.style.overflow = '';
