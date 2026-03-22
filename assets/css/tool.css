@@ -294,6 +294,8 @@
     #canvas-column { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px; background: #0b0912; position: relative; overflow: hidden; cursor: default; }
     /* Large canvas mode — editor box expands to fit full-width canvas */
     #playmat-tool-root.size-mode-large { height: auto !important; max-height: none !important; overflow: visible !important; }
+    /* Tab-mode applies height: calc(100vh - 220px) !important with higher specificity (2,1,0) so we must match it */
+    #adv-backdrop.tab-mode #playmat-tool-root.size-mode-large { height: auto !important; overflow: visible !important; }
     #playmat-tool-root.size-mode-large #editor-main { flex: none; height: auto; overflow: visible; }
     #playmat-tool-root.size-mode-large #canvas-column { height: auto; overflow: visible; justify-content: flex-start; }
     #playmat-tool-root.size-mode-large #sidebar { position: sticky; top: 0; max-height: 100vh; overflow-y: auto; align-self: flex-start; }
