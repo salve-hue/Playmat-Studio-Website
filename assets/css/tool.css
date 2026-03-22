@@ -169,12 +169,14 @@
     /* ── SIMPLE EDITOR FULL-SCREEN MODE ── */
     #simple-modal.simple-fullscreen-mode {
         position: fixed !important;
-        top: 2% !important;
-        left: 2% !important;
-        width: 96vw !important;
-        height: 96vh !important;
-        max-width: none !important;
-        max-height: none !important;
+        top: 5vh !important;
+        left: 5vw !important;
+        right: auto !important;
+        width: 90vw !important;
+        height: 90vh !important;
+        max-width: 90vw !important;
+        max-height: 90vh !important;
+        box-sizing: border-box !important;
         z-index: 10000 !important;
         border-radius: 6px !important;
     }
@@ -245,7 +247,7 @@
 
     /* --- ADVANCED EDITOR --- */
     #playmat-tool-root { display: flex; width: 100%; height: clamp(650px, 90vh, 1050px); background: #181228; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; flex-direction: column; }
-    .app-fullscreen-mode { position: fixed !important; top: 2% !important; left: 2% !important; width: 96vw !important; height: 96vh !important; max-width: none !important; max-height: none !important; z-index: 10000 !important; border-radius: 6px !important; }
+    .app-fullscreen-mode { position: fixed !important; top: 5vh !important; left: 5vw !important; right: auto !important; width: 90vw !important; height: 90vh !important; max-width: 90vw !important; max-height: 90vh !important; box-sizing: border-box !important; z-index: 10000 !important; border-radius: 6px !important; }
 
     /* ── EDITOR TOP BAR ── */
     #editor-top-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: rgba(0,0,0,0.35); border-bottom: 1px solid rgba(104,48,187,0.3); flex-shrink: 0; gap: 12px; }
@@ -360,6 +362,9 @@
     /* --- BLEED WARNING BANNERS --- */
     .bleed-warning-banner { display: none; background: rgba(255,71,87,0.15); border: 1px solid rgba(255,71,87,0.5); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: #ff4757; font-weight: 600; line-height: 1.5; text-align: center; }
     .bleed-warning-banner.visible { display: block; }
+
+    /* --- FULLSCREEN BACKDROP BLUR --- */
+    #fs-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 999998; }
 
     /* --- ADVANCED EDITOR LIGHTBOX --- */
     #adv-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.92); z-index: 999999; justify-content: center; align-items: flex-start; padding: 20px; padding-top: max(20px, calc(var(--adv-nav-offset, 80px) + 20px)); box-sizing: border-box; overflow-y: auto; }

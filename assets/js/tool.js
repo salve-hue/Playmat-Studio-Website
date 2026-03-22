@@ -919,26 +919,85 @@
     window.forceSimpleFit      = ()   => { const img = window.sCanvas.getObjects().find(o=>o.name==='art'); if(!img) return; const el=img.getElement(); const srcW=(el&&el.naturalWidth)||img.width; const srcH=(el&&el.naturalHeight)||img.height; APP.s_baseArtScale = Math.max(APP.canvasW/srcW, APP.canvasH/srcH); img.scale(APP.s_baseArtScale).set({ left:APP.canvasW/2, top:APP.canvasH/2, angle:0 }); document.getElementById('s-zoom-in').value=1; window.sCanvas.renderAll(); window.updateBleedWarnings(window.sCanvas); };
     window.triggerUpload       = ()   => { document.getElementById('adv-file-in').click(); };
 
+    window._fsOrigParent = null;
+    window._fsOrigNextSibling = null;
+    window._fsOrigStyle = '';
+
+    function _applyFsStyles(el) {
+        var props = [
+            ['position','fixed'],['top','5vh'],['left','5vw'],['width','90vw'],
+            ['height','90vh'],['max-width','90vw'],['max-height','90vh'],
+            ['right','auto'],['bottom','auto'],['margin','0'],
+            ['box-sizing','border-box'],['z-index','999999'],['border-radius','6px']
+        ];
+        props.forEach(function(p){ el.style.setProperty(p[0], p[1], 'important'); });
+    }
+    function _clearFsStyles(el) {
+        ['position','top','left','width','height','max-width','max-height',
+         'right','bottom','margin','box-sizing','z-index','border-radius'].forEach(function(p){
+            el.style.removeProperty(p);
+        });
+    }
+
     window.toggleFullScreen = function() {
         const root = document.getElementById('playmat-tool-root');
         const btn  = document.getElementById('fs-toggle-btn');
         const bd   = document.getElementById('fs-backdrop');
-        root.classList.toggle('app-fullscreen-mode');
-        if (root.classList.contains('app-fullscreen-mode')) { bd.style.display='block'; btn.innerText='EXIT FULL SCREEN'; btn.style.background='var(--danger-red)'; }
-        else { bd.style.display='none'; btn.innerText='FULL SCREEN'; btn.style.background='var(--brand-hover)'; }
+        const entering = !root.classList.contains('app-fullscreen-mode');
+        if (entering) {
+            window._fsOrigParent = root.parentNode;
+            window._fsOrigNextSibling = root.nextSibling;
+            window._fsOrigStyle = root.getAttribute('style') || '';
+            document.body.appendChild(root);
+            _applyFsStyles(root);
+            root.classList.add('app-fullscreen-mode');
+            bd.style.display = 'block';
+            btn.innerText = 'EXIT FULL SCREEN';
+            btn.style.background = 'var(--danger-red)';
+            document.body.style.overflow = 'hidden';
+        } else {
+            root.classList.remove('app-fullscreen-mode');
+            _clearFsStyles(root);
+            if (window._fsOrigStyle) { root.setAttribute('style', window._fsOrigStyle); }
+            if (window._fsOrigParent) {
+                window._fsOrigParent.insertBefore(root, window._fsOrigNextSibling || null);
+            }
+            bd.style.display = 'none';
+            btn.innerText = 'FULL SCREEN';
+            btn.style.background = 'var(--brand-hover)';
+            document.body.style.overflow = '';
+        }
         setTimeout(() => window.changeSize(), 350);
     };
+
+    window._sfsOrigParent = null;
+    window._sfsOrigNextSibling = null;
+    window._sfsOrigStyle = '';
 
     window.toggleSimpleFullScreen = function() {
         const modal = document.getElementById('simple-modal');
         const btn   = document.getElementById('s-fs-toggle-btn');
-        modal.classList.toggle('simple-fullscreen-mode');
-        if (modal.classList.contains('simple-fullscreen-mode')) {
+        const entering = !modal.classList.contains('simple-fullscreen-mode');
+        if (entering) {
+            window._sfsOrigParent = modal.parentNode;
+            window._sfsOrigNextSibling = modal.nextSibling;
+            window._sfsOrigStyle = modal.getAttribute('style') || '';
+            document.body.appendChild(modal);
+            _applyFsStyles(modal);
+            modal.classList.add('simple-fullscreen-mode');
             btn.innerText = '⛶ EXIT FULL SCREEN';
             btn.style.background = 'var(--danger-red)';
+            document.body.style.overflow = 'hidden';
         } else {
+            modal.classList.remove('simple-fullscreen-mode');
+            _clearFsStyles(modal);
+            if (window._sfsOrigStyle) { modal.setAttribute('style', window._sfsOrigStyle); }
+            if (window._sfsOrigParent) {
+                window._sfsOrigParent.insertBefore(modal, window._sfsOrigNextSibling || null);
+            }
             btn.innerText = '⛶ FULL SCREEN';
             btn.style.background = 'var(--brand-hover)';
+            document.body.style.overflow = '';
         }
     };
 
