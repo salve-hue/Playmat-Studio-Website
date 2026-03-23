@@ -274,8 +274,8 @@
     .sidebar-header .action-btn { font-size: 14px !important; padding: 8px 14px; letter-spacing: 1px; }
 
     /* ── ACCORDION CARDS ── */
-    .acc-card { margin: 8px; border-radius: 8px; border: 1px solid rgba(104,48,187,0.35); overflow: hidden; background: rgba(0,0,0,0.25); flex-shrink: 0; }
-    .acc-btn { width: 100%; padding: 11px 16px; background: #0f1314 !important; color: #f0eeff !important; border: none !important; border-bottom: 1px solid rgba(104,48,187,0.2) !important; text-align: left; cursor: pointer; font-size: 14px !important; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
+    .acc-card { margin: 8px; border-radius: 8px; border: 1px solid rgba(104,48,187,0.35); overflow: hidden; background: rgba(104,48,187,0.08); flex-shrink: 0; }
+    .acc-btn { width: 100%; padding: 11px 16px; background: rgba(104,48,187,0.08) !important; color: #f0eeff !important; border: none !important; border-bottom: 1px solid rgba(104,48,187,0.2) !important; text-align: left; cursor: pointer; font-size: 14px !important; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
     .acc-btn:hover { background: rgba(104,48,187,0.18) !important; color: #30BBAD !important; }
     .acc-content { padding: 16px; display: none; background: transparent; border-bottom: none; }
     .slider-row { margin-top: 12px; }
