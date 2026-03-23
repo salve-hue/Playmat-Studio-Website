@@ -2797,4 +2797,42 @@
                 }
             }
         });
+
+        // ── Mobile scroll protection for range sliders ──
+        // On touch devices, scrolling over a slider can accidentally change its
+        // value. We detect vertical gestures (scroll intent) and reset the
+        // slider's value before the 'input' event fires, so filter updates
+        // become a no-op for that scroll interaction.
+        document.querySelectorAll('input[type="range"]').forEach(function(slider) {
+            var touchStartX, touchStartY, touchStartValue, isScrollGesture;
+
+            slider.addEventListener('touchstart', function(e) {
+                var t = e.touches[0];
+                touchStartX = t.clientX;
+                touchStartY = t.clientY;
+                touchStartValue = this.value;
+                isScrollGesture = false;
+            }, { passive: true });
+
+            slider.addEventListener('touchmove', function(e) {
+                var t = e.touches[0];
+                var dx = Math.abs(t.clientX - touchStartX);
+                var dy = Math.abs(t.clientY - touchStartY);
+
+                // Once we have enough movement to determine direction, lock it in
+                if (!isScrollGesture && dy > dx && dy > 5) {
+                    isScrollGesture = true;
+                }
+
+                // Reset value during scroll so the 'input' event (which fires
+                // after touchmove) sees the original value and skips any update
+                if (isScrollGesture) {
+                    this.value = touchStartValue;
+                }
+            }, { passive: true });
+
+            slider.addEventListener('touchend', function() {
+                isScrollGesture = false;
+            }, { passive: true });
+        });
     };
