@@ -340,6 +340,52 @@
         color: #fff !important;
     }
 
+    /* --- PRESET BUTTON TOOLTIPS --- */
+    .preset-btn-tip { position: relative; }
+    .preset-btn-tip::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: calc(100% + 7px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1a1428;
+        color: var(--brand-text);
+        border: 1px solid rgba(104,48,187,0.45);
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 10px;
+        font-weight: normal;
+        line-height: 1.45;
+        white-space: normal;
+        width: 160px;
+        text-align: center;
+        z-index: 200;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.55);
+        pointer-events: none;
+        opacity: 0;
+        letter-spacing: 0;
+        text-transform: none;
+        transition: opacity 0s;
+    }
+    .preset-btn-tip::before {
+        content: '';
+        position: absolute;
+        bottom: calc(100% + 2px);
+        left: 50%;
+        transform: translateX(-50%);
+        border: 5px solid transparent;
+        border-top-color: rgba(104,48,187,0.45);
+        z-index: 200;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0s;
+    }
+    .preset-btn-tip:hover::after,
+    .preset-btn-tip:hover::before {
+        opacity: 1;
+        transition: opacity 0.2s 1s;
+    }
+
     /* --- INFO TOOLTIP --- */
     .info-tooltip { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.15); color: var(--brand-text-sec); font-size: 9px; font-weight: bold; cursor: default; vertical-align: middle; margin-left: 5px; position: relative; font-style: normal; text-transform: none; letter-spacing: 0; line-height: 1; }
     .info-tooltip:hover::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); background: #1a1428; color: var(--brand-text); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 8px 12px; font-size: 11px; font-weight: normal; line-height: 1.5; white-space: normal; width: 220px; z-index: 999; box-shadow: 0 4px 16px rgba(0,0,0,0.5); pointer-events: none; }
