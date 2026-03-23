@@ -2798,41 +2798,51 @@
             }
         });
 
-        // ── Mobile scroll protection for range sliders ──
-        // On touch devices, scrolling over a slider can accidentally change its
-        // value. We detect vertical gestures (scroll intent) and reset the
-        // slider's value before the 'input' event fires, so filter updates
-        // become a no-op for that scroll interaction.
+        // ── Prevent sliders from changing during page scroll ──
         document.querySelectorAll('input[type="range"]').forEach(function(slider) {
-            var touchStartX, touchStartY, touchStartValue, isScrollGesture;
+            // Mouse wheel: prevent the slider value from changing; manually
+            // forward the scroll delta to the page so scrolling still works.
+            slider.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                var delta = e.deltaY;
+                if (e.deltaMode === 1) delta *= 40;             // lines → px
+                if (e.deltaMode === 2) delta *= window.innerHeight; // pages → px
+                window.scrollBy(0, delta);
+            }, { passive: false });
+
+            // Touch: detect a vertical-scroll gesture and block the slider from
+            // moving. We use passive:false on touchmove so we can call
+            // preventDefault(), and we drive the page scroll manually using
+            // the incremental touch delta.
+            var startX, startY, isScroll;
 
             slider.addEventListener('touchstart', function(e) {
                 var t = e.touches[0];
-                touchStartX = t.clientX;
-                touchStartY = t.clientY;
-                touchStartValue = this.value;
-                isScrollGesture = false;
+                startX = t.clientX;
+                startY = t.clientY;
+                isScroll = false;
             }, { passive: true });
 
             slider.addEventListener('touchmove', function(e) {
+                if (startX === undefined) return;
                 var t = e.touches[0];
-                var dx = Math.abs(t.clientX - touchStartX);
-                var dy = Math.abs(t.clientY - touchStartY);
+                var dx = Math.abs(t.clientX - startX);
+                var dy = Math.abs(t.clientY - startY);
 
-                // Once we have enough movement to determine direction, lock it in
-                if (!isScrollGesture && dy > dx && dy > 5) {
-                    isScrollGesture = true;
+                if (!isScroll && dy > 8 && dy > dx) {
+                    isScroll = true;
                 }
 
-                // Reset value during scroll so the 'input' event (which fires
-                // after touchmove) sees the original value and skips any update
-                if (isScrollGesture) {
-                    this.value = touchStartValue;
+                if (isScroll) {
+                    e.preventDefault(); // stop slider from updating
+                    window.scrollBy(0, startY - t.clientY);
+                    startY = t.clientY; // incremental delta for next move
                 }
-            }, { passive: true });
+            }, { passive: false });
 
             slider.addEventListener('touchend', function() {
-                isScrollGesture = false;
+                isScroll = false;
+                startX = startY = undefined;
             }, { passive: true });
         });
     };
