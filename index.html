@@ -587,11 +587,24 @@
 					            <button class="acc-btn" data-acc="acc-size">ARTWORK <span>▼</span></button>
 					            <div id="acc-size" class="acc-content" style="display:block;">
 
+					                <div class="slider-row" style="margin-top: 15px;">
+					                    <label>Art Scale</label>
+					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="width:100%;">
+					                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn">RESET ART SCALE &amp; CENTER</button>
+					                </div>
+
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality <span class="info-tooltip" data-tip="AI upscaling improves low-resolution artwork before printing. Works best on images that look blurry or pixelated. Results may vary depending on the source image.">?</span></label>
-					                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); line-height: 1.2; width: 100%;">
-					                        ✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>
-					                    </button>
+					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Rotate &amp; Flip</label>
+					                    <div style="display:flex; gap:8px; margin-bottom: 10px;">
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-rotate-btn">ROTATE 90°</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipx-btn">FLIP H</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipy-btn">FLIP V</button>
+					                    </div>
+					                    <div style="display:flex; gap:10px; align-items:center; margin-bottom: 10px;">
+					                        <input type="range" id="transform-rotation" min="-180" max="180" value="0" style="flex:1;">
+					                        <span id="rotation-val" style="font-size: 13px; width: 35px; text-align: right; color:var(--brand-text-pri);">0°</span>
+					                    </div>
+					                    <button class="action-btn btn-secondary" style="margin:0;" id="adv-reset-rotation-btn">RESET ROTATION</button>
 					                </div>
 
 					                <div style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
@@ -600,6 +613,13 @@
 					                        <input type="color" id="bg-color-picker" value="#000000" class="color-swatch" style="width: 50px;">
 					                        <input type="text" id="bg-color-hex" value="#000000" class="ui-select" style="margin:0; width:80px; padding:8px; font-family:monospace;">
 					                    </div>
+					                </div>
+
+					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality <span class="info-tooltip" data-tip="AI upscaling improves low-resolution artwork before printing. Works best on images that look blurry or pixelated. Results may vary depending on the source image.">?</span></label>
+					                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); line-height: 1.2; width: 100%;">
+					                        ✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>
+					                    </button>
 					                </div>
 
 					            </div>
@@ -813,19 +833,14 @@
 					                    </div>
 
 					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn">RESET COLORS</button>
-					                    <button class="action-btn btn-secondary" style="margin-top:8px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">SHOW/HIDE PRINT GUIDES</button>
 					                </div>
 
-					                <div class="slider-row">
-					                    <label>Art Scale</label>
-					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="width:100%;">
-					                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn">RESET ART SCALE &amp; CENTER</button>
-					                </div>
+					                <button class="action-btn btn-secondary" style="margin-top:10px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">SHOW/HIDE PRINT GUIDES</button>
 
 					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
 
 					                <div class="inner-panel">
-					                    <span class="panel-title">TEXT &amp; TRANSFORMATIONS</span>
+					                    <span class="panel-title">TEXT</span>
 					                    <button class="action-btn" style="background: var(--brand-hover); margin-bottom:15px;" id="adv-add-text-btn">+ ADD TEXT</button>
 
 					                    <div id="adv-text-tools" class="hidden-field" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:6px; border: 1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
@@ -849,17 +864,6 @@
 					                        </div>
 					                        <button class="action-btn" style="background:var(--danger-red); margin-top:15px;" id="adv-delete-btn">DELETE SELECTED</button>
 					                    </div>
-
-					                    <div style="display:flex; gap:8px; margin-bottom: 15px;">
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-rotate-btn">ROTATE 90°</button>
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipx-btn">FLIP H</button>
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipy-btn">FLIP V</button>
-					                    </div>
-					                    <div style="display:flex; gap:10px; align-items:center; margin-bottom: 15px;">
-					                        <input type="range" id="transform-rotation" min="-180" max="180" value="0" style="flex:1;">
-					                        <span id="rotation-val" style="font-size: 13px; width: 35px; text-align: right; color:var(--brand-text-pri);">0°</span>
-					                    </div>
-					                    <button class="action-btn btn-secondary" style="margin:0;" id="adv-reset-rotation-btn">RESET ROTATION</button>
 					                </div>
 
 					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
