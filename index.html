@@ -1098,12 +1098,38 @@
 								<span class="cl-vdate">March 2026</span>
 							</div>
 							<div class="cl-card">
-								<p class="cl-summary">Mobile scroll no longer accidentally changes filter slider values.</p>
+								<p class="cl-summary">Security hardening from the March audit, Advanced Editor sidebar overhaul, and several UI and interaction fixes.</p>
 								<div class="cl-groups">
+									<div class="cl-group">
+										<p class="cl-label cl-label-security">Security</p>
+										<ul class="cl-list">
+											<li>Content Security Policy added &mdash; restricts which scripts and connection targets the page is permitted to load</li>
+											<li>External image URLs are now validated against private IP ranges before being proxied, blocking SSRF-by-proxy attacks</li>
+											<li><code>X-Content-Type-Options</code> and <code>Referrer-Policy</code> headers added site-wide</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-improved">Improved</p>
+										<ul class="cl-list">
+											<li>Advanced Editor sidebar reorganised &mdash; Art Scale and rotation controls now appear before Background Fill and Enhance Quality, matching a more natural editing order</li>
+											<li>Sidebar panels are now wrapped in individual accordion cards, making sections easier to distinguish and scroll through</li>
+											<li>Show/Hide Print Guides moved outside the Color Correction panel (it is a view aid, not a color tool)</li>
+											<li>Fullscreen mode now dims and blurs the background page while the editor is open</li>
+											<li>Editor tab carries a BETA badge; the redundant title bar above the canvas has been removed</li>
+										</ul>
+									</div>
+									<div class="cl-group">
+										<p class="cl-label cl-label-added">Added</p>
+										<ul class="cl-list">
+											<li>Hover tooltips on image adjustment preset buttons explain what each preset does before you apply it</li>
+										</ul>
+									</div>
 									<div class="cl-group">
 										<p class="cl-label cl-label-fixed">Fixed</p>
 										<ul class="cl-list">
-											<li>Scrolling on mobile while a finger passes over a slider (brightness, vibrance, etc.) no longer changes the slider's value</li>
+											<li>Scrolling over a filter slider (mouse wheel or touch swipe) no longer accidentally changes its value</li>
+											<li>Sidebar accordion cards no longer collapse to a minimal height when their content is taller than the panel</li>
+											<li>Fullscreen mode no longer overflows the right edge of the viewport on some screen sizes</li>
 										</ul>
 									</div>
 								</div>
