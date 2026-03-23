@@ -723,6 +723,28 @@
             window.initSimpleCanvas();
         }
 
+        // H3: Block SSRF — reject private IPs, loopback, and non-routable hostnames
+        // before passing the URL through a third-party CORS proxy.
+        try {
+            const _parsed = new URL(url);
+            if (!/^https?:$/i.test(_parsed.protocol)) throw new Error('bad scheme');
+            const _host = _parsed.hostname.toLowerCase();
+            if (
+                _host === 'localhost' ||
+                /^127\./.test(_host) ||
+                /^10\./.test(_host) ||
+                /^192\.168\./.test(_host) ||
+                /^172\.(1[6-9]|2\d|3[01])\./.test(_host) ||
+                /^169\.254\./.test(_host) ||
+                /^::1$/.test(_host) ||
+                /^0\.0\.0\.0$/.test(_host) ||
+                !_host.includes('.')   // bare hostnames with no dot
+            ) throw new Error('private host');
+        } catch (_urlErr) {
+            window.showAppAlert("Invalid URL", "That URL cannot be used as an image source. Please paste a public image URL.", "error");
+            return;
+        }
+
         const proxies = [
             `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp`,
             `https://corsproxy.io/?${encodeURIComponent(url)}`
