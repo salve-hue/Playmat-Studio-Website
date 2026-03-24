@@ -360,6 +360,12 @@ a:hover {
 	opacity: 0.92 !important;
 }
 
+/* Disable tile links — purely informational, no accidental navigation */
+.tiles article > a {
+	pointer-events: none !important;
+	cursor: default !important;
+}
+
 /* Tile heading */
 .tiles article > a h2 {
 	font-family: 'Plus Jakarta Sans', sans-serif !important;
