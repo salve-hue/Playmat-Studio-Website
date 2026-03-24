@@ -158,8 +158,8 @@
         { game: "Universus", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Universus.webp" },
         { game: "Flesh and Blood", format: "Single Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Single%20Arsenal.webp" },
         { game: "Flesh and Blood", format: "Double Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Double%20Arsenal.webp" },
-        { game: "Cyberpunk TCG", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Standard.webp" },
-        { game: "Cyberpunk TCG", format: "", size: "Extended", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Extended.webp" }
+        { game: "Cyberpunk TCG", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Standard.webp", preserveColors: true },
+        { game: "Cyberpunk TCG", format: "", size: "Extended", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Extended.webp", preserveColors: true }
     ];
 
     window.RB_POINTS_DB = {
@@ -1519,7 +1519,7 @@
         const hands=[...new Set(LAYOUT_RAW.filter(i=>i.game===game&&i.size===activeSize&&i.format===format&&i.hand!=='').map(i=>i.hand))];
         if(hands.length>0&&hand==='') { APP.activeLayoutUrl=null; window.renderLayout(); return; }
         const match=LAYOUT_RAW.find(i=>i.game===game&&i.format===format&&i.hand===hand&&i.size===activeSize);
-        if(match) { APP.activeLayoutUrl=match.url ?? ''; APP.layoutPreservesColors=!!(match.preserveColors); APP.erasedPaths=[]; window.resetRecolor(); const zsw=document.getElementById('zone-style-wrap'); if(APP.layoutPreservesColors) zsw.classList.add('hidden-field'); else zsw.classList.remove('hidden-field'); window.renderLayout(); }
+        if(match) { APP.activeLayoutUrl=match.url ?? ''; APP.layoutPreservesColors=!!(match.preserveColors); APP.erasedPaths=[]; window.resetRecolor(); const zsw=document.getElementById('zone-style-wrap'); zsw.classList.remove('hidden-field'); window.renderLayout(); }
     };
 
     window.updateOpacity = () => { document.getElementById('layout-canvas').style.opacity = document.getElementById('op-in').value; };
@@ -1598,6 +1598,14 @@
             if (!preserveColors) {
                 ctx.globalCompositeOperation = 'source-in';
                 applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+            } else {
+                // Apply color fill clipped to overlay shape, then redraw overlay with multiply
+                // so black text/lines are restored while zone areas get the selected color
+                ctx.globalCompositeOperation = 'source-in';
+                applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+                ctx.globalCompositeOperation = 'multiply';
+                ctx.drawImage(img, 0, 0, APP.canvasW, APP.canvasH);
+                ctx.globalCompositeOperation = 'source-over';
             }
         }
 
@@ -1918,10 +1926,7 @@
         if (match) {
             APP.s_activeLayoutUrl = match.url ?? '';
             APP.s_layoutPreservesColors = !!(match.preserveColors);
-            if (colorWrap) {
-                if (APP.s_layoutPreservesColors) colorWrap.classList.add('hidden-field');
-                else colorWrap.classList.remove('hidden-field');
-            }
+            if (colorWrap) colorWrap.classList.remove('hidden-field');
             window.renderSimpleLayout();
         }
     };
