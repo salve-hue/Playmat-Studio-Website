@@ -1098,21 +1098,21 @@
 								<span class="cl-vdate">March 2026</span>
 							</div>
 							<div class="cl-card">
-								<p class="cl-summary">Security hardening from the March audit, Advanced Editor sidebar overhaul, and several UI and interaction fixes.</p>
+								<p class="cl-summary">Security improvements from the March review, a redesigned Advanced Editor sidebar, and several visual and usability fixes.</p>
 								<div class="cl-groups">
 									<div class="cl-group">
 										<p class="cl-label cl-label-security">Security</p>
 										<ul class="cl-list">
-											<li>Content Security Policy added &mdash; restricts which scripts and connection targets the page is permitted to load</li>
-											<li>External image URLs are now validated against private IP ranges before being proxied, blocking SSRF-by-proxy attacks</li>
-											<li><code>X-Content-Type-Options</code> and <code>Referrer-Policy</code> headers added site-wide</li>
+											<li>Added protections that prevent the site from loading unauthorized scripts or connecting to untrusted sources</li>
+											<li>Image links from outside the site are now checked to make sure they don&rsquo;t point to restricted addresses before being loaded</li>
+											<li>Added extra browser security settings across the whole site to help protect your connection and browsing data</li>
 										</ul>
 									</div>
 									<div class="cl-group">
 										<p class="cl-label cl-label-improved">Improved</p>
 										<ul class="cl-list">
 											<li>Advanced Editor sidebar reorganised &mdash; Art Scale and rotation controls now appear before Background Fill and Enhance Quality, matching a more natural editing order</li>
-											<li>Sidebar panels are now wrapped in individual accordion cards, making sections easier to distinguish and scroll through</li>
+											<li>Each sidebar section now has its own collapsible card, making it easier to find what you need and scroll through</li>
 											<li>Show/Hide Print Guides moved outside the Color Correction panel (it is a view aid, not a color tool)</li>
 											<li>Fullscreen mode now dims and blurs the background page while the editor is open</li>
 											<li>Editor tab carries a BETA badge; the redundant title bar above the canvas has been removed</li>
@@ -1154,8 +1154,8 @@
 									<div class="cl-group">
 										<p class="cl-label cl-label-security">Security</p>
 										<ul class="cl-list">
-											<li>Comprehensive internal security review completed across the full codebase</li>
-											<li>Findings catalogued and a remediation plan established; fixes are in progress for the next release</li>
+											<li>A thorough security review of the entire site was completed</li>
+											<li>Issues found were recorded and a fix plan put in place; updates are coming in the next release</li>
 										</ul>
 									</div>
 								</div>
@@ -1227,22 +1227,22 @@
 								<span class="cl-vdate">November 2025</span>
 							</div>
 							<div class="cl-card">
-								<p class="cl-summary">Contact form hardening and site-wide security improvements.</p>
+								<p class="cl-summary">Contact form improvements and site-wide security updates.</p>
 								<div class="cl-groups">
 									<div class="cl-group">
 										<p class="cl-label cl-label-fixed">Fixed</p>
 										<ul class="cl-list">
-											<li>Contact form now properly sanitises all submitted content before processing</li>
-											<li>Field length limits enforced server-side to prevent misuse</li>
+											<li>Contact form now properly cleans up messages before they&rsquo;re sent</li>
+											<li>Limits on how long each field can be are now checked on our end to prevent misuse</li>
 											<li>Contact form status messages now correctly announced to screen readers</li>
 										</ul>
 									</div>
 									<div class="cl-group">
 										<p class="cl-label cl-label-security">Security</p>
 										<ul class="cl-list">
-											<li>Contact form backend restricted to only accept requests from Playmat Studio domains</li>
-											<li>Security response headers added across the site: clickjacking protection, content-type sniffing prevention, HTTPS enforcement, referrer controls, and permissions policy</li>
-											<li>Browser caching tightened: page content never cached; assets cached aggressively with automatic invalidation on each update</li>
+											<li>The contact form now only accepts messages sent from the Playmat Studio website</li>
+											<li>Additional security protections added across the whole site to keep your connection and data safe</li>
+											<li>Improved how the site loads in your browser: the main page always loads fresh, while images and other files load faster and update automatically when changed</li>
 										</ul>
 									</div>
 								</div>
@@ -1310,28 +1310,28 @@
 								<span class="cl-vdate">August 2025</span>
 							</div>
 							<div class="cl-card">
-								<p class="cl-summary">Advanced Editor (Beta) launched &mdash; full canvas editing, text overlays, and multi-format export.</p>
+								<p class="cl-summary">Advanced Editor (Beta) launched &mdash; edit your designs with full controls, add text overlays, and save in multiple file formats.</p>
 								<div class="cl-groups">
 									<div class="cl-group">
 										<p class="cl-label cl-label-added">Added</p>
 										<ul class="cl-list">
-											<li><strong>Advanced Editor</strong> (Beta) &mdash; a full-featured canvas editor with a split sidebar and floating toolbar</li>
+											<li><strong>Advanced Editor</strong> (Beta) &mdash; a powerful editor with adjustable side panels and a moveable toolbar</li>
 											<li>Collapsible sidebar panels: Artwork, Game Layout, Adjustments, and Text</li>
-											<li>Text overlay tool with 9 display font choices, fill color, stroke color, size, and on-canvas positioning</li>
+											<li>Text overlay tool with 9 font choices, fill color, outline color, size, and free positioning on the canvas</li>
 											<li>Color adjustment sliders: brightness, contrast, and saturation</li>
 											<li>Eraser brush for manually removing areas of artwork (adjustable size, circle or square tip)</li>
 											<li>Gradient overlay with adjustable angle and opacity</li>
 											<li>Flip horizontal and flip vertical transformations</li>
-											<li>Export in JPG, PNG, or WEBP &mdash; all at 300&thinsp;DPI with print-resolution metadata embedded in the file</li>
-											<li>Responsive stacked layout on smaller screens</li>
+											<li>Export in JPG, PNG, or WEBP &mdash; all at 300&thinsp;DPI with print quality settings built in</li>
+											<li>Automatically rearranges to fit on smaller screens</li>
 											<li>In-app help documentation accessible from the editor</li>
 										</ul>
 									</div>
 									<div class="cl-group">
 										<p class="cl-label cl-label-improved">Improved</p>
 										<ul class="cl-list">
-											<li>Canvas rendering performance tuned for smoother editing with large images</li>
-											<li>Text font library expanded with 9 display typefaces suited to game-themed designs</li>
+											<li>Editing with large images is now smoother and faster</li>
+											<li>9 fonts suited to game-themed designs added</li>
 										</ul>
 									</div>
 								</div>
@@ -1349,9 +1349,9 @@
 									<div class="cl-group">
 										<p class="cl-label cl-label-added">Added</p>
 										<ul class="cl-list">
-											<li>Game layout overlay system with cascading Game &rarr; Format &rarr; Handedness selectors</li>
+											<li>Game layout overlays with Game, Format, and Handedness options &mdash; each choice updates the next automatically</li>
 											<li>Launch overlays: Magic: The Gathering (60-Card and Commander), Pok&eacute;mon, and One Piece Card Game</li>
-											<li>Artwork coverage warning &mdash; alerts you if your design doesn&rsquo;t fully cover the printable area including bleed</li>
+											<li>A warning now appears if your design doesn&rsquo;t fully cover the printable area, including the edges</li>
 											<li>Overlay opacity control in the Quick Upload tool</li>
 											<li>Specialty mat sizes added: Victor, Secundus, Primus, Tiro, Veteranus, and Gladiator</li>
 										</ul>
@@ -1359,8 +1359,8 @@
 									<div class="cl-group">
 										<p class="cl-label cl-label-improved">Improved</p>
 										<ul class="cl-list">
-											<li>Canvas architecture updated to support a dedicated overlay layer sitting above the artwork</li>
-											<li>Downloaded filenames now include a unique identifier to prevent accidental overwrites</li>
+											<li>The editor was updated to support game overlays displayed on top of your artwork</li>
+											<li>Downloaded files now have a unique name to avoid replacing files you&rsquo;ve already saved</li>
 										</ul>
 									</div>
 								</div>
@@ -1378,7 +1378,7 @@
 									<div class="cl-group">
 										<p class="cl-label cl-label-improved">Improved</p>
 										<ul class="cl-list">
-											<li>Stylesheet loading updated to always deliver the latest version &mdash; no more stale styles after an update</li>
+											<li>The site&rsquo;s appearance now always loads fresh after an update &mdash; no more outdated-looking pages</li>
 											<li>Mobile navigation behaviour refined at narrower screen widths</li>
 											<li>Back-to-top button now appears only after scrolling down, keeping the page clean on load</li>
 											<li>Low-resolution upload warning added &mdash; alerts you if your image may not print at full quality</li>
@@ -1409,10 +1409,10 @@
 										<p class="cl-label cl-label-added">Added</p>
 										<ul class="cl-list">
 											<li>Contact form &mdash; messages delivered directly to the support inbox with reply-to set to the sender</li>
-											<li>Social sharing preview image and metadata for richer link previews when shared online</li>
+											<li>A preview image and description now appear when the site link is shared on social media or messaging apps</li>
 											<li>App icon for saving the site to a phone or tablet home screen</li>
 											<li>Custom error page for broken or mistyped URLs</li>
-											<li>Site made discoverable to search engines with a sitemap and crawler guidance</li>
+											<li>The site is now findable on Google and other search engines</li>
 										</ul>
 									</div>
 								</div>
@@ -1430,12 +1430,12 @@
 									<div class="cl-group">
 										<p class="cl-label cl-label-added">Added</p>
 										<ul class="cl-list">
-											<li>Complete single-page layout: navigation, hero, how-it-works, features, tools, about, contact, and footer</li>
+											<li>The full site was built out: navigation, main banner, how-it-works, features, tools, about, contact, and footer sections</li>
 											<li><strong>Quick Upload</strong> &mdash; upload artwork, zoom, rotate, fit to canvas, enhance or grayscale filter, download at 300&thinsp;DPI</li>
 											<li>Standard, Expanded, and Extended mat sizes</li>
-											<li>Brand identity applied: color system, typography, and icon set</li>
-											<li>Full responsive layout from large desktop down to small mobile screens</li>
-											<li>Off-canvas mobile navigation menu</li>
+											<li>The site&rsquo;s look and feel was finalized: colors, fonts, and icons</li>
+											<li>The site works on all screen sizes, from large desktops to small phones</li>
+											<li>A slide-out navigation menu for mobile devices</li>
 											<li>Custom domain live at playmatstudio.com</li>
 										</ul>
 									</div>
@@ -1449,14 +1449,14 @@
 								<span class="cl-vdate">January 2025</span>
 							</div>
 							<div class="cl-card">
-								<p class="cl-summary">First build. Site scaffolded and brand foundations established.</p>
+								<p class="cl-summary">First version. The site was built and the brand style was established.</p>
 								<div class="cl-groups">
 									<div class="cl-group">
 										<p class="cl-label cl-label-added">Added</p>
 										<ul class="cl-list">
-											<li>Initial project structure created and deployed</li>
+											<li>The site was first created and published online</li>
 											<li>Brand color palette and visual identity established</li>
-											<li>Core layout framework in place</li>
+											<li>The basic structure of the site was set up</li>
 											<li>Hosting and custom domain configured</li>
 										</ul>
 									</div>
