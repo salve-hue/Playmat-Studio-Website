@@ -2798,50 +2798,75 @@
             }
         });
 
-        // ── Prevent sliders from changing during page scroll ──
+        // ── Slider interaction guards ──
+        // 1) Clicks on the track (not the thumb) are blocked — user must grab and
+        //    drag the thumb directly.
+        // 2) Mouse-wheel over a slider scrolls the page instead of changing the value.
+        // 3) Touch: vertical swipe scrolls the page; horizontal swipe on the thumb drags.
         document.querySelectorAll('input[type="range"]').forEach(function(slider) {
-            // Mouse wheel: prevent the slider value from changing; manually
-            // forward the scroll delta to the page so scrolling still works.
+
+            // Thumb hit-test: returns true when clientX is within ±12 px of the
+            // thumb's current rendered position (thumb is 16 px wide so this gives
+            // a comfortable but intentional grab zone).
+            function isOnThumb(clientX) {
+                var rect = slider.getBoundingClientRect();
+                var min  = parseFloat(slider.min)   || 0;
+                var max  = parseFloat(slider.max)   || 100;
+                var val  = parseFloat(slider.value);
+                var ratio    = (val - min) / (max - min);
+                var thumbX   = rect.left + ratio * rect.width;
+                return Math.abs(clientX - thumbX) <= 12;
+            }
+
+            // Block track clicks on mouse.
+            slider.addEventListener('mousedown', function(e) {
+                if (!isOnThumb(e.clientX)) {
+                    e.preventDefault();
+                }
+            });
+
+            // Mouse wheel: pass scroll through to the page.
             slider.addEventListener('wheel', function(e) {
                 e.preventDefault();
                 var delta = e.deltaY;
-                if (e.deltaMode === 1) delta *= 40;             // lines → px
-                if (e.deltaMode === 2) delta *= window.innerHeight; // pages → px
+                if (e.deltaMode === 1) delta *= 40;
+                if (e.deltaMode === 2) delta *= window.innerHeight;
                 window.scrollBy(0, delta);
             }, { passive: false });
 
-            // Touch: detect a vertical-scroll gesture and block the slider from
-            // moving. We use passive:false on touchmove so we can call
-            // preventDefault(), and we drive the page scroll manually using
-            // the incremental touch delta.
-            var startX, startY, isScroll;
+            // Touch: block track taps and detect vertical-scroll vs horizontal-drag.
+            var startX, startY, isScroll, thumbHit;
 
             slider.addEventListener('touchstart', function(e) {
                 var t = e.touches[0];
-                startX = t.clientX;
-                startY = t.clientY;
+                startX   = t.clientX;
+                startY   = t.clientY;
                 isScroll = false;
+                thumbHit = isOnThumb(t.clientX);
             }, { passive: true });
 
             slider.addEventListener('touchmove', function(e) {
                 if (startX === undefined) return;
-                var t = e.touches[0];
+                var t  = e.touches[0];
                 var dx = Math.abs(t.clientX - startX);
                 var dy = Math.abs(t.clientY - startY);
 
+                // Classify as a page scroll if vertical motion wins out.
                 if (!isScroll && dy > 8 && dy > dx) {
                     isScroll = true;
                 }
 
-                if (isScroll) {
-                    e.preventDefault(); // stop slider from updating
-                    window.scrollBy(0, startY - t.clientY);
-                    startY = t.clientY; // incremental delta for next move
+                if (isScroll || !thumbHit) {
+                    e.preventDefault();
+                    if (isScroll) {
+                        window.scrollBy(0, startY - t.clientY);
+                        startY = t.clientY;
+                    }
                 }
             }, { passive: false });
 
             slider.addEventListener('touchend', function() {
-                isScroll = false;
+                isScroll = thumbHit = false;
                 startX = startY = undefined;
             }, { passive: true });
         });
