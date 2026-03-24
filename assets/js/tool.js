@@ -158,8 +158,8 @@
         { game: "Universus", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Universus.webp" },
         { game: "Flesh and Blood", format: "Single Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Single%20Arsenal.webp" },
         { game: "Flesh and Blood", format: "Double Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Double%20Arsenal.webp" },
-        { game: "Cyberpunk TCG", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Standard.webp", preserveColors: true },
-        { game: "Cyberpunk TCG", format: "", size: "Extended", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Extended.webp", preserveColors: true }
+        { game: "Cyberpunk TCG", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Standard.webp" },
+        { game: "Cyberpunk TCG", format: "", size: "Extended", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Extended.webp" }
     ];
 
     window.RB_POINTS_DB = {
