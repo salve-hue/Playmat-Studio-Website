@@ -723,6 +723,28 @@
             window.initSimpleCanvas();
         }
 
+        // H3: Block SSRF — reject private IPs, loopback, and non-routable hostnames
+        // before passing the URL through a third-party CORS proxy.
+        try {
+            const _parsed = new URL(url);
+            if (!/^https?:$/i.test(_parsed.protocol)) throw new Error('bad scheme');
+            const _host = _parsed.hostname.toLowerCase();
+            if (
+                _host === 'localhost' ||
+                /^127\./.test(_host) ||
+                /^10\./.test(_host) ||
+                /^192\.168\./.test(_host) ||
+                /^172\.(1[6-9]|2\d|3[01])\./.test(_host) ||
+                /^169\.254\./.test(_host) ||
+                /^::1$/.test(_host) ||
+                /^0\.0\.0\.0$/.test(_host) ||
+                !_host.includes('.')   // bare hostnames with no dot
+            ) throw new Error('private host');
+        } catch (_urlErr) {
+            window.showAppAlert("Invalid URL", "That URL cannot be used as an image source. Please paste a public image URL.", "error");
+            return;
+        }
+
         const proxies = [
             `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp`,
             `https://corsproxy.io/?${encodeURIComponent(url)}`
@@ -2774,5 +2796,53 @@
                     break;
                 }
             }
+        });
+
+        // ── Prevent sliders from changing during page scroll ──
+        document.querySelectorAll('input[type="range"]').forEach(function(slider) {
+            // Mouse wheel: prevent the slider value from changing; manually
+            // forward the scroll delta to the page so scrolling still works.
+            slider.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                var delta = e.deltaY;
+                if (e.deltaMode === 1) delta *= 40;             // lines → px
+                if (e.deltaMode === 2) delta *= window.innerHeight; // pages → px
+                window.scrollBy(0, delta);
+            }, { passive: false });
+
+            // Touch: detect a vertical-scroll gesture and block the slider from
+            // moving. We use passive:false on touchmove so we can call
+            // preventDefault(), and we drive the page scroll manually using
+            // the incremental touch delta.
+            var startX, startY, isScroll;
+
+            slider.addEventListener('touchstart', function(e) {
+                var t = e.touches[0];
+                startX = t.clientX;
+                startY = t.clientY;
+                isScroll = false;
+            }, { passive: true });
+
+            slider.addEventListener('touchmove', function(e) {
+                if (startX === undefined) return;
+                var t = e.touches[0];
+                var dx = Math.abs(t.clientX - startX);
+                var dy = Math.abs(t.clientY - startY);
+
+                if (!isScroll && dy > 8 && dy > dx) {
+                    isScroll = true;
+                }
+
+                if (isScroll) {
+                    e.preventDefault(); // stop slider from updating
+                    window.scrollBy(0, startY - t.clientY);
+                    startY = t.clientY; // incremental delta for next move
+                }
+            }, { passive: false });
+
+            slider.addEventListener('touchend', function() {
+                isScroll = false;
+                startX = startY = undefined;
+            }, { passive: true });
         });
     };
