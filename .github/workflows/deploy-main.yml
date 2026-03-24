@@ -30,7 +30,7 @@ jobs:
       - name: Checkout preview branch (for /preview/)
         uses: actions/checkout@v4
         with:
-          ref: preview
+          ref: claude/document-page-overview-o7u0M
           path: preview-site
         continue-on-error: true
 
