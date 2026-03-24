@@ -1,7 +1,7 @@
 # Playmat Studio — Technical Reference Document
 
-**Version:** 1.7.1
-**Last Updated:** 2026-03-15
+**Version:** 1.7.2b
+**Last Updated:** 2026-03-24
 **Domain:** playmatstudio.com
 **Architecture:** Static Single-Page Application (SPA)
 
@@ -48,7 +48,7 @@ Playmat Studio is a **free, browser-based image preparation tool** built for tab
 
 ```
 /Playmat-Studio-Website/
-├── index.html                         # Main app (~1065 lines)
+├── index.html                         # Main app (~1625 lines)
 ├── 404.html                           # Custom error page
 ├── contact-worker.js                  # Cloudflare Worker: email via Resend
 ├── playmat-host-worker.js             # Cloudflare Worker: R2 image hosting
@@ -62,8 +62,8 @@ Playmat Studio is a **free, browser-based image preparation tool** built for tab
 ├── assets/
 │   ├── css/
 │   │   ├── main.css                   # 58 KB — Phantom template base styles
-│   │   ├── custom.css                 # 29 KB — Brand overrides & custom UI
-│   │   ├── tool.css                   # 28 KB — Tool editor UI styling
+│   │   ├── custom.css                 # 36 KB — Brand overrides & custom UI
+│   │   ├── tool.css                   # 36 KB — Tool editor UI styling
 │   │   ├── fontawesome-all.min.css    # 59 KB — Font Awesome 6.x icons
 │   │   └── noscript.css               # 296 B  — No-JS fallback
 │   ├── js/
@@ -72,7 +72,7 @@ Playmat Studio is a **free, browser-based image preparation tool** built for tab
 │   │   ├── breakpoints.min.js         # 2 KB   — Breakpoint utility (Phantom)
 │   │   ├── util.js                    # 13 KB  — Misc utilities (Phantom)
 │   │   ├── main.js                    # 3.5 KB — Menu & contact form logic
-│   │   └── tool.js                    # 145 KB / 2472 lines — All tool logic
+│   │   └── tool.js                    # 166 KB / 2873 lines — All tool logic
 │   ├── webfonts/                      # Font Awesome icon fonts (eot/svg/ttf/woff/woff2)
 │   ├── Under Subway.ttf               # Custom branding font (115 KB)
 │   └── sass/                          # Source SCSS (not compiled on deploy)
@@ -84,6 +84,11 @@ Playmat Studio is a **free, browser-based image preparation tool** built for tab
 │   ├── apple-touch-icon.png           # iOS home screen icon
 │   ├── og-preview.jpg                 # Open Graph / Twitter Card preview image
 │   └── pic01.jpg – pic15.jpg          # Demo / placeholder images
+│
+├── b2b-handoff/                       # White-label B2B platform project brief
+│   ├── CLAUDE.md                      # Master context file for a new Claude project
+│   ├── PROJECT_SPEC.md                # Full feature spec, DB schema, user flows
+│   └── STARTER_CODE.md                # Bootstrap commands and starter code files
 │
 └── audits/
     └── security-audit-2026-03-12.md   # 16 findings (2 critical, 4 high)
@@ -299,14 +304,15 @@ Simple single-image editor for fast turnaround:
 
 ### Advanced Editor (Beta)
 Full-featured Fabric.js canvas editor with split layout:
-- **Left sidebar (300px):** Accordion panels — Artwork, Game Layout, Adjustments, Text
+- **Left sidebar (300px):** Collapsible accordion cards — Artwork, Game Layout, Adjustments, Text (each section is an independent scrollable card)
 - **Center canvas:** Zoomable Fabric.js canvas with floating toolbar
 - **AI features:** Upscale resolution, remove background (both require confirmation modal)
 - **Manual editing:** Eraser brush (size 10–150px), Recolor brush (5–100px)
 - **Text overlay:** Font selection from 9+ display fonts, color, stroke, size, position
 - **Transformations:** Flip H/V, rotate, zoom (0.1–2.5x), gradient overlay
-- **Color adjustments:** Brightness, contrast, saturation sliders
+- **Color adjustments:** Brightness, contrast, saturation, vibrance sliders + image presets with tooltips
 - **Canvas export:** JPG 99% quality, PNG lossless, WEBP 95%, all at 300 DPI
+- **Slider guards:** Track clicks are blocked (must grab thumb); wheel and vertical touch swipe scroll the page instead of changing the slider value
 
 ### Batch Enhance
 - Drag-and-drop or click to upload multiple images
@@ -351,7 +357,7 @@ Full-featured Fabric.js canvas editor with split layout:
 | File | Responsibility |
 |---|---|
 | `main.js` | Nav menu toggle, breakpoint setup, contact form POST |
-| `tool.js` | All tool logic (2472 lines) — editors, AI calls, export, overlays |
+| `tool.js` | All tool logic (2873 lines) — editors, AI calls, export, overlays |
 | `jquery.min.js` | DOM/AJAX base |
 | `browser.min.js` | User-agent detection (Phantom) |
 | `breakpoints.min.js` | Responsive JS breakpoints |
@@ -408,12 +414,14 @@ fabric.textureSize = 16384;                      // Max texture size
 | `#s-layout-canvas` | Game overlay layer |
 
 **Advanced Editor:**
-| Canvas ID | Purpose |
-|---|---|
-| `#main-canvas` | Primary art canvas |
-| `#layout-canvas` | Game overlay layer |
-| `#fg-canvas` | AI foreground layer |
-| `#recolor-canvas` | Recolor brush layer |
+| Canvas ID | z-index | Purpose |
+|---|---|---|
+| `#main-canvas` | (Fabric) | Primary art canvas |
+| `#vignette-canvas` | 5 | Vignette / gradient overlay layer (below game overlay) |
+| `#layout-canvas` | 10 | Game overlay layer |
+| `#fg-canvas` | 20 | AI foreground layer |
+| `#recolor-canvas` | 30 | Recolor brush layer |
+| `#eraser-interaction` | 40 | Eraser pointer event capture |
 
 ### Named Fabric Objects
 - `'art'` — Main user-uploaded image object
@@ -644,7 +652,7 @@ Sitemap: https://playmatstudio.com/sitemap.xml
 | Images | 30 days | `max-age=2592000` |
 
 ### Version Bumping
-The `v=` query param on CSS/JS is set to `Date.now()` at runtime — cache busting happens automatically on every page load. The displayed version number (`v1.7.1`) is a hardcoded `<div class="version-tag">` inside both tool editors.
+The `v=` query param on CSS/JS is set to `Date.now()` at runtime — cache busting happens automatically on every page load. The displayed version number (`v1.7.1`) is a hardcoded `<div class="version-tag">` inside both tool editors. The changelog in `index.html` tracks public-facing versions (currently `v1.7.2b`).
 
 To bump the display version: search for `v1.7.1` in `index.html` and update both occurrences.
 
@@ -654,10 +662,11 @@ To bump the display version: search for `v1.7.1` in `index.html` and update both
 
 ### From Security Audit (High Priority)
 - [ ] Sanitize `innerHTML` usage in `tool.js` (C1)
-- [ ] Implement Content Security Policy (C2)
+- [x] Implement Content Security Policy (C2) — CSP `<meta>` tag added in `index.html`; SSRF URL validation added to workers
 - [ ] Verify Fabric.js + JSZip SRI hashes are current (H1)
 - [ ] Add rate limiting to contact and R2 workers (H2, M5)
 - [ ] Restrict CORS origins on R2 worker (M4)
+- [x] Missing security response headers (M1) — `Permissions-Policy`, `HSTS`, `Referrer-Policy` added to `.htaccess`
 
 ### General
 - [ ] Advanced Editor is labeled **Beta** — Fabric.js canvas has known edge cases with complex overlays
@@ -665,6 +674,9 @@ To bump the display version: search for `v1.7.1` in `index.html` and update both
 - [ ] Google Fonts loaded from external CDN — consider self-hosting for privacy/performance
 - [ ] No offline/PWA support — full internet required for AI features and Google Fonts
 
+### B2B Platform (Future Work)
+The `b2b-handoff/` directory contains a complete project brief for a white-label storefront platform. This is a separate Next.js project, not part of the existing static site. See `b2b-handoff/CLAUDE.md` for the full context.
+
 ---
 
-*This document was generated on 2026-03-15 from codebase inspection. Update when significant architectural changes are made.*
+*This document was last updated on 2026-03-24 from codebase inspection. Update when significant architectural changes are made.*
