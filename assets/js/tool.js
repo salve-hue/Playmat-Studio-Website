@@ -48,6 +48,8 @@
         aiFgImg:           null,
         activeUpscaleEditor: null,
         activeLayoutUrl:   null,
+        layoutPreservesColors: false,
+        s_layoutPreservesColors: false,
         erasedPaths:       [],
         canvasW:           0,
         canvasH:           0,
@@ -156,8 +158,8 @@
         { game: "Universus", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Universus.webp" },
         { game: "Flesh and Blood", format: "Single Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Single%20Arsenal.webp" },
         { game: "Flesh and Blood", format: "Double Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Double%20Arsenal.webp" },
-        { game: "Cyberpunk TCG", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Standard%20White.png" },
-        { game: "Cyberpunk TCG", format: "", size: "Extended", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Extended.webp" }
+        { game: "Cyberpunk TCG", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Standard%20White.png", preserveColors: true },
+        { game: "Cyberpunk TCG", format: "", size: "Extended", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Extended.webp", preserveColors: true }
     ];
 
     window.RB_POINTS_DB = {
@@ -599,6 +601,8 @@
         if (cursor) cursor.style.display = 'none';
         APP.activeLayoutUrl   = null;
         APP.s_activeLayoutUrl = null;
+        APP.layoutPreservesColors   = false;
+        APP.s_layoutPreservesColors = false;
         APP.cachedLayoutUrl   = null;
         APP.cachedLayoutImg   = null;
         APP.s_cachedLayoutImg = null;
@@ -1491,7 +1495,7 @@
         const fSel=document.getElementById('format-sel'), hSel=document.getElementById('hand-sel');
         if(game==='Riftbound') document.getElementById('rb-extras-wrap').classList.remove('hidden-field');
         else                   document.getElementById('rb-extras-wrap').classList.add('hidden-field');
-        if (!game) { document.getElementById('zone-style-wrap').classList.add('hidden-field'); fSel.classList.add('hidden-field'); hSel.classList.add('hidden-field'); fSel.value=''; hSel.value=''; APP.activeLayoutUrl=null; window.renderLayout(); return; }
+        if (!game) { document.getElementById('zone-style-wrap').classList.add('hidden-field'); fSel.classList.add('hidden-field'); hSel.classList.add('hidden-field'); fSel.value=''; hSel.value=''; APP.activeLayoutUrl=null; APP.layoutPreservesColors=false; window.renderLayout(); return; }
         const formats=[...new Set(LAYOUT_RAW.filter(i=>i.game===game&&i.size===activeSize&&i.format!=='').map(i=>i.format))];
         if(game==='Riftbound') { const order=["Bounded","Unbounded","Rubicon Mod","Regional Solo Mod","Gen Con Solo","Houston Regional","Houston Regional w/ Points"]; formats.sort((a,b)=>{ let ia=order.indexOf(a),ib=order.indexOf(b); return (ia===-1?99:ia)-(ib===-1?99:ib); }); }
         fSel.value=''; hSel.value='';
@@ -1515,7 +1519,7 @@
         const hands=[...new Set(LAYOUT_RAW.filter(i=>i.game===game&&i.size===activeSize&&i.format===format&&i.hand!=='').map(i=>i.hand))];
         if(hands.length>0&&hand==='') { APP.activeLayoutUrl=null; window.renderLayout(); return; }
         const match=LAYOUT_RAW.find(i=>i.game===game&&i.format===format&&i.hand===hand&&i.size===activeSize);
-        if(match) { APP.activeLayoutUrl=match.url ?? ''; APP.erasedPaths=[]; window.resetRecolor(); document.getElementById('zone-style-wrap').classList.remove('hidden-field'); window.renderLayout(); }
+        if(match) { APP.activeLayoutUrl=match.url ?? ''; APP.layoutPreservesColors=!!(match.preserveColors); APP.erasedPaths=[]; window.resetRecolor(); const zsw=document.getElementById('zone-style-wrap'); if(APP.layoutPreservesColors) zsw.classList.add('hidden-field'); else zsw.classList.remove('hidden-field'); window.renderLayout(); }
     };
 
     window.updateOpacity = () => { document.getElementById('layout-canvas').style.opacity = document.getElementById('op-in').value; };
@@ -1540,7 +1544,7 @@
         const rbPointsVal=isRiftbound?document.getElementById('rb-points-sel').value:'none';
         const hand=document.getElementById('hand-sel').value, format=document.getElementById('format-sel').value;
 
-        const drawFn = (img) => window.drawLayoutCanvasCore(lCanvas.getContext('2d'), img, lCanvas, document.getElementById('col-1').value, mode, true, isRiftbound, rbPointsVal, hand, format);
+        const drawFn = (img) => window.drawLayoutCanvasCore(lCanvas.getContext('2d'), img, lCanvas, document.getElementById('col-1').value, mode, true, isRiftbound, rbPointsVal, hand, format, APP.layoutPreservesColors);
         // Points Only format has an empty URL — draw with null image (points strip only)
         if (APP.activeLayoutUrl === '') { drawFn(null); return; }
         if (APP.cachedLayoutUrl===APP.activeLayoutUrl && APP.cachedLayoutImg) { drawFn(APP.cachedLayoutImg); }
@@ -1563,7 +1567,7 @@
     };
 
     // FIX 4 in action: drawLayoutCanvasCore now delegates to shared helpers
-    window.drawLayoutCanvasCore = function(ctx, img, lCanvas, c1, mode, isAdv, isRiftbound, rbPointsVal, hand, format) {
+    window.drawLayoutCanvasCore = function(ctx, img, lCanvas, c1, mode, isAdv, isRiftbound, rbPointsVal, hand, format, preserveColors) {
         // Points Only: img will be null — pass a blank 1x1 image so the rest of the
         // pipeline (points draw, source-in fill) still runs correctly.
         if (!img) { img = document.createElement('canvas'); img.width = 1; img.height = 1; }
@@ -1584,13 +1588,17 @@
             ctx.rect(sx, sy, sw, sh);
             ctx.clip();
             drawRiftboundLayout(ctx, img, APP.canvasW, APP.canvasH, hand, format, rbPointsVal);
-            ctx.globalCompositeOperation = 'source-in';
-            applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+            if (!preserveColors) {
+                ctx.globalCompositeOperation = 'source-in';
+                applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+            }
             ctx.restore();
         } else {
             ctx.drawImage(img, 0, 0, APP.canvasW, APP.canvasH);
-            ctx.globalCompositeOperation = 'source-in';
-            applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+            if (!preserveColors) {
+                ctx.globalCompositeOperation = 'source-in';
+                applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+            }
         }
 
         if (isAdv && APP.erasedPaths.length>0) {
@@ -1711,6 +1719,7 @@
         // Draw layout overlay — only if the user has actively selected a layout in this session.
         // Guard against stale cachedLayoutImg persisting from a previous session without restart.
         const activeUrl = isAdv ? APP.activeLayoutUrl : APP.s_activeLayoutUrl;
+        const layoutPreservesColors = isAdv ? APP.layoutPreservesColors : APP.s_layoutPreservesColors;
         if (layoutImg && activeUrl !== null && activeUrl !== undefined) {
             const tCanvas=document.createElement('canvas'); tCanvas.width=printW; tCanvas.height=printH;
             const tCtx=tCanvas.getContext('2d');
@@ -1725,15 +1734,19 @@
                 tCtx.rect(px, py, pw, ph);
                 tCtx.clip();
                 drawRiftboundLayout(tCtx, layoutImg, printW, printH, handVal, formatVal, rbPointsVal);
-                tCtx.globalCompositeOperation='source-in';
-                const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
-                applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+                if (!layoutPreservesColors) {
+                    tCtx.globalCompositeOperation='source-in';
+                    const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
+                    applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+                }
                 tCtx.restore();
             } else {
                 tCtx.drawImage(layoutImg,0,0,printW,printH);
-                tCtx.globalCompositeOperation='source-in';
-                const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
-                applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+                if (!layoutPreservesColors) {
+                    tCtx.globalCompositeOperation='source-in';
+                    const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
+                    applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+                }
             }
 
             if (isAdv && APP.erasedPaths.length>0) {
@@ -1854,7 +1867,7 @@
             fSel.classList.add('hidden-field'); hSel.classList.add('hidden-field');
             if (colorWrap) colorWrap.classList.add('hidden-field');
             fSel.value = ''; hSel.value = '';
-            APP.s_activeLayoutUrl = null; window.renderSimpleLayout(); return;
+            APP.s_activeLayoutUrl = null; APP.s_layoutPreservesColors = false; window.renderSimpleLayout(); return;
         }
 
         const formats = [...new Set(LAYOUT_RAW.filter(i => i.game===game && i.size===activeSize && i.format!=='').map(i => i.format))];
@@ -1904,7 +1917,11 @@
         const match = LAYOUT_RAW.find(i => i.game===game && i.format===format && i.hand===hand && i.size===activeSize);
         if (match) {
             APP.s_activeLayoutUrl = match.url ?? '';
-            if (colorWrap) colorWrap.classList.remove('hidden-field');
+            APP.s_layoutPreservesColors = !!(match.preserveColors);
+            if (colorWrap) {
+                if (APP.s_layoutPreservesColors) colorWrap.classList.add('hidden-field');
+                else colorWrap.classList.remove('hidden-field');
+            }
             window.renderSimpleLayout();
         }
     };
@@ -1922,7 +1939,7 @@
 
         const drawFn = (img) => {
             APP.s_cachedLayoutImg = img;
-            window.drawLayoutCanvasCore(lCanvas.getContext('2d'), img, lCanvas, c1, 'solid', false, isRiftbound, rbPointsVal, hand, format);
+            window.drawLayoutCanvasCore(lCanvas.getContext('2d'), img, lCanvas, c1, 'solid', false, isRiftbound, rbPointsVal, hand, format, APP.s_layoutPreservesColors);
         };
 
         // Points Only: empty URL — draw with null so only the points strip renders
