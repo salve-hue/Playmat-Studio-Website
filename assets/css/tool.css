@@ -28,6 +28,12 @@
     height: auto !important;
     line-height: normal !important;
     overflow: visible !important;
+}
+.tool-tab-btn,
+.mat-size-btn,
+.action-btn,
+.acc-btn,
+#zoom-toolbar button {
     padding-left: unset;
     padding-right: unset;
 }
@@ -199,7 +205,7 @@
     }
     
     /* UI Components */
-    .ui-select { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); color: var(--brand-text-pri); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; transition: border 0.3s; cursor: pointer; }
+    .ui-select { width: 100%; padding: 12px 36px 12px 12px !important; background-color: rgba(0,0,0,0.2) !important; background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMicgaGVpZ2h0PSc4JyB2aWV3Qm94PScwIDAgMTIgOCc+PHBhdGggZD0nTTEgMWw1IDUgNS01JyBzdHJva2U9JyMwMGM5YTcnIHN0cm9rZS13aWR0aD0nMS44JyBmaWxsPSdub25lJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnLz48L3N2Zz4=") !important; background-repeat: no-repeat !important; background-position: right 12px center !important; background-size: 12px 8px !important; color: var(--brand-text-pri); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; transition: border 0.3s; cursor: pointer; appearance: none; -webkit-appearance: none; height: auto !important; }
     .ui-select:focus { outline: none; border-color: var(--brand-hover); }
     .ui-select option { background: var(--brand-bg); color: var(--brand-text-pri); }
     

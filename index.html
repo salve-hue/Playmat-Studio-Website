@@ -616,7 +616,7 @@
 					                    <label style="font-size: 12px; color: var(--brand-text-sec); display: block; margin-bottom: 10px;">No artwork? Try a solid color:</label>
 					                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
 					                        <input type="color" id="bg-color-picker" value="#000000" class="color-swatch" style="width: 50px;">
-					                        <input type="text" id="bg-color-hex" value="#000000" class="ui-select" style="margin:0; width:80px; padding:8px; font-family:monospace;">
+					                        <input type="text" id="bg-color-hex" value="#000000" class="ui-select" style="margin:0; width:80px; padding:8px !important; font-family:monospace; background-image:none !important;">
 					                    </div>
 					                </div>
 
@@ -662,7 +662,7 @@
 					                        <label style="margin-top:15px;">Primary Color</label>
 					                        <div style="display: flex; gap: 8px;">
 					                            <input type="color" id="col-1" value="#ffffff" class="color-swatch" style="flex:1;">
-					                            <input type="text" id="col-1-hex" value="#ffffff" class="ui-select" style="margin:0; width:90px; padding:8px; font-family:monospace;">
+					                            <input type="text" id="col-1-hex" value="#ffffff" class="ui-select" style="margin:0; width:90px; padding:8px !important; font-family:monospace; background-image:none !important;">
 					                        </div>
 
 					                        <div id="grad-controls" class="hidden-field">
@@ -672,7 +672,7 @@
 					                            </div>
 					                            <div style="display: flex; gap: 8px; margin-top:6px;">
 					                                <input type="color" id="col-2" value="#000000" class="color-swatch" style="flex:1;">
-					                                <input type="text" id="col-2-hex" value="#000000" class="ui-select" style="margin:0; width:90px; padding:8px; font-family:monospace;">
+					                                <input type="text" id="col-2-hex" value="#000000" class="ui-select" style="margin:0; width:90px; padding:8px !important; font-family:monospace; background-image:none !important;">
 					                            </div>
 
 					                            <label style="margin-top:15px;">Gradient Angle</label>
@@ -746,10 +746,10 @@
 
 					                <div class="inner-panel">
 					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
-					                    <p style="font-size:11px; color:#f0eeff !important; line-height:1.4; margin-bottom:15px; margin-top:0;">
+					                    <p style="font-size:11px; color:#f0eeff !important; line-height:1.4; margin-bottom:15px; margin-top:0; display:none;">
 					                        Images on digital screens look much brighter than physical ink. Use our Auto-Optimize tool to perfectly calibrate your art for printing!
 					                    </p>
-					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px;">🪄 AUTO-OPTIMIZE FOR PRINT</button>
+					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px; display:none;">🪄 AUTO-OPTIMIZE FOR PRINT</button>
 
 					                    <div class="slider-row" style="margin-top:0;">
 					                        <div class="adj-item">
@@ -1014,8 +1014,8 @@
 		<script src="assets/js/browser.min.js"></script>
 		<script src="assets/js/breakpoints.min.js"></script>
 		<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js?v=4"></script>
-		<script src="assets/js/tool.js?v=4"></script>
+<script src="assets/js/main.js?v=5"></script>
+		<script src="assets/js/tool.js?v=8"></script>
 
 
 		<!-- Back to Top -->
