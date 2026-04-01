@@ -72,7 +72,7 @@ a:hover {
    ============================================================ */
 
 #wrapper {
-	padding-top: 4em !important;
+	padding-top: 12em !important;
 }
 
 #header {
@@ -81,14 +81,13 @@ a:hover {
 	left: 0 !important;
 	right: 0 !important;
 	width: 100% !important;
-	height: 4em !important;
+	height: 12em !important;
 	padding: 0 !important;
 	background: rgba(11, 9, 18, 0.97) !important;
 	border-bottom: 1px solid var(--ps-border) !important;
 	backdrop-filter: blur(8px) !important;
 	-webkit-backdrop-filter: blur(8px) !important;
 	z-index: 9999 !important;
-	overflow: visible !important;
 }
 
 #header .inner {
@@ -117,8 +116,8 @@ a:hover {
 }
 
 #header .logo .symbol img {
-	width: 16em !important;
-	height: 16em !important;
+	width: 12em !important;
+	height: 12em !important;
 }
 
 #header nav {
@@ -928,13 +927,19 @@ a:hover {
 
 @media screen and (max-width: 736px) {
 	/* ── HEADER: shrink logo back to single line ── */
+	#wrapper {
+		padding-top: 9em !important;
+	}
+	#header {
+		height: 9em !important;
+	}
 	#header .logo .title {
 		font-size: 0.935em !important;
 		white-space: nowrap !important;
 	}
 	#header .logo .symbol img {
-		width: 12em !important;
-		height: 12em !important;
+		width: 9em !important;
+		height: 9em !important;
 	}
 
 	#main .inner > header h1 {
