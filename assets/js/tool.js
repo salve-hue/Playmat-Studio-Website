@@ -1195,9 +1195,28 @@
         const aspect = conf.w / conf.h;
         let targetW, targetH;
         if (mode === 'l') {
-            // Large: fill full column width, no height cap — size-mode-large CSS handles scrolling
             targetW = Math.max(measuredW, 250);
             targetH = targetW / aspect;
+            // In lightbox mode, cap height so the actions bar stays within the viewport.
+            // Use the backdrop's computed padding-top (stable, not scroll-dependent) to
+            // determine where the root starts, then subtract the UI chrome heights.
+            const backdrop = document.getElementById('adv-backdrop');
+            const isLightbox = backdrop && !backdrop.classList.contains('tab-mode');
+            if (isLightbox) {
+                const infoBar2    = document.getElementById('adv-info-bar');
+                const infoH2      = infoBar2 ? (infoBar2.offsetHeight  || 40)  : 40;
+                const actionsBar2 = document.getElementById('adv-canvas-actions');
+                const actionsH2   = actionsBar2 ? (actionsBar2.offsetHeight || 120) : 120;
+                const topBar      = document.getElementById('editor-top-bar');
+                const topBarH     = topBar ? (topBar.offsetHeight || 52) : 52;
+                const bdPadTop    = parseFloat(getComputedStyle(backdrop).paddingTop) || 40;
+                const maxH2       = window.innerHeight - bdPadTop - topBarH - vPad - 24 - infoH2 - actionsH2;
+                if (maxH2 > 100 && targetH > maxH2) {
+                    targetH = maxH2;
+                    targetW = Math.round(targetH * aspect);
+                    if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
+                }
+            }
         } else {
             // Measure the fixed elements that share canvas-column with the canvas
             const infoBar  = document.getElementById('adv-info-bar');
