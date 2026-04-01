@@ -740,13 +740,19 @@ These are shared between the Quick Upload editor and the Advanced Editor. They m
 
 ## 17. Shopify Migration Notes
 
+### Shopify file structure
+
+In a Shopify theme, there is no separate `tool.js`. Everything — HTML markup, CSS, and JavaScript — is inlined into a single self-contained `.liquid` file (e.g. `sections/playmat-editor.liquid` or `templates/page.playmat-editor.liquid`). Shopify's asset pipeline does not support loading arbitrary external JS files the same way a static site does; the entire editor lives in one file.
+
+When porting, copy the relevant HTML from `index.html`, the CSS from `tool.css` (inside a `<style>` block), and the JS from `tool.js` (inside a `<script>` block) into that single Liquid file. Use Liquid's `{{ 'asset.js' | asset_url | script_tag }}` only for large shared libraries (jQuery, Fabric.js) that you upload to the Shopify theme's `/assets/` folder.
+
 ### Embedding the editor
 
 The editor is designed to work in two modes, controlled by a CSS class:
 - **Tab mode** (`.tab-mode` on `#simple-backdrop`): renders inline in the page, no overlay. This is the mode to use in Shopify.
 - **Backdrop mode** (default): full-screen overlay, controlled by `display: flex`.
 
-For Shopify, apply `#simple-backdrop.tab-mode` and render it inside a Shopify section or app block. Remove the fixed-position styles from `#simple-backdrop`.
+For Shopify, apply `#simple-backdrop.tab-mode` and render it inside the Liquid section. Remove the fixed-position styles from `#simple-backdrop`.
 
 ### Get Printed → Shopify Cart
 

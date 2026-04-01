@@ -1070,7 +1070,7 @@ Same shared dependencies as Quick Upload (see that document, section 16), with t
 
 ## 23. Shopify Migration Notes
 
-See also the Quick Upload handoff (section 17) for general notes. Advanced Editor-specific items:
+See also the Quick Upload handoff (section 17) for general notes, including the key point that **Shopify has no separate `tool.js`** — all HTML, CSS, and JavaScript are inlined into a single self-contained `.liquid` file. Advanced Editor-specific items:
 
 ### AI worker authentication
 
