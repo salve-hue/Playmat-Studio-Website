@@ -1197,6 +1197,20 @@
         if (mode === 'l') {
             targetW = Math.max(measuredW, 250);
             targetH = targetW / aspect;
+            // Cap height so the canvas bottom stays within the viewport
+            const infoBar2  = document.getElementById('adv-info-bar');
+            const infoH2    = infoBar2  ? (infoBar2.offsetHeight  || 40)  : 40;
+            const actionsBar2 = document.getElementById('adv-canvas-actions');
+            const actionsH2 = actionsBar2 ? (actionsBar2.offsetHeight || 120) : 120;
+            const topBar    = document.getElementById('editor-top-bar');
+            const topBarH   = topBar ? (topBar.offsetHeight || 52) : 52;
+            const rootTop   = root ? Math.max(root.getBoundingClientRect().top, 0) : 0;
+            const maxH2     = window.innerHeight - rootTop - topBarH - infoH2 - actionsH2 - vPad - 24;
+            if (maxH2 > 100 && targetH > maxH2) {
+                targetH = maxH2;
+                targetW = Math.round(targetH * aspect);
+                if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
+            }
         } else {
             // Measure the fixed elements that share canvas-column with the canvas
             const infoBar  = document.getElementById('adv-info-bar');
