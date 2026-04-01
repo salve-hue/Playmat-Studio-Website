@@ -1197,19 +1197,28 @@
         if (mode === 'l') {
             targetW = Math.max(measuredW, 250);
             targetH = targetW / aspect;
-            // Cap height so the canvas bottom stays within the viewport
-            const infoBar2  = document.getElementById('adv-info-bar');
-            const infoH2    = infoBar2  ? (infoBar2.offsetHeight  || 40)  : 40;
-            const actionsBar2 = document.getElementById('adv-canvas-actions');
-            const actionsH2 = actionsBar2 ? (actionsBar2.offsetHeight || 120) : 120;
-            const topBar    = document.getElementById('editor-top-bar');
-            const topBarH   = topBar ? (topBar.offsetHeight || 52) : 52;
-            const rootTop   = root ? Math.max(root.getBoundingClientRect().top, 0) : 0;
-            const maxH2     = window.innerHeight - rootTop - topBarH - infoH2 - actionsH2 - vPad - 24;
-            if (maxH2 > 100 && targetH > maxH2) {
-                targetH = maxH2;
-                targetW = Math.round(targetH * aspect);
-                if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
+            // Cap height in fullscreen or lightbox mode so the actions bar stays within the viewport.
+            const backdrop     = document.getElementById('adv-backdrop');
+            const isLightbox   = backdrop && !backdrop.classList.contains('tab-mode');
+            const isFullscreen = root && root.classList.contains('app-fullscreen-mode');
+            if (isLightbox || isFullscreen) {
+                // In fullscreen the root is fixed at top:5vh, height:90vh.
+                // In lightbox the backdrop has a computed padding-top before the root starts.
+                const availH = isFullscreen
+                    ? window.innerHeight * 0.90
+                    : window.innerHeight - (parseFloat(getComputedStyle(backdrop).paddingTop) || 40);
+                const infoBar2    = document.getElementById('adv-info-bar');
+                const infoH2      = infoBar2    ? (infoBar2.offsetHeight    || 40)  : 40;
+                const actionsBar2 = document.getElementById('adv-canvas-actions');
+                const actionsH2   = actionsBar2 ? (actionsBar2.offsetHeight || 120) : 120;
+                const topBar      = document.getElementById('editor-top-bar');
+                const topBarH     = topBar      ? (topBar.offsetHeight      || 52)  : 52;
+                const maxH2       = availH - topBarH - vPad - 24 - infoH2 - actionsH2;
+                if (maxH2 > 100 && targetH > maxH2) {
+                    targetH = maxH2;
+                    targetW = Math.round(targetH * aspect);
+                    if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
+                }
             }
         } else {
             // Measure the fixed elements that share canvas-column with the canvas
