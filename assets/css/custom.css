@@ -88,6 +88,7 @@ a:hover {
 	backdrop-filter: blur(8px) !important;
 	-webkit-backdrop-filter: blur(8px) !important;
 	z-index: 9999 !important;
+	overflow: visible !important;
 }
 
 #header .inner {
@@ -116,8 +117,8 @@ a:hover {
 }
 
 #header .logo .symbol img {
-	width: 20em !important;
-	height: 20em !important;
+	width: 16em !important;
+	height: 16em !important;
 }
 
 #header nav {
@@ -932,8 +933,8 @@ a:hover {
 		white-space: nowrap !important;
 	}
 	#header .logo .symbol img {
-		width: 15em !important;
-		height: 15em !important;
+		width: 12em !important;
+		height: 12em !important;
 	}
 
 	#main .inner > header h1 {
