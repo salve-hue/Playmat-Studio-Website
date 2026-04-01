@@ -72,7 +72,7 @@ a:hover {
    ============================================================ */
 
 #wrapper {
-	padding-top: calc(4em + 20px) !important;
+	padding-top: calc(7em + 20px) !important;
 }
 
 #header {
@@ -116,8 +116,8 @@ a:hover {
 }
 
 #header .logo .symbol img {
-	width: 4em !important;
-	height: 4em !important;
+	width: 7em !important;
+	height: 7em !important;
 }
 
 #header nav {
@@ -928,7 +928,7 @@ a:hover {
 @media screen and (max-width: 736px) {
 	/* ── HEADER: shrink logo back to single line ── */
 	#wrapper {
-		padding-top: calc(3.5em + 20px) !important;
+		padding-top: calc(5.5em + 20px) !important;
 	}
 	#header {
 		height: auto !important;
@@ -938,8 +938,8 @@ a:hover {
 		white-space: nowrap !important;
 	}
 	#header .logo .symbol img {
-		width: 3.5em !important;
-		height: 3.5em !important;
+		width: 5.5em !important;
+		height: 5.5em !important;
 	}
 
 	#main .inner > header h1 {
