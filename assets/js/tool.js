@@ -428,9 +428,18 @@
             if (el && disp) disp.textContent = _adjFmt[id](parseFloat(el.value));
         });
     };
+    // Updates the CSS --fill-pct variable on a range input so the coloured
+    // track portion visually tracks the thumb position.
+    window.setSliderFill = function(s) {
+        var min = parseFloat(s.min) || 0;
+        var max = parseFloat(s.max) || 100;
+        var pct = ((parseFloat(s.value) - min) / (max - min)) * 100;
+        s.style.setProperty('--fill-pct', pct.toFixed(2) + '%');
+    };
     window.resetSingleFilter = function(id, defaultVal) {
         const el = document.getElementById(id); if (!el) return;
         el.value = defaultVal;
+        window.setSliderFill(el);
         const disp = document.getElementById('val-' + id);
         if (disp) disp.textContent = _adjFmt[id] ? _adjFmt[id](defaultVal) : defaultVal;
         if (id === 'filter-vignette') window.updateVignette(); else window.updateFilters();
@@ -438,7 +447,7 @@
 
     window.resetFilters = function() {
         ['filter-brightness','filter-contrast','filter-saturation','filter-vibrance','filter-hue','filter-blur','filter-shadows','filter-warmth','filter-vignette','filter-grayscale'].forEach(id => {
-            const el = document.getElementById(id); if (el) el.value = 0;
+            const el = document.getElementById(id); if (el) { el.value = 0; window.setSliderFill(el); }
         });
         const btnAdv = document.getElementById('auto-opt-btn-adv');
         if (btnAdv) { btnAdv.dataset.active = 'false'; btnAdv.style.background = 'transparent'; btnAdv.style.color = 'var(--brand-hover)'; }
@@ -2851,6 +2860,10 @@
         // 2) Mouse-wheel over a slider scrolls the page instead of changing the value.
         // 3) Touch: vertical swipe scrolls the page; horizontal swipe on the thumb drags.
         document.querySelectorAll('input[type="range"]').forEach(function(slider) {
+            // Initialise fill on load.
+            window.setSliderFill(slider);
+            // Keep fill in sync whenever the value changes.
+            slider.addEventListener('input', function() { window.setSliderFill(slider); });
 
             // Thumb hit-test: returns true when clientX is within ±12 px of the
             // thumb's current rendered position (thumb is 16 px wide so this gives
