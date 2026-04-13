@@ -63,7 +63,7 @@
     .landing-label { color: var(--brand-hover); font-size: 12px; font-weight: bold; letter-spacing: 1px; display: block; margin-bottom: 8px; }
 
     /* --- ADVANCED EDITOR --- */
-    #playmat-tool-root { display: flex; width: 100%; max-width: 1400px; height: 90vh; max-height: 900px; background: var(--brand-bg); border-radius: 6px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; flex-direction: row; }
+    #playmat-tool-root { display: flex; width: 100%; max-width: 1400px; height: 90vh; max-height: 900px; background: var(--brand-bg); border-radius: 6px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; flex-direction: column; }
     .app-fullscreen-mode { position: fixed !important; top: 2% !important; left: 2% !important; width: 96vw !important; height: 96vh !important; max-width: none !important; max-height: none !important; z-index: 10000 !important; border-radius: 6px !important; }
     #sidebar { width: 340px; border-right: 1px solid rgba(255,255,255,0.1); overflow-y: auto; background: var(--brand-bg); flex-shrink: 0; z-index: 20; display: flex; flex-direction: column; }
     
@@ -178,7 +178,47 @@
         .simple-tool-grid { grid-template-columns: 1fr !important; }
     }
     @media (hover: none) and (pointer: coarse) { #brush-cursor { display: none !important; } }
-    
+
+    /* --- HIDE BASIC EDITOR --- */
+    #simple-backdrop { display: none !important; }
+    .btn-landing-simple { display: none !important; }
+
+    /* --- EDITOR TOP BAR --- */
+    #editor-top-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: rgba(0,0,0,0.35); border-bottom: 1px solid rgba(104,48,187,0.3); flex-shrink: 0; gap: 12px; }
+    .etb-group { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+    /* --- EDITOR MAIN (sidebar + canvas row) --- */
+    #editor-main { display: flex; flex-direction: row; flex: 1; min-height: 0; overflow: hidden; }
+
+    /* --- ACCORDION CARDS --- */
+    .acc-card { border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+    .acc-card .acc-btn { border-bottom: none; }
+
+    /* --- ADJUSTMENT SLIDER ITEMS --- */
+    .adj-item { margin-top: 12px; }
+    .adj-item:first-child { margin-top: 0; }
+    .adj-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+    .adj-name { font-size: 11px; color: var(--brand-text-sec); text-transform: uppercase; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+    .adj-tip { display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border-radius: 50%; border: 1px solid currentColor; font-size: 9px; cursor: help; opacity: 0.55; line-height: 1; flex-shrink: 0; }
+    .adj-right { display: flex; align-items: center; gap: 5px; }
+    .adj-val { font-size: 10px; color: var(--brand-text-sec); font-variant-numeric: tabular-nums; min-width: 32px; text-align: right; opacity: 0.8; }
+    .adj-reset { background: rgba(2,182,250,0.07); border: 1px solid rgba(2,182,250,0.28); border-radius: 4px; color: var(--brand-hover); cursor: pointer; font-size: 14px; width: 22px; height: 22px; padding: 0; display: grid; place-items: center; opacity: 0.55; line-height: 1; transition: opacity 0.15s, background 0.15s; flex-shrink: 0; }
+    .adj-reset:hover { opacity: 1; background: rgba(2,182,250,0.2); }
+
+    /* --- PRESET BUTTON TOOLTIPS --- */
+    .preset-btn-tip { position: relative; }
+    .preset-btn-tip::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); background: #1a1428; color: var(--brand-text-pri); border: 1px solid rgba(104,48,187,0.45); border-radius: 6px; padding: 6px 10px; font-size: 10px; font-weight: normal; line-height: 1.45; white-space: normal; width: 160px; text-align: center; z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.2s 1s; }
+    .preset-btn-tip:hover::after { opacity: 1; }
+
+    /* --- INFO TOOLTIP (? badge) --- */
+    .info-tooltip { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.15); color: var(--brand-text-sec); font-size: 9px; font-weight: bold; cursor: default; vertical-align: middle; margin-left: 5px; position: relative; font-style: normal; text-transform: none; letter-spacing: 0; line-height: 1; }
+
+    /* Responsive: stack top bar on mobile */
+    @media (max-width: 900px) {
+        #editor-top-bar { flex-wrap: wrap; }
+        #editor-main { flex-direction: column; }
+    }
+
     /* TOGGLE SWITCH CSS */
     .toggle-wrap { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
     .switch { position: relative; display: inline-block; width: 38px; height: 22px; margin: 0; }
@@ -323,9 +363,7 @@
     <div id="landing-ui">
         <p style="color: #444; font-size: 14px; margin-bottom: 30px;">Select your edge style above, then upload your work below.</p>
 
-        <span class="landing-label" style="color: var(--brand-hover);">CHOOSE EDITOR</span>
         <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <button class="action-btn btn-landing-simple" style="max-width: 200px; padding: 15px;" onclick="window.triggerSimpleFlow()">QUICK UPLOAD</button>
             <button class="action-btn btn-landing-adv" style="max-width: 200px; padding: 15px;" onclick="window.triggerAdvancedFlow()">ADVANCED EDITOR</button>
             <button class="action-btn" style="max-width: 200px; padding: 15px; background:#888; border-color:#888;" onclick="window.openUrlToCartModal()">PASTE URL</button>
         </div>
@@ -426,42 +464,66 @@
 
     <div id="adv-backdrop">
     <div id="playmat-tool-root">
-        <div id="sidebar">
-            <div class="studio-title-wrap">
-                <h2 class="studio-title">Playmat Studio</h2>
-                <span class="studio-subtitle">Advanced Editor <span class="beta-badge" style="font-size:9px; vertical-align:middle;">BETA</span></span>
-            </div>
-            
-            <div class="sidebar-header">
-                <button class="action-btn btn-secondary" style="margin:0;" onclick="window.restartApp()">RESTART</button>
-                <button id="fs-toggle-btn" class="action-btn" style="margin:0; background: var(--brand-hover);" onclick="window.toggleFullScreen()">FULL SCREEN</button>
-            </div>
 
+        <div id="editor-top-bar">
+            <div class="etb-group">
+                <button class="action-btn" style="width:auto; padding:8px 14px;" onclick="window.triggerUpload()">📁 UPLOAD FILE</button>
+                <button class="action-btn btn-secondary" style="width:auto; padding:8px 14px;" onclick="window.promptPasteUrl()">🔗 PASTE URL</button>
+            </div>
+            <div class="etb-group">
+                <button class="action-btn btn-secondary" style="width:auto; padding:8px 14px;" onclick="window.restartApp()">↺ RESTART</button>
+                <button id="fs-toggle-btn" class="action-btn" style="width:auto; padding:8px 14px; background: var(--brand-hover);" onclick="window.toggleFullScreen()">⛶ FULL SCREEN</button>
+            </div>
+        </div>
+
+        <div id="editor-main">
+        <div id="sidebar">
+
+            <input type="file" id="adv-file-in" accept="image/*" style="display:none;" onchange="window.handleUpload(this)">
+
+            <div class="acc-card">
             <button class="acc-btn" onclick="window.toggleAcc('acc-size')">ARTWORK <span>▼</span></button>
             <div id="acc-size" class="acc-content" style="display:block;">
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <button class="action-btn" style="flex:2;" onclick="window.triggerUpload()">📁 UPLOAD FILE</button>
-                    <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" onclick="window.promptPasteUrl()">🔗 PASTE URL</button>
+
+                <div class="slider-row" style="margin-top:15px;">
+                    <label>Art Scale</label>
+                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" oninput="window.handleZoom(this.value)" style="width:100%;">
+                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn" onclick="window.forceFit()">RESET ART SCALE &amp; CENTER</button>
                 </div>
-                
-                <input type="file" id="adv-file-in" accept="image/*" style="display:none;" onchange="window.handleUpload(this)">
-                
-                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality</label>
-                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); line-height: 1.2; width: 100%;" onclick="window.confirmAutoUpscale(true)">
+
+                <div style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Rotate &amp; Flip</label>
+                    <div style="display:flex; gap:8px; margin-bottom:10px;">
+                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-rotate-btn" onclick="window.transformActive('rotate')">ROTATE 90°</button>
+                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipx-btn" onclick="window.transformActive('flipX')">FLIP H</button>
+                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipy-btn" onclick="window.transformActive('flipY')">FLIP V</button>
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                        <input type="range" id="transform-rotation" min="-180" max="180" value="0" oninput="window.transformActive('angle', this.value)" style="flex:1;">
+                        <span id="rotation-val" style="font-size:13px; width:35px; text-align:right; color:var(--brand-text-pri);">0°</span>
+                    </div>
+                    <button class="action-btn btn-secondary" style="margin:0;" id="adv-reset-rotation-btn" onclick="window.transformActive('angle', 0)">RESET ROTATION</button>
+                </div>
+
+                <div style="margin-top:20px; text-align:center; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
+                    <label style="font-size:12px; color:var(--brand-text-sec); display:block; margin-bottom:10px;">No artwork? Try a solid color:</label>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <input type="color" id="bg-color-picker" value="#000000" oninput="window.syncHex('bg-color-picker','bg-color-hex'); window.setSolidBackground(this.value)" class="color-swatch" style="width:50px;">
+                        <input type="text" id="bg-color-hex" value="#000000" oninput="window.syncColor('bg-color-hex','bg-color-picker'); window.setSolidBackground(document.getElementById('bg-color-picker').value)" class="ui-select" style="margin:0; width:80px; padding:8px; font-family:monospace;">
+                    </div>
+                </div>
+
+                <div style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Image Quality <span class="info-tooltip" data-tip="AI upscaling improves low-resolution artwork before printing.">?</span></label>
+                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border:1px solid var(--brand-hover); color:var(--brand-hover); line-height:1.2; width:100%;" onclick="window.confirmAutoUpscale(true)">
                         ✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>
                     </button>
                 </div>
 
-                <div style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                    <label style="font-size: 12px; color: var(--brand-text-sec); display: block; margin-bottom: 10px;">No artwork? Try a solid color:</label>
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <input type="color" id="bg-color-picker" value="#000000" oninput="window.syncHex('bg-color-picker', 'bg-color-hex'); window.setSolidBackground(this.value)" class="color-swatch" style="width: 50px;">
-                        <input type="text" id="bg-color-hex" value="#000000" oninput="window.syncColor('bg-color-hex', 'bg-color-picker'); window.setSolidBackground(document.getElementById('bg-color-picker').value)" class="ui-select" style="margin:0; width:80px; padding:8px; font-family:monospace;">
-                    </div>
-                </div>
+            </div>
             </div>
 
+            <div class="acc-card">
             <button class="acc-btn" onclick="window.toggleAcc('acc-layouts')">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
             <div id="acc-layouts" class="acc-content">
                 <select id="game-sel" class="ui-select" style="margin:0;" onchange="window.filterFormats()"><option value="">-- Select Game (Optional) --</option></select>
@@ -558,73 +620,146 @@
                             </div>
                         </div>
                     </div>
+
+                    <div style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:6px; font-weight:bold; text-transform:uppercase;">Custom Overlay</label>
+                        <p style="font-size:11px; color:#f0eeff; line-height:1.4; margin:0 0 10px;">Upload a PNG/image to layer over your artwork — drag &amp; resize freely on the canvas.</p>
+                        <button class="action-btn btn-secondary" id="adv-overlay-upload-btn" style="width:100%;" onclick="document.getElementById('adv-overlay-file-in').click()">📐 UPLOAD OVERLAY</button>
+                        <input type="file" id="adv-overlay-file-in" accept="image/*" style="display:none;" onchange="window.loadAdvOverlay(this.files[0])">
+                        <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; font-size:11px; padding:7px;" id="adv-overlay-lock-btn" onclick="window.toggleOverlayLock()">🔒 Proportions Locked</button>
+                        <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; border-color:var(--danger-red); color:var(--danger-red);" id="adv-overlay-clear-btn" onclick="window.clearAdvOverlay()">🗑️ REMOVE OVERLAY</button>
+                    </div>
                 </div>
             </div>
+            </div><!-- /.acc-card game layout -->
 
+            <div class="acc-card">
             <button class="acc-btn" onclick="window.toggleAcc('acc-art')">ADJUSTMENTS <span>▼</span></button>
             <div id="acc-art" class="acc-content">
 
                 <div class="inner-panel">
                     <span class="panel-title">PRINT COLOR CORRECTION</span>
-                    <p style="font-size:11px; color:var(--brand-text-sec); line-height:1.4; margin-bottom:15px; margin-top:0;">
-                        Images on digital screens look much brighter than physical ink. Use our Auto-Optimize tool to perfectly calibrate your art for printing!
-                    </p>
-                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px;" onclick="window.autoOptimizePrintAdv()">🪄 AUTO-OPTIMIZE FOR PRINT</button>
-                    
+                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border:1px solid var(--brand-hover); color:var(--brand-hover); margin-bottom:15px; display:none;" onclick="window.autoOptimizePrintAdv()">🪄 AUTO-OPTIMIZE FOR PRINT</button>
+
                     <div class="slider-row" style="margin-top:0;">
-                        <label>Brightness</label>
-                        <input type="range" id="filter-brightness" min="-0.3" max="0.3" step="0.01" value="0" oninput="window.updateFilters()">
-                        
-                        <label style="margin-top:10px;">Contrast</label>
-                        <input type="range" id="filter-contrast" min="-0.3" max="0.3" step="0.01" value="0" oninput="window.updateFilters()">
-                        
-                        <label style="margin-top:10px;">Saturation</label>
-                        <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0" oninput="window.updateFilters()">
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Brightness <span class="adj-tip" title="Lightens or darkens the overall image.">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-brightness">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-brightness',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-brightness" min="-0.3" max="0.3" step="0.01" value="0" oninput="window.updateFilters()">
+                        </div>
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Contrast <span class="adj-tip" title="Increases or decreases the difference between light and dark areas.">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-contrast">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-contrast',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-contrast" min="-0.3" max="0.3" step="0.01" value="0" oninput="window.updateFilters()">
+                        </div>
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Saturation <span class="adj-tip" title="Boosts or reduces the intensity and richness of colors.">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-saturation">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-saturation',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0" oninput="window.updateFilters()">
+                        </div>
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Vibrance <span class="adj-tip" title="Boosts muted colors while leaving already-vivid tones largely unchanged.">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-vibrance">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-vibrance',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-vibrance" min="-0.5" max="0.5" step="0.01" value="0" oninput="window.updateFilters()">
+                        </div>
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Hue Shift <span class="adj-tip" title="Rotates all colors around the color wheel.">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-hue">0°</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-hue',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-hue" min="-180" max="180" step="1" value="0" oninput="window.updateFilters()">
+                        </div>
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Blur <span class="adj-tip" title="Softens the image by blurring fine detail and hard edges.">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-blur">0px</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-blur',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-blur" min="0" max="20" step="0.5" value="0" oninput="window.updateFilters()">
+                        </div>
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Shadows <span class="adj-tip" title="Lifts or crushes the dark tones in the image.">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-shadows">0</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-shadows',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-shadows" min="-100" max="100" step="1" value="0" oninput="window.updateFilters()">
+                        </div>
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Vignette <span class="adj-tip" title="Darkens the corners and edges of the image.">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-vignette">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-vignette',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-vignette" min="0" max="100" step="1" value="0" oninput="window.updateVignette()">
+                        </div>
+                        <div class="adj-item">
+                            <div class="adj-header">
+                                <span class="adj-name">Warmth <span class="adj-tip" title="Shifts toward warm golden tones (positive) or cool blue tones (negative).">?</span></span>
+                                <div class="adj-right"><span class="adj-val" id="val-filter-warmth">0</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-warmth',0)">↺</button></div>
+                            </div>
+                            <input type="range" id="filter-warmth" min="-100" max="100" step="1" value="0" oninput="window.updateFilters()">
+                        </div>
+                        <input type="range" id="filter-grayscale" min="0" max="1" step="1" value="0" style="display:none;" aria-hidden="true">
                     </div>
-                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" onclick="window.resetFilters()">RESET COLORS</button>
+
+                    <div style="margin-top:15px; margin-bottom:5px;">
+                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Presets</label>
+                        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vibrant')" data-tip="Boosts contrast &amp; saturation for vivid, punchy colors">Vibrant</button>
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('faded')" data-tip="Softens contrast &amp; desaturates for a washed-out film look">Faded</button>
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('velvet')" data-tip="Warm vignette with lifted shadows for a rich, moody feel">Velvet</button>
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vintage')" data-tip="Warm hue shift &amp; vignette for a classic aged look">Vintage</button>
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('frosted')" data-tip="Cool tones with soft blur for an icy, diffused effect">Frosted</button>
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('golden')" data-tip="Warm golden tones &amp; lifted shadows for a sun-kissed glow">Golden</button>
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('ink')" data-tip="High contrast near-monochrome with deep, dramatic blacks">Ink</button>
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('bw')" data-tip="Full grayscale conversion, removing all color">B&amp;W</button>
+                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('neutral')" data-tip="Resets all adjustments back to defaults">Neutral</button>
+                        </div>
+                    </div>
+
+                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn" onclick="window.resetFilters()">RESET COLORS</button>
                 </div>
 
-                <div class="slider-row">
-                    <label>Art Scale</label>
-                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" oninput="window.handleZoom(this.value)" style="width:100%;">
-                    <button class="action-btn btn-secondary" style="margin-top:15px;" onclick="window.forceFit()">RESET ART SCALE & CENTER</button>
-                </div>
-                
+                <button class="action-btn btn-secondary" style="margin-top:10px; font-size:10px; padding:6px 8px;" onclick="window.toggleAdvGuides()">SHOW/HIDE PRINT GUIDES</button>
+
                 <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
 
                 <div class="inner-panel">
-                    <span class="panel-title">TEXT & TRANSFORMATIONS</span>
-                    <button class="action-btn" style="background: var(--brand-hover); margin-bottom:15px;" onclick="window.addAdvText()">+ ADD TEXT</button>
-                    
-                    <div id="adv-text-tools" class="hidden-field" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:6px; border: 1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
+                    <span class="panel-title">TEXT</span>
+                    <button class="action-btn" style="background:var(--brand-hover); margin-bottom:15px;" onclick="window.addAdvText()">+ ADD TEXT</button>
+
+                    <div id="adv-text-tools" class="hidden-field" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:6px; border:1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
                         <select id="adv-font-family" class="ui-select" onchange="window.updateAdvTextAttr('fontFamily', this.value)">
                             <option value="Rubik">Rubik</option> <option value="Bangers">Bangers</option> <option value="Oswald">Oswald</option> <option value="Permanent Marker">Marker</option> <option value="Cinzel">Cinzel</option> <option value="Pacifico">Pacifico</option>
                         </select>
                         <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Font Size</label>
-                        <input type="range" id="adv-text-size-in" min="10" max="200" value="40" oninput="window.updateAdvTextAttr('fontSize', parseInt(this.value, 10))" style="width:100%; margin-bottom:15px;">
+                        <input type="range" id="adv-text-size-in" min="10" max="200" value="40" oninput="window.updateAdvTextAttr('fontSize', parseInt(this.value,10))" style="width:100%; margin-bottom:12px;">
+                        <div style="display:flex; gap:6px; margin-bottom:12px;">
+                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:14px; font-weight:bold;" id="adv-text-bold-btn" onclick="(function(btn){var obj=window.canvas&&window.canvas.getActiveObject();if(!obj)return;var b=obj.fontWeight==='bold';window.updateAdvTextAttr('fontWeight',b?'normal':'bold');btn.style.background=b?'':'var(--brand-hover)';})(this)">B</button>
+                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:14px; font-style:italic;" id="adv-text-italic-btn" onclick="(function(btn){var obj=window.canvas&&window.canvas.getActiveObject();if(!obj)return;var i=obj.fontStyle==='italic';window.updateAdvTextAttr('fontStyle',i?'normal':'italic');btn.style.background=i?'':'var(--brand-hover)';})(this)"><i>I</i></button>
+                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-left" title="Align Left" onclick="window.updateAdvTextAttr('textAlign','left');   ['left','center','right'].forEach(function(a){var b=document.getElementById('adv-text-align-'+a);if(b)b.style.background=a==='left'?'var(--brand-hover)':''})">&#8676;</button>
+                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-center" title="Align Center" onclick="window.updateAdvTextAttr('textAlign','center'); ['left','center','right'].forEach(function(a){var b=document.getElementById('adv-text-align-'+a);if(b)b.style.background=a==='center'?'var(--brand-hover)':''})">&#8801;</button>
+                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-right" title="Align Right" onclick="window.updateAdvTextAttr('textAlign','right');  ['left','center','right'].forEach(function(a){var b=document.getElementById('adv-text-align-'+a);if(b)b.style.background=a==='right'?'var(--brand-hover)':''})">&#8677;</button>
+                        </div>
+                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline Width</label>
+                        <input type="range" id="adv-text-stroke-width" min="0" max="20" step="0.5" value="2" oninput="window.updateAdvTextAttr('strokeWidth', parseFloat(this.value))" style="width:100%; margin-bottom:12px;">
                         <div style="display:flex; gap:10px;">
                             <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Fill</label><input type="color" id="adv-text-col" class="color-swatch" value="#ffffff" oninput="window.updateAdvTextAttr('fill', this.value)"></div>
                             <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline</label><input type="color" id="adv-text-stroke" class="color-swatch" value="#000000" oninput="window.updateAdvTextAttr('stroke', this.value)"></div>
                         </div>
                         <button class="action-btn" style="background:var(--danger-red); margin-top:15px;" onclick="window.removeAdvActive()">DELETE SELECTED</button>
                     </div>
-
-                    <div style="display:flex; gap:8px; margin-bottom: 15px;">
-                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.transformActive('rotate')">ROTATE 90°</button>
-                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.transformActive('flipX')">FLIP H</button>
-                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" onclick="window.transformActive('flipY')">FLIP V</button>
-                    </div>
-                    <div style="display:flex; gap:10px; align-items:center; margin-bottom: 15px;">
-                        <input type="range" id="transform-rotation" min="-180" max="180" value="0" oninput="window.transformActive('angle', this.value)" style="flex:1;">
-                        <span id="rotation-val" style="font-size: 13px; width: 35px; text-align: right; color:var(--brand-text-pri);">0°</span>
-                    </div>
-                    <button class="action-btn btn-secondary" style="margin:0;" onclick="window.transformActive('angle', 0)">RESET ROTATION</button>
                 </div>
 
                 <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
-                
-                <button class="action-btn btn-secondary" style="margin-top:10px;" onclick="window.toggleAdvGuides()">SHOW/HIDE PRINT GUIDES</button>
             </div>
+            </div><!-- /.acc-card adjustments -->
             
             <div style="flex-grow: 1;"></div> 
 
@@ -652,6 +787,7 @@
                 <canvas id="main-canvas"></canvas>
                 <canvas id="layout-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; opacity: 1;"></canvas>
                 <canvas id="fg-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 20; opacity: 1;"></canvas>
+                <canvas id="vignette-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5; opacity: 1;"></canvas>
                 <div id="recolor-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; mask-size: 100% 100%; -webkit-mask-size: 100% 100%;">
                     <canvas id="recolor-canvas"></canvas>
                 </div>
@@ -665,7 +801,8 @@
                 <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
             </div>
         </div>
-    </div>
+        </div><!-- /#editor-main -->
+    </div><!-- /#playmat-tool-root -->
     <div class="version-tag" style="color:rgba(255,255,255,0.2); z-index:10001;">v1.7.1</div>
     </div><!-- /#adv-backdrop -->
 </div>
@@ -1166,8 +1303,35 @@
         window.updateBleedWarnings(window.sCanvas);
     };
 
+    // Formats a slider value for display next to the slider
+    const _adjFmt = {
+        'filter-brightness': v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-contrast':   v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-saturation': v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-vibrance':   v => (v > 0 ? '+' : '') + Math.round(v * 100) + '%',
+        'filter-hue':        v => (v > 0 ? '+' : '') + Math.round(v) + '°',
+        'filter-blur':       v => parseFloat(v).toFixed(1) + 'px',
+        'filter-shadows':    v => (v > 0 ? '+' : '') + Math.round(v),
+        'filter-vignette':   v => Math.round(v) + '%',
+        'filter-warmth':     v => (v > 0 ? '+' : '') + Math.round(v),
+    };
+    window.syncSliderDisplays = function() {
+        Object.keys(_adjFmt).forEach(id => {
+            const el = document.getElementById(id);
+            const disp = document.getElementById('val-' + id);
+            if (el && disp) disp.textContent = _adjFmt[id](parseFloat(el.value));
+        });
+    };
+    window.resetSingleFilter = function(id, defaultVal) {
+        const el = document.getElementById(id); if (!el) return;
+        el.value = defaultVal;
+        const disp = document.getElementById('val-' + id);
+        if (disp) disp.textContent = _adjFmt[id] ? _adjFmt[id](defaultVal) : defaultVal;
+        if (id === 'filter-vignette') window.updateVignette(); else window.updateFilters();
+    };
+
     window.resetFilters = function() {
-        ['filter-brightness','filter-contrast','filter-saturation'].forEach(id => {
+        ['filter-brightness','filter-contrast','filter-saturation','filter-vibrance','filter-hue','filter-blur','filter-shadows','filter-warmth','filter-vignette','filter-grayscale'].forEach(id => {
             const el = document.getElementById(id); if (el) el.value = 0;
         });
         const btnAdv = document.getElementById('auto-opt-btn-adv');
@@ -1178,20 +1342,35 @@
             if (btn) { btn.style.background = 'transparent'; btn.style.color = 'var(--brand-text-pri)'; }
         });
         window.updateFilters();
+        window.updateVignette();
+        window.syncSliderDisplays();
         if (window.sCanvas) window.applySimpleFiltersCore();
     };
 
     window.updateFilters = function() {
         if (!window.canvas) return;
-        const b = parseFloat(document.getElementById('filter-brightness')?.value || 0);
-        const c = parseFloat(document.getElementById('filter-contrast')?.value   || 0);
-        const s = parseFloat(document.getElementById('filter-saturation')?.value || 0);
+        const b  = parseFloat(document.getElementById('filter-brightness')?.value || 0);
+        const c  = parseFloat(document.getElementById('filter-contrast')?.value   || 0);
+        const s  = parseFloat(document.getElementById('filter-saturation')?.value || 0);
+        const vb = parseFloat(document.getElementById('filter-vibrance')?.value   || 0);
+        const h  = parseFloat(document.getElementById('filter-hue')?.value        || 0);
+        const bl = parseFloat(document.getElementById('filter-blur')?.value       || 0);
+        const sh = parseFloat(document.getElementById('filter-shadows')?.value    || 0);
+        const wm = parseFloat(document.getElementById('filter-warmth')?.value     || 0);
+        const gr = parseFloat(document.getElementById('filter-grayscale')?.value  || 0);
         const art = window.canvas.getObjects().find(o => o.name === 'art');
         if (art) {
             let f = '';
-            if (b !== 0) f += `brightness(${100 + b * 100}%) `;
-            if (c !== 0) f += `contrast(${100 + c * 100}%) `;
-            if (s !== 0) f += `saturate(${100 + s * 100}%) `;
+            if (b  !== 0) f += `brightness(${100 + b * 100}%) `;
+            if (c  !== 0) f += `contrast(${100 + c * 100}%) `;
+            if (s  !== 0) f += `saturate(${100 + s * 100}%) `;
+            if (h  !== 0) f += `hue-rotate(${h}deg) `;
+            if (bl !== 0) f += `blur(${bl}px) `;
+            if (sh !== 0) { const bAdj = 1 + sh * 0.0015; const cAdj = 1 - sh * 0.0008; f += `brightness(${(bAdj*100).toFixed(1)}%) contrast(${(cAdj*100).toFixed(1)}%) `; }
+            if (wm > 0) f += `sepia(${(wm * 0.5).toFixed(1)}%) saturate(${(100 + wm * 0.3).toFixed(1)}%) `;
+            if (wm < 0) f += `hue-rotate(${(wm * 0.6).toFixed(1)}deg) saturate(${(100 - wm * 0.2).toFixed(1)}%) `;
+            if (vb !== 0) f += `saturate(${Math.max(0, 100 + vb * 100).toFixed(1)}%) `;
+            if (gr > 0)  f += `grayscale(${(gr * 100).toFixed(0)}%) `;
             art.customFilterStr = f.trim();
             art._render = function(ctx) {
                 if (this.customFilterStr) { ctx.save(); ctx.filter = this.customFilterStr; fabric.Image.prototype._render.call(this, ctx); ctx.restore(); }
@@ -1200,6 +1379,83 @@
             window.canvas.requestRenderAll();
             window.renderForeground();
         }
+        window.updateVignette();
+        window.syncSliderDisplays();
+    };
+
+    window.updateVignette = function() {
+        const vCanvas = document.getElementById('vignette-canvas');
+        if (!vCanvas) return;
+        const strength = parseFloat(document.getElementById('filter-vignette')?.value || 0);
+        const w = vCanvas.width, h = vCanvas.height;
+        const ctx = vCanvas.getContext('2d');
+        ctx.clearRect(0, 0, w, h);
+        if (strength <= 0 || w <= 0 || h <= 0) return;
+        const alpha = strength / 100;
+        const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w, h) * 0.7);
+        grad.addColorStop(0,   'rgba(0,0,0,0)');
+        grad.addColorStop(0.5, `rgba(0,0,0,${(alpha * 0.3).toFixed(3)})`);
+        grad.addColorStop(1,   `rgba(0,0,0,${(alpha * 0.95).toFixed(3)})`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+    };
+
+    window.applyFilterPreset = function(name) {
+        const presets = {
+            vibrant:  { brightness:0,     contrast:0.1,  saturation:0.2,  vibrance:0.2,  hue:0,  blur:0,   shadows:0,   vignette:0,  warmth:0,   grayscale:0 },
+            faded:    { brightness:0,     contrast:-0.1, saturation:-0.3, vibrance:0,    hue:0,  blur:0,   shadows:20,  vignette:15, warmth:0,   grayscale:0 },
+            velvet:   { brightness:-0.05, contrast:0.15, saturation:-0.1, vibrance:0,    hue:0,  blur:0,   shadows:-15, vignette:35, warmth:10,  grayscale:0 },
+            vintage:  { brightness:-0.05, contrast:0,    saturation:-0.2, vibrance:0,    hue:15, blur:0,   shadows:10,  vignette:25, warmth:40,  grayscale:0 },
+            frosted:  { brightness:0.05,  contrast:-0.05,saturation:-0.2, vibrance:0,    hue:10, blur:1.5, shadows:0,   vignette:0,  warmth:-35, grayscale:0 },
+            golden:   { brightness:0.05,  contrast:0.05, saturation:0.1,  vibrance:0.15, hue:0,  blur:0,   shadows:15,  vignette:20, warmth:65,  grayscale:0 },
+            ink:      { brightness:0,     contrast:0.25, saturation:-0.45,vibrance:0,    hue:0,  blur:0,   shadows:-20, vignette:30, warmth:0,   grayscale:0 },
+            bw:       { brightness:0,     contrast:0.1,  saturation:0,    vibrance:0,    hue:0,  blur:0,   shadows:0,   vignette:0,  warmth:0,   grayscale:1 },
+            neutral:  { brightness:0,     contrast:0,    saturation:0,    vibrance:0,    hue:0,  blur:0,   shadows:0,   vignette:0,  warmth:0,   grayscale:0 },
+        };
+        const p = presets[name]; if (!p) return;
+        const map = { brightness:'filter-brightness', contrast:'filter-contrast', saturation:'filter-saturation', vibrance:'filter-vibrance', hue:'filter-hue', blur:'filter-blur', shadows:'filter-shadows', vignette:'filter-vignette', warmth:'filter-warmth', grayscale:'filter-grayscale' };
+        Object.entries(map).forEach(([key, id]) => { const el = document.getElementById(id); if (el) el.value = p[key]; });
+        const autoBtn = document.getElementById('auto-opt-btn-adv');
+        if (autoBtn) { autoBtn.dataset.active = 'false'; autoBtn.style.background = 'transparent'; autoBtn.style.color = 'var(--brand-hover)'; }
+        window.updateFilters();
+        window.syncSliderDisplays();
+    };
+
+    // --- CUSTOM OVERLAY ---
+    window.loadAdvOverlay = function(file) {
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        fabric.Image.fromURL(url, function(img) {
+            window.canvas.getObjects().forEach(o => { if (o.name === 'overlay') window.canvas.remove(o); });
+            const scaleX = APP.canvasW / img.width, scaleY = APP.canvasH / img.height;
+            img.set({ name:'overlay', left:APP.canvasW/2, top:APP.canvasH/2, originX:'center', originY:'center', scaleX:Math.min(scaleX,scaleY), scaleY:Math.min(scaleX,scaleY), selectable:true, hasControls:true });
+            window.canvas.add(img);
+            const art = window.canvas.getObjects().find(o => o.name==='art');
+            const guides = window.canvas.getObjects().find(o => o.name==='guides');
+            if (art) window.canvas.bringForward(img);
+            if (guides) window.canvas.bringToFront(guides);
+            window.canvas.setActiveObject(img);
+            window.canvas.uniformScaling = true;
+            window.canvas.renderAll();
+            const lockBtn = document.getElementById('adv-overlay-lock-btn');
+            const clearBtn = document.getElementById('adv-overlay-clear-btn');
+            if (lockBtn)  { lockBtn.classList.remove('hidden-field'); lockBtn.dataset.locked='true'; lockBtn.textContent='🔒 Proportions Locked'; lockBtn.style.borderColor=''; lockBtn.style.color=''; }
+            if (clearBtn) clearBtn.classList.remove('hidden-field');
+        });
+    };
+    window.toggleOverlayLock = function() {
+        const btn = document.getElementById('adv-overlay-lock-btn'); if (!btn) return;
+        const locked = btn.dataset.locked === 'true';
+        if (locked) { window.canvas.uniformScaling=false; btn.dataset.locked='false'; btn.textContent='↔ Free Resize'; btn.style.borderColor='var(--brand-hover)'; btn.style.color='var(--brand-hover)'; }
+        else        { window.canvas.uniformScaling=true;  btn.dataset.locked='true';  btn.textContent='🔒 Proportions Locked'; btn.style.borderColor=''; btn.style.color=''; }
+    };
+    window.clearAdvOverlay = function() {
+        window.canvas.getObjects().forEach(o => { if (o.name==='overlay') window.canvas.remove(o); });
+        window.canvas.uniformScaling = true; window.canvas.renderAll();
+        const lockBtn=document.getElementById('adv-overlay-lock-btn'), clearBtn=document.getElementById('adv-overlay-clear-btn');
+        if (lockBtn)  lockBtn.classList.add('hidden-field');
+        if (clearBtn) clearBtn.classList.add('hidden-field');
+        const inp=document.getElementById('adv-overlay-file-in'); if(inp) inp.value='';
     };
 
     // --- GAME DROPDOWNS ---
@@ -1925,10 +2181,13 @@
         APP.canvasH = APP.canvasW / (conf.w / conf.h);
         window.canvas.setDimensions({ width:APP.canvasW, height:APP.canvasH });
         window.rCanvas.setDimensions({ width:APP.canvasW, height:APP.canvasH });
+        const vCvs = document.getElementById('vignette-canvas');
+        if (vCvs) { vCvs.width = APP.canvasW; vCvs.height = APP.canvasH; }
         document.getElementById('canvas-wrapper').style.width  = APP.canvasW + 'px';
         document.getElementById('canvas-wrapper').style.height = APP.canvasH + 'px';
         window.drawAdvGuides(APP.canvasW, APP.canvasH, conf.w);
         window.forceFit(); if(APP.activeLayoutUrl) window.renderLayout(); window.renderForeground();
+        window.updateVignette();
     };
 
     window.toggleAdvGuides = () => { const g=window.canvas.getObjects().find(o=>o.name==='guides'); if(g) { g.visible=!g.visible; window.canvas.renderAll(); } };
