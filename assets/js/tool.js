@@ -273,7 +273,23 @@
     // Shared Riftbound layout drawing helper.
     // Used by both the canvas preview and the print export.
     // ============================================================
-    function drawRiftboundLayout(ctx, img, canvasW, canvasH, hand, format, rbPointsVal) {
+    // Fetches an image from `url` with crossOrigin='anonymous' so it can be
+    // drawn to a canvas without tainting it.  Returns the loaded Image element,
+    // or null if the CORS request fails (server lacks CORS headers).
+    // Used by buildPrintCanvas before any drawImage call to prevent toBlob()
+    // from silently producing an all-black JPEG on older Safari / iOS.
+    async function fetchCorsImage(url) {
+        if (!url) return null;
+        return new Promise(res => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload  = () => res(img);
+            img.onerror = () => res(null);
+            img.src = url;
+        });
+    }
+
+    function drawRiftboundLayout(ctx, img, canvasW, canvasH, hand, format, rbPointsVal, safeRbImg = window.rbPointsImg) {
         // Riftbound overlays are designed at standard playmat resolution (7350×4350).
         // Scale factor maps overlay native px → current canvas px.
         const nativeW  = Math.round(24.5 * 300); // 7350 — standard playmat native width
@@ -335,8 +351,8 @@
             ctx.drawImage(img, drawX, drawY, drawW, drawH);
         }
 
-        if (hasPoints && window.rbPointsImg && window.rbPointsImg.src) {
-            ctx.drawImage(window.rbPointsImg, pX, pY, pW, pH);
+        if (hasPoints && safeRbImg && safeRbImg.src) {
+            ctx.drawImage(safeRbImg, pX, pY, pW, pH);
         }
     }
 
@@ -1727,6 +1743,14 @@
         const art = activeCanvas.getObjects().find(o => o.name === 'art');
         if (art) {
             const el = art.getElement();
+            // Validate the underlying image element before drawing.  If the
+            // element is broken (unsupported format, memory error, etc.) the
+            // drawImage call silently draws nothing, leaving only the black
+            // background fill — causing the "all black" export bug.
+            if (el instanceof HTMLImageElement && (!el.complete || el.naturalWidth === 0)) {
+                if (g) { g.visible = wasVisible; activeCanvas.renderAll(); }
+                throw new Error('Your artwork image failed to load. Please re-upload and try again.');
+            }
             const w  = art.getScaledWidth()  * scale;
             const h  = art.getScaledHeight() * scale;
             const cx = art.left * scale;
@@ -1761,44 +1785,66 @@
         const activeUrl = isAdv ? APP.activeLayoutUrl : APP.s_activeLayoutUrl;
         const layoutPreservesColors = isAdv ? APP.layoutPreservesColors : APP.s_layoutPreservesColors;
         if (layoutImg && activeUrl !== null && activeUrl !== undefined) {
-            const tCanvas=document.createElement('canvas'); tCanvas.width=printW; tCanvas.height=printH;
-            const tCtx=tCanvas.getContext('2d');
-            if (isRiftbound) {
-                // Clip to safe area in print pixel space.
-                // At 300dpi: safe inset = 225px (0.75" × 300).
-                // Scale factor: printW maps to the product's native canvas width.
-                const nativePrintW = Math.round(SIZE_DB[sizeSel]?.w * 300) || Math.round(24.5 * 300);
-                const ps = printW / nativePrintW;
-                const px = 225*ps, py = 225*ps, pw = 6900*ps, ph = 3900*ps;
-                tCtx.save();
-                tCtx.rect(px, py, pw, ph);
-                tCtx.clip();
-                drawRiftboundLayout(tCtx, layoutImg, printW, printH, handVal, formatVal, rbPointsVal);
-                if (!layoutPreservesColors) {
-                    tCtx.globalCompositeOperation='source-in';
-                    const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
-                    applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
-                }
-                tCtx.restore();
-            } else {
-                tCtx.drawImage(layoutImg,0,0,printW,printH);
-                if (!layoutPreservesColors) {
-                    tCtx.globalCompositeOperation='source-in';
-                    const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
-                    applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
-                }
+            // CORS guard: the display-path fallback may have cached a non-CORS image
+            // (crossOrigin not set) when the CDN temporarily lacked CORS headers.
+            // Drawing a non-CORS image into tCanvas taints mCanvas, which causes
+            // toBlob() to silently return an all-black JPEG on older Safari / iOS
+            // instead of throwing a catchable SecurityError.
+            // Re-fetch with CORS before any canvas draw; skip overlay on failure.
+            let safeLayoutImg = layoutImg;
+            if (layoutImg.crossOrigin !== 'anonymous') {
+                safeLayoutImg = await fetchCorsImage(activeUrl);
             }
 
-            if (isAdv && APP.erasedPaths.length>0) {
-                tCtx.globalCompositeOperation='destination-out';
-                APP.erasedPaths.forEach(path => {
-                    tCtx.lineWidth=path.size*scale; tCtx.lineCap=path.shape; tCtx.lineJoin=path.shape==='round'?'round':'miter';
-                    tCtx.beginPath(); tCtx.moveTo(path.points[0].x*scale,path.points[0].y*scale);
-                    path.points.forEach(pt=>tCtx.lineTo(pt.x*scale,pt.y*scale)); tCtx.stroke();
-                });
+            // Riftbound points strip: same CORS guard.
+            let safeRbImg = window.rbPointsImg;
+            if (isRiftbound && rbPointsVal !== 'none' && window.rbPointsImg
+                    && window.rbPointsImg.crossOrigin !== 'anonymous' && APP.activePointsUrl) {
+                safeRbImg = await fetchCorsImage(APP.activePointsUrl);
             }
-            mCtx.save(); mCtx.globalAlpha=isAdv?(document.getElementById('op-in').value||1.0):1.0;
-            mCtx.drawImage(tCanvas,0,0,printW,printH); mCtx.restore();
+
+            if (safeLayoutImg) {
+                const tCanvas=document.createElement('canvas'); tCanvas.width=printW; tCanvas.height=printH;
+                const tCtx=tCanvas.getContext('2d');
+                if (isRiftbound) {
+                    // Clip to safe area in print pixel space.
+                    // At 300dpi: safe inset = 225px (0.75" × 300).
+                    // Scale factor: printW maps to the product's native canvas width.
+                    const nativePrintW = Math.round(SIZE_DB[sizeSel]?.w * 300) || Math.round(24.5 * 300);
+                    const ps = printW / nativePrintW;
+                    const px = 225*ps, py = 225*ps, pw = 6900*ps, ph = 3900*ps;
+                    tCtx.save();
+                    tCtx.rect(px, py, pw, ph);
+                    tCtx.clip();
+                    drawRiftboundLayout(tCtx, safeLayoutImg, printW, printH, handVal, formatVal, rbPointsVal, safeRbImg);
+                    if (!layoutPreservesColors) {
+                        tCtx.globalCompositeOperation='source-in';
+                        const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
+                        applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+                    }
+                    tCtx.restore();
+                } else {
+                    tCtx.drawImage(safeLayoutImg,0,0,printW,printH);
+                    if (!layoutPreservesColors) {
+                        tCtx.globalCompositeOperation='source-in';
+                        const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
+                        applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+                    }
+                }
+
+                if (isAdv && APP.erasedPaths.length>0) {
+                    tCtx.globalCompositeOperation='destination-out';
+                    APP.erasedPaths.forEach(path => {
+                        tCtx.lineWidth=path.size*scale; tCtx.lineCap=path.shape; tCtx.lineJoin=path.shape==='round'?'round':'miter';
+                        tCtx.beginPath(); tCtx.moveTo(path.points[0].x*scale,path.points[0].y*scale);
+                        path.points.forEach(pt=>tCtx.lineTo(pt.x*scale,pt.y*scale)); tCtx.stroke();
+                    });
+                }
+                mCtx.save(); mCtx.globalAlpha=isAdv?(document.getElementById('op-in').value||1.0):1.0;
+                mCtx.drawImage(tCanvas,0,0,printW,printH); mCtx.restore();
+            }
+            // If safeLayoutImg is null the layout overlay is skipped rather than
+            // tainting mCanvas — the export still produces a valid (non-black) image.
         }
 
         // Draw recolor layer
