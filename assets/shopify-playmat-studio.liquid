@@ -2202,9 +2202,14 @@
         if (!url) { APP.activePointsUrl=null; isAdv?window.renderLayout():window.renderSimpleLayout(); return; }
         if (APP.activePointsUrl !== url) {
             APP.activePointsUrl = url;
-            // Use fabric.Image.fromURL so ibb.co CORS headers are handled correctly
             fabric.Image.fromURL(url, (fabricImg, isError) => {
-                if (isError) { console.error('Failed to load points overlay:', url); return; }
+                if (isError) {
+                    const fb = new Image();
+                    fb.onload = () => { window.rbPointsImg = fb; isAdv ? window.renderLayout() : window.renderSimpleLayout(); };
+                    fb.onerror = () => console.error('Failed to load points overlay:', url);
+                    fb.src = url;
+                    return;
+                }
                 window.rbPointsImg = fabricImg.getElement();
                 isAdv ? window.renderLayout() : window.renderSimpleLayout();
             }, { crossOrigin: 'anonymous' });
@@ -2410,9 +2415,15 @@
         if (APP.activeLayoutUrl === '') { drawFn(null); return; }
         if (APP.cachedLayoutUrl===APP.activeLayoutUrl && APP.cachedLayoutImg) { drawFn(APP.cachedLayoutImg); }
         else {
-            // Use fabric.Image.fromURL so ibb.co CORS headers are handled correctly
             fabric.Image.fromURL(APP.activeLayoutUrl, (fabricImg, isError) => {
-                if (isError) { console.error('Failed to load layout image:', APP.activeLayoutUrl); return; }
+                if (isError) {
+                    // CORS failed — retry without crossOrigin so preview still works
+                    const fallbackImg = new Image();
+                    fallbackImg.onload = () => { APP.cachedLayoutImg = fallbackImg; APP.cachedLayoutUrl = APP.activeLayoutUrl; drawFn(fallbackImg); };
+                    fallbackImg.onerror = () => { console.error('Failed to load layout image:', APP.activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "Something went wrong loading the game zone. Please try again in a few minutes.", "error"); };
+                    fallbackImg.src = APP.activeLayoutUrl;
+                    return;
+                }
                 const img = fabricImg.getElement();
                 APP.cachedLayoutImg = img; APP.cachedLayoutUrl = APP.activeLayoutUrl;
                 drawFn(img);
