@@ -1016,7 +1016,9 @@
         { game: "Warlord", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Warlord.webp" },
         { game: "Universus", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Universus.webp" },
         { game: "Flesh and Blood", format: "Single Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Single%20Arsenal.webp" },
-        { game: "Flesh and Blood", format: "Double Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Double%20Arsenal.webp" }
+        { game: "Flesh and Blood", format: "Double Arsenal", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Flesh%20and%20Blood%20Double%20Arsenal.webp" },
+        { game: "Cyberpunk TCG", format: "", size: "Standard", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Standard.webp", preserveColors: true },
+        { game: "Cyberpunk TCG", format: "", size: "Extended", hand: "", url: "https://pub-6fa65da7f5a44c9a9f6fbefabd3634dd.r2.dev/Main%20Overlays/Cyberpunk%20Extended.webp", preserveColors: true }
     ];
 
     window.RB_POINTS_DB = {
@@ -2377,7 +2379,7 @@
         const hands=[...new Set(LAYOUT_RAW.filter(i=>i.game===game&&i.size===activeSize&&i.format===format&&i.hand!=='').map(i=>i.hand))];
         if(hands.length>0&&hand==='') { APP.activeLayoutUrl=null; window.renderLayout(); return; }
         const match=LAYOUT_RAW.find(i=>i.game===game&&i.format===format&&i.hand===hand&&i.size===activeSize);
-        if(match) { APP.activeLayoutUrl=match.url ?? ''; APP.erasedPaths=[]; window.resetRecolor(); document.getElementById('zone-style-wrap').classList.remove('hidden-field'); window.renderLayout(); }
+        if(match) { APP.activeLayoutUrl=match.url ?? ''; APP.layoutPreservesColors=!!(match.preserveColors); APP.erasedPaths=[]; window.resetRecolor(); document.getElementById('zone-style-wrap').classList.remove('hidden-field'); window.renderLayout(); }
     };
 
     window.updateOpacity = () => { document.getElementById('layout-canvas').style.opacity = document.getElementById('op-in').value; };
@@ -2402,7 +2404,7 @@
         const rbPointsVal=isRiftbound?document.getElementById('rb-points-sel').value:'none';
         const hand=document.getElementById('hand-sel').value, format=document.getElementById('format-sel').value;
 
-        const drawFn = (img) => window.drawLayoutCanvasCore(lCanvas.getContext('2d'), img, lCanvas, document.getElementById('col-1').value, mode, true, isRiftbound, rbPointsVal, hand, format);
+        const drawFn = (img) => window.drawLayoutCanvasCore(lCanvas.getContext('2d'), img, lCanvas, document.getElementById('col-1').value, mode, true, isRiftbound, rbPointsVal, hand, format, !!(APP.layoutPreservesColors));
         // Points Only format has an empty URL — draw with null image (points strip only)
         if (APP.activeLayoutUrl === '') { drawFn(null); return; }
         if (APP.cachedLayoutUrl===APP.activeLayoutUrl && APP.cachedLayoutImg) { drawFn(APP.cachedLayoutImg); }
@@ -2418,7 +2420,7 @@
     };
 
     // FIX 4 in action: drawLayoutCanvasCore now delegates to shared helpers
-    window.drawLayoutCanvasCore = function(ctx, img, lCanvas, c1, mode, isAdv, isRiftbound, rbPointsVal, hand, format) {
+    window.drawLayoutCanvasCore = function(ctx, img, lCanvas, c1, mode, isAdv, isRiftbound, rbPointsVal, hand, format, preserveColors) {
         // Points Only: img will be null — pass a blank 1x1 image so the rest of the
         // pipeline (points draw, source-in fill) still runs correctly.
         if (!img) { img = document.createElement('canvas'); img.width = 1; img.height = 1; }
@@ -2444,8 +2446,18 @@
             ctx.restore();
         } else {
             ctx.drawImage(img, 0, 0, APP.canvasW, APP.canvasH);
-            ctx.globalCompositeOperation = 'source-in';
-            applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+            if (!preserveColors) {
+                ctx.globalCompositeOperation = 'source-in';
+                applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+            } else {
+                // preserveColors: apply fill clipped to overlay shape, then redraw overlay
+                // with multiply so black lines are restored while zones get the selected color
+                ctx.globalCompositeOperation = 'source-in';
+                applyGradientOrSolidFill(ctx, APP.canvasW, APP.canvasH, isAdv ? mode : 'solid', c1);
+                ctx.globalCompositeOperation = 'multiply';
+                ctx.drawImage(img, 0, 0, APP.canvasW, APP.canvasH);
+                ctx.globalCompositeOperation = 'source-over';
+            }
         }
 
         if (isAdv && APP.erasedPaths.length>0) {
