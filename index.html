@@ -13,12 +13,12 @@
 		<meta http-equiv="Expires" content="0" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!-- Security headers (C2, M1) -->
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://playmatstudio.com; script-src 'self' https://playmatstudio.com https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://playmatstudio.com https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://playmatstudio.com https://fonts.gstatic.com; img-src 'self' https://playmatstudio.com https: data: blob:; connect-src 'self' https://playmatstudio.com https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
 		<meta http-equiv="X-Content-Type-Options" content="nosniff" />
 		<meta name="referrer" content="strict-origin-when-cross-origin" />
 		<meta name="description" content="Free browser-based tools to design, enhance, and download print-ready game mat artwork. No installs. No account. No cost." />
 		<!-- Favicons -->
-		<link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href="https://playmatstudio.com/images/favicon.svg" />
 		<meta name="theme-color" content="#0b0912" />
 
 		<!-- Open Graph / Twitter Card -->
@@ -34,10 +34,10 @@
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link rel="preload" href="assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
+		<link rel="preload" href="https://playmatstudio.com/assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
-		<link rel="stylesheet" href="assets/css/custom.css?v=16" />
-		<link rel="stylesheet" href="assets/css/tool.css?v=10" />
+		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/custom.css?v=16" />
+		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/tool.css?v=10" />
 		<style>
 			html, body { height: 100%; }
 			#wrapper { min-height: 100vh; display: flex; flex-direction: column; }
@@ -67,7 +67,7 @@
 
 					<!-- Logo -->
 					<a href="index.html" class="logo">
-						<span class="symbol"><img src="images/Playmat Studio Logo v3.svg" alt="Playmat Studio logo" /></span>
+						<span class="symbol"><img src="https://playmatstudio.com/images/Playmat%20Studio%20Logo%20v3.svg" alt="Playmat Studio logo" /></span>
 					</a>
 
 				</div>
@@ -765,7 +765,7 @@
 
 		</div>
 
-		<script src="assets/js/tool.js?v=8"></script>
+		<script src="https://playmatstudio.com/assets/js/tool.js?v=8"></script>
 
 
 		<!-- Hidden trigger so tool.js privacy listener has an element to bind -->
@@ -829,6 +829,7 @@
 		</div>
 
 
+		<script>
 		// Force tool wrapper to 90vw — always 90% of browser window, no more
 		(function(){
 			function applyToolWidth(){
