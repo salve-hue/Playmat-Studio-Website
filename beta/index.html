@@ -41,7 +41,7 @@
 		<style>
 			html, body { height: 100%; }
 			#wrapper { min-height: 100vh; display: flex; flex-direction: column; }
-			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
+			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; border-top: none !important; }
 			section#tools .inner { max-width: none !important; padding: 0 !important; }
 			#designer-visibility-wrapper {
 				width: 100% !important;
@@ -49,6 +49,9 @@
 				margin: 0 !important;
 				box-sizing: border-box !important;
 			}
+			.designer-container-wrap { padding: 0 !important; }
+			#landing-ui { padding: 12px 20px 0 !important; }
+			.tool-tab-panel.active { display: block; }
 		</style>
 		<!-- Tool dependencies -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
@@ -178,8 +181,6 @@
 			<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
 
 					    <div id="landing-ui">
-					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>
-
 					        <span class="landing-label">MAT SIZE</span>
 					        <div class="mat-size-btn-group">
 					            <button class="mat-size-btn active" data-size="standard">
@@ -198,104 +199,7 @@
 					                <svg class="msb-icon" viewBox="0 0 57 33" width="57" height="33" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
 					            </button>
 					        </div>
-
-					        <div class="tool-tab-bar">
-					            <button class="tool-tab-btn active" data-tab="adv-editor"><svg viewBox="-10 -10 120 120" width="16" height="16" style="vertical-align:middle;margin-right:4px;display:inline-block" aria-hidden="true"><defs><linearGradient id="cbr-h" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5a898"/><stop offset="40%" stop-color="#e07060"/><stop offset="100%" stop-color="#be5040"/></linearGradient><linearGradient id="cbr-f" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f8e060"/><stop offset="50%" stop-color="#c09018"/><stop offset="100%" stop-color="#e4c048"/></linearGradient><linearGradient id="cbr-b" x1="20%" y1="10%" x2="80%" y2="90%"><stop offset="0%" stop-color="#f6f3ea"/><stop offset="100%" stop-color="#c8c4b2"/></linearGradient><linearGradient id="cbr-p" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#7ac4e8"/><stop offset="100%" stop-color="#3888c0"/></linearGradient></defs><g transform="rotate(-45,50,50)"><path d="M 90,50 C 83,37 64,34 48,34 C 30,34 17,39 14,50 C 17,61 30,66 48,66 C 64,66 83,63 90,50 Z" fill="url(#cbr-h)" stroke="#1a0808" stroke-width="2.5"/><ellipse cx="58" cy="43" rx="17" ry="5.5" fill="rgba(255,215,205,0.55)"/><path d="M 71,50 C 67,43 58,40 50,40 C 41,40 34,44 32,50 C 34,56 41,60 50,60 C 58,60 67,57 71,50 Z" fill="none" stroke="#1a0808" stroke-width="1.2" opacity="0.45"/><rect x="9" y="43" width="7" height="5" rx="1" fill="url(#cbr-f)" stroke="#1a0808" stroke-width="1.5"/><rect x="8" y="48" width="8" height="5" rx="1" fill="url(#cbr-f)" stroke="#1a0808" stroke-width="1.5"/><rect x="7" y="53" width="9" height="5" rx="1.5" fill="url(#cbr-f)" stroke="#1a0808" stroke-width="1.5"/><path d="M 7,38 Q 0,32 -10,33 Q -22,36 -28,50 Q -22,64 -10,67 Q 0,68 7,62 Z" fill="url(#cbr-b)" stroke="#1a0808" stroke-width="2.5"/><path d="M 5,40 Q -4,38 -22,46" fill="none" stroke="#888878" stroke-width="2.5"/><path d="M 5,46 Q -4,45 -24,49" fill="none" stroke="#888878" stroke-width="2.5"/><path d="M 5,50 Q -4,50 -24,50" fill="none" stroke="#888878" stroke-width="2.5"/><path d="M 5,54 Q -4,55 -24,51" fill="none" stroke="#888878" stroke-width="2.5"/><path d="M 5,60 Q -4,62 -22,54" fill="none" stroke="#888878" stroke-width="2.5"/><ellipse cx="-5" cy="41" rx="9" ry="4" fill="rgba(255,255,255,0.4)"/><path d="M -25,47 Q -31,50 -25,53 Q -28,50 -25,47 Z" fill="url(#cbr-p)" stroke="#1a3060" stroke-width="1.5"/><path d="M -26,53 Q -27,59 -24,61 Q -22,62 -20,60 Q -19,57 -21,54 Z" fill="url(#cbr-p)" stroke="#1a3060" stroke-width="1.2"/></g></svg>PLAYMAT STUDIO <span class="beta-badge" style="font-size:9px;vertical-align:middle;margin-left:4px;">BETA</span></button>
-					            <button class="tool-tab-btn" data-tab="batch">&#x2728; BATCH ENHANCE</button>
-					            <button class="tool-tab-btn" data-tab="converter">&#x1F504; FORMAT CONVERTER</button>
-					            <button class="tool-tab-btn" data-tab="host">&#x2601; IMAGE HOST</button>
-					        </div>
-
-					        <!-- Playmat Studio editor: editor launches immediately when this tab is clicked via switchTab() -->
 					        <div id="tab-panel-adv-editor" class="tool-tab-panel active"></div>
-
-					        <!-- Batch Enhance -->
-					        <div id="tab-panel-batch" class="tool-tab-panel">
-					            <div id="batch-drop-zone" class="ps-drop-zone">
-					                <div class="dz-icon">&#x1F4E4;</div>
-					                <p class="dz-title">&#x2728; Batch Enhance</p>
-					                <p class="dz-sub">Drag &amp; drop images, or click to select</p>
-					                <p class="dz-note">Automatically boosts color and contrast so your artwork looks vivid and sharp when printed &mdash; no manual adjustments needed.</p>
-					            </div>
-					            <input type="file" id="batch-file-in" accept="image/*" multiple style="display:none;">
-					            <div id="batch-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
-					            <div id="batch-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
-					            <div id="batch-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
-					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
-					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="batch-clear-btn">&#x2715; CLEAR</button>
-					                </div>
-					            </div>
-					        </div>
-
-					        <!-- Format Converter -->
-					        <div id="tab-panel-converter" class="tool-tab-panel">
-					            <div class="ps-tool-controls">
-					                <span class="ps-panel-label">&#x1F504; CONVERT TO:</span>
-					                <select id="converter-format-sel" class="ui-select" style="width:auto; min-width:180px; padding:8px 12px; font-size:13px;">
-					                    <option value="jpeg">JPG &mdash; 99% quality</option>
-					                    <option value="png">PNG &mdash; lossless</option>
-					                    <option value="webp">WEBP &mdash; 95% quality</option>
-					                </select>
-					            </div>
-					            <div id="converter-drop-zone" class="ps-drop-zone">
-					                <div class="dz-icon">&#x1F504;</div>
-					                <p class="dz-title">&#x1F4C4; Format Converter</p>
-					                <p class="dz-sub">Drag &amp; drop images to convert, or click to select</p>
-					                <p class="dz-note">PNG &middot; WEBP &middot; GIF &middot; AVIF &middot; BMP &middot; JPG &#x2192; any format</p>
-					            </div>
-					            <input type="file" id="converter-file-in" accept="image/*" multiple style="display:none;">
-					            <div id="converter-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
-					            <div id="converter-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
-					            <div id="converter-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
-					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
-					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="converter-clear-btn">&#x2715; CLEAR</button>
-					                </div>
-					            </div>
-					        </div>
-
-					        <!-- Image Hosting -->
-				        <div id="tab-panel-host" class="tool-tab-panel">
-				            <div id="upload-customer-banner" style="display:none; background:rgba(48,187,173,0.12); border:1px solid rgba(48,187,173,0.35); border-radius:8px; padding:12px 16px; margin-bottom:16px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:#d0f0ee; line-height:1.5;">
-				                Upload your file below, then copy the link and paste it wherever you need it!
-				            </div>
-				            <div id="host-drop-zone" class="ps-drop-zone">
-				                <div class="dz-icon">&#x2601;</div>
-				                <p class="dz-title">&#x1F517; Image Hosting</p>
-				                <p class="dz-sub">Drag &amp; drop an image, or click to select</p>
-				                <p class="dz-note">Hosted for 7 days &middot; Max 50 MB &middot; JPG &middot; PNG &middot; WEBP &middot; GIF &middot; AVIF</p>
-				            </div>
-				            <input type="file" id="host-file-in" accept="image/*" style="display:none;">
-
-				            <div id="host-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
-
-				            <!-- Result card (shown after a successful upload) -->
-				            <div id="host-result" style="display:none; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px; margin-bottom:20px; display:none;">
-				                <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
-				                    <img id="host-preview" src="" alt="Preview" style="width:120px; height:80px; object-fit:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.12); flex-shrink:0; display:block;">
-				                    <div style="flex:1; min-width:200px;">
-				                        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Plus Jakarta Sans',sans-serif; margin-bottom:6px;">Hosted URL</div>
-				                        <div style="display:flex; gap:8px; align-items:center;">
-				                            <input id="host-url-input" type="text" readonly style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:8px 10px; font-size:12px; color:#f0eeff; font-family:monospace; outline:none;">
-				                            <button class="action-btn" style="width:auto; padding:8px 16px; margin:0; font-size:12px; flex-shrink:0;" id="host-copy-btn">COPY</button>
-				                        </div>
-				                        <div id="host-expiry" style="font-size:12px; color:#9888c0; margin-top:8px; font-family:'Plus Jakarta Sans',sans-serif;"></div>
-				                        <button class="action-btn btn-secondary" style="width:auto; padding:6px 14px; margin-top:12px; font-size:12px;" id="host-upload-another-btn">&#x2B06; UPLOAD ANOTHER</button>
-				                    </div>
-				                </div>
-				            </div>
-
-				            <!-- Upload history from localStorage -->
-				            <div id="host-history" style="display:none;">
-				                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-				                    <span style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Plus Jakarta Sans',sans-serif;">Recent Uploads</span>
-				                    <button class="action-btn btn-secondary" style="width:auto; padding:4px 10px; margin:0; font-size:11px;" id="host-clear-history-btn">CLEAR ALL</button>
-				                </div>
-				                <div id="host-history-list"></div>
-				            </div>
-				        </div>
-
 				        <input type="file" id="simple-file-in" accept="image/*" style="display:none;">
 					    </div>
 
