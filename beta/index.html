@@ -186,7 +186,7 @@
 					        </div>
 					    </div>
 					</div>
-			<div id="designer-visibility-wrapper"><div class="designer-container-wrap">
+			<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
 
 					    <div id="landing-ui" aria-hidden="true">
 					        <div class="mat-size-btn-group">
@@ -207,6 +207,8 @@
 					            </button>
 					        </div>
 
+					        <!-- Hidden trigger: tool.js attaches its switchTab handler to this button -->
+					        <button id="adv-tab-trigger" class="tool-tab-btn active" data-tab="adv-editor" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0;overflow:hidden;" aria-hidden="true" tabindex="-1"></button>
 					        <div id="tab-panel-adv-editor" class="tool-tab-panel active"></div>
 
 				        <input type="file" id="simple-file-in" accept="image/*" style="display:none;">
@@ -587,18 +589,26 @@
 
 		<script src="https://playmatstudio.com/assets/js/tool.js?v=8"></script>
 		<script>
-			/* Auto-launch the advanced editor with standard mat size, bypassing the landing UI */
+			/* Auto-launch the advanced editor once tool.js reveals the wrapper */
 			(function () {
 				function launch() {
 					var std = document.querySelector('.mat-size-btn[data-size="standard"]');
 					if (std) std.click();
-					if (typeof window.switchTab === 'function') window.switchTab('adv-editor');
+					var tab = document.getElementById('adv-tab-trigger');
+					if (tab) tab.click();
 				}
-				if (document.readyState === 'loading') {
-					document.addEventListener('DOMContentLoaded', launch);
-				} else {
-					launch();
-				}
+				var wrapper = document.getElementById('designer-visibility-wrapper');
+				if (!wrapper) { setTimeout(launch, 500); return; }
+				/* Watch for tool.js removing display:none from the wrapper */
+				var obs = new MutationObserver(function () {
+					if (wrapper.style.display !== 'none') {
+						obs.disconnect();
+						launch();
+					}
+				});
+				obs.observe(wrapper, { attributes: true, attributeFilter: ['style'] });
+				/* Fallback: if wrapper is never changed (already visible), launch directly */
+				if (wrapper.style.display !== 'none') launch();
 			})();
 		</script>
 
