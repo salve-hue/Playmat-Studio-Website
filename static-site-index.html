@@ -1,0 +1,932 @@
+<!DOCTYPE HTML>
+<!--
+	Playmat Studio
+	Built on Phantom by HTML5 UP (html5up.net | @ajlkn)
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en">
+	<head>
+		<title>Playmat Studio &mdash; Tool Demo</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Security headers (C2, M1) -->
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
+		<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+		<meta name="referrer" content="strict-origin-when-cross-origin" />
+		<meta name="description" content="Free browser-based tools to design, enhance, and download print-ready game mat artwork. No installs. No account. No cost." />
+		<!-- Favicons -->
+		<link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+		<meta name="theme-color" content="#0b0912" />
+
+		<!-- Open Graph / Twitter Card -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://playmatstudio.com/" />
+		<meta property="og:title" content="Playmat Studio &mdash; Your Playmat Starts Here" />
+		<meta property="og:description" content="Free browser-based tools to design, enhance, and download print-ready game mat artwork. No installs. No account. No cost." />
+		<meta property="og:image" content="https://playmatstudio.com/images/og-preview.jpg" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Playmat Studio &mdash; Your Playmat Starts Here" />
+		<meta name="twitter:description" content="Free browser-based tools to design, enhance, and download print-ready game mat artwork. No installs. No account. No cost." />
+		<meta name="twitter:image" content="https://playmatstudio.com/images/og-preview.jpg" />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="preload" href="assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
+		<link rel="stylesheet" href="assets/css/custom.css?v=16" />
+		<link rel="stylesheet" href="assets/css/tool.css?v=10" />
+		<style>
+			html, body { height: 100%; }
+			#wrapper { min-height: 100vh; display: flex; flex-direction: column; }
+			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
+			section#tools .inner { max-width: none !important; padding: 0 !important; }
+			#designer-visibility-wrapper {
+				width: 100% !important;
+				max-width: 100% !important;
+				margin: 0 !important;
+				box-sizing: border-box !important;
+			}
+		</style>
+		<!-- Tool dependencies -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
+		        integrity="sha384-sLpuECXYCB5TUyTbC06pftm/rgurDambREZmV4eRHwEqJzCQtU6lxI2Ve00z4XW5" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+		        integrity="sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG" crossorigin="anonymous"></script>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Header — horizontal sticky nav -->
+			<header id="header">
+				<div class="inner">
+
+					<!-- Logo -->
+					<a href="index.html" class="logo">
+						<span class="symbol"><img src="images/Playmat Studio Logo v3.svg" alt="Playmat Studio logo" /></span>
+					</a>
+
+				</div>
+			</header>
+
+			<!-- Tools — native embed -->
+			<a id="upload" style="display:block; visibility:hidden; position:relative; top:-80px;"></a>
+			<section id="tools" class="ps-tools">
+				<!-- ═══ TOOL HTML (native embed) ══════════════════════════════ -->
+
+					<div id="fs-backdrop"></div>
+					<div id="brush-cursor"></div>
+
+					<div id="app-alert-modal" class="overlay-modal">
+					    <div class="overlay-box" id="app-alert-box" style="text-align: center;">
+					        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--brand-text-sec); font-size:20px; cursor:pointer;" id="app-alert-close-x">×</button>
+					        <h3 id="app-alert-title" style="margin-top:0; font-size:20px; text-transform:uppercase;">Notice</h3>
+					        <p id="app-alert-text" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px; white-space: pre-wrap;"></p>
+					        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+					            <button class="action-btn" id="app-alert-btn" style="width:auto; padding:12px 30px;">OKAY</button>
+					            <button class="action-btn" id="app-alert-retry-btn" style="width:auto; padding:12px 30px; display:none;">RETRY</button>
+					        </div>
+					    </div>
+					</div>
+
+					<div id="dpi-warning-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color: var(--danger-red); text-align: center;">
+					        <h3 style="color:var(--danger-red); margin-top:0; font-size:20px; text-transform:uppercase;">Resolution Warning</h3>
+					        <p id="dpi-warning-text" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;"></p>
+					        <div style="display:flex; gap:10px; justify-content:center;">
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="dpi-help-btn">NEED HELP?</button>
+					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 30px; margin:0;" id="dpi-understand-btn">I UNDERSTAND</button>
+					        </div>
+					    </div>
+					</div>
+
+					<div id="ai-warning-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color: var(--brand-hover); text-align: center;">
+					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">AI Frame Break</h3>
+					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
+					            This magical feature securely sends your artwork to a powerful cloud server to accurately separate the main character from the background!<br><br>
+					            It usually takes <strong>5 to 10 seconds</strong> to process.
+					        </p>
+					        <div style="display:flex; gap:10px; justify-content:center;">
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-warn-cancel-btn">CANCEL</button>
+					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-warn-proceed-btn">PROCEED</button>
+					        </div>
+					    </div>
+					</div>
+
+					<div id="ai-upscale-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color: var(--brand-hover); text-align: center;">
+					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">Cloud AI Enhancer</h3>
+					        <p id="ai-upscale-desc" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
+					            We will securely send your image to a powerful cloud server to magically redraw the missing pixels and double the resolution for perfect printing!<br><br>
+					            It usually takes <strong>5 to 10 seconds</strong>.
+					        </p>
+					        <div style="display:flex; gap:10px; justify-content:center;">
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-upscale-cancel-btn">CANCEL</button>
+					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-upscale-proceed-btn">PROCEED</button>
+					        </div>
+					    </div>
+					</div>
+
+					<div id="ai-success-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color: var(--success-green); text-align: center;">
+					        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--brand-text-sec); font-size:20px; cursor:pointer;" id="ai-success-close-x">×</button>
+					        <h3 style="color:var(--success-green); margin-top:0; font-size:20px; text-transform:uppercase;">Enhancement Complete</h3>
+					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
+					            Your image has been successfully upscaled and optimized for high-quality printing!
+					        </p>
+					        <button class="action-btn" style="background:var(--success-green); width:auto; padding:12px 30px; margin:0 auto;" id="ai-success-btn">AWESOME</button>
+					    </div>
+					</div>
+
+					<div id="url-paste-modal" class="overlay-modal">
+					    <div class="overlay-box" style="text-align: center;">
+					        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--brand-text-sec); font-size:20px; cursor:pointer;" id="url-paste-close-x">×</button>
+					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">🔗 Import from Web</h3>
+					        <p style="color:var(--brand-text-sec); font-size:14px; margin-bottom:20px;">Paste a direct link to an image (ending in .jpg, .png, .webp) to load it onto the canvas.</p>
+					        <input type="text" id="paste-url-input" class="ui-select" placeholder="https://example.com/image.jpg" style="margin-bottom: 15px;" />
+					        <button class="action-btn" style="background:var(--brand-hover);" id="url-paste-submit">IMPORT IMAGE</button>
+					    </div>
+					</div>
+
+					<div id="help-modal" class="overlay-modal">
+					    <div class="overlay-box">
+					        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--brand-text-sec); font-size:20px; cursor:pointer;" id="help-close-x">×</button>
+					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">Customer Support</h3>
+					        <p style="color:var(--brand-text-sec); font-size:14px; margin-bottom:10px;">For support and documentation, visit the project on GitHub.</p>
+					    </div>
+					</div>
+
+					<div id="bleed-confirm-modal" class="overlay-modal">
+					    <div class="overlay-box" style="border-color:var(--danger-red); text-align:center;">
+					        <h3 style="color:var(--danger-red); margin-top:0; font-size:20px; text-transform:uppercase;">&#9888;&#65039; Artwork Does Not Cover Canvas</h3>
+					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
+					            Your artwork does not extend to the edges of the canvas.<br><br>
+					            <strong style="color:#fff;">This will result in white borders on your printed mat.</strong><br><br>
+					            Scale your artwork outward so it fills the entire canvas &mdash; including the red bleed area &mdash; to avoid white borders.
+					        </p>
+					        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 24px; margin:0;" id="bleed-back-btn">&larr; GO BACK AND FIX</button>
+					            <button class="action-btn" style="background:rgba(255,255,255,0.15); width:auto; padding:12px 20px; margin:0; font-size:12px;" id="bleed-proceed-btn">Proceed anyway (I accept white borders)</button>
+					        </div>
+					    </div>
+					</div>
+			<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
+
+					    <div id="landing-ui">
+					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>
+
+					        <span class="landing-label">MAT SIZE</span>
+					        <div class="mat-size-btn-group">
+					            <button class="mat-size-btn active" data-size="standard">
+					                <span class="msb-name">Standard</span>
+					                <span class="msb-dim">24&Prime; &times; 14&Prime;</span>
+					                <svg class="msb-icon" viewBox="0 0 49 29" width="49" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
+					            </button>
+					            <button class="mat-size-btn" data-size="extended">
+					                <span class="msb-name">Extended</span>
+					                <span class="msb-dim">28&Prime; &times; 14&Prime;</span>
+					                <svg class="msb-icon" viewBox="0 0 57 29" width="57" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
+					            </button>
+					            <button class="mat-size-btn" data-size="expanded">
+					                <span class="msb-name">Expanded</span>
+					                <span class="msb-dim">28&Prime; &times; 16&Prime;</span>
+					                <svg class="msb-icon" viewBox="0 0 57 33" width="57" height="33" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
+					            </button>
+					        </div>
+
+					        <div class="tool-tab-bar">
+					            <button class="tool-tab-btn active" data-tab="adv-editor"><svg viewBox="-10 -10 120 120" width="16" height="16" style="vertical-align:middle;margin-right:4px;display:inline-block" aria-hidden="true"><defs><linearGradient id="cbr-h" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5a898"/><stop offset="40%" stop-color="#e07060"/><stop offset="100%" stop-color="#be5040"/></linearGradient><linearGradient id="cbr-f" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f8e060"/><stop offset="50%" stop-color="#c09018"/><stop offset="100%" stop-color="#e4c048"/></linearGradient><linearGradient id="cbr-b" x1="20%" y1="10%" x2="80%" y2="90%"><stop offset="0%" stop-color="#f6f3ea"/><stop offset="100%" stop-color="#c8c4b2"/></linearGradient><linearGradient id="cbr-p" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#7ac4e8"/><stop offset="100%" stop-color="#3888c0"/></linearGradient></defs><g transform="rotate(-45,50,50)"><path d="M 90,50 C 83,37 64,34 48,34 C 30,34 17,39 14,50 C 17,61 30,66 48,66 C 64,66 83,63 90,50 Z" fill="url(#cbr-h)" stroke="#1a0808" stroke-width="2.5"/><ellipse cx="58" cy="43" rx="17" ry="5.5" fill="rgba(255,215,205,0.55)"/><path d="M 71,50 C 67,43 58,40 50,40 C 41,40 34,44 32,50 C 34,56 41,60 50,60 C 58,60 67,57 71,50 Z" fill="none" stroke="#1a0808" stroke-width="1.2" opacity="0.45"/><rect x="9" y="43" width="7" height="5" rx="1" fill="url(#cbr-f)" stroke="#1a0808" stroke-width="1.5"/><rect x="8" y="48" width="8" height="5" rx="1" fill="url(#cbr-f)" stroke="#1a0808" stroke-width="1.5"/><rect x="7" y="53" width="9" height="5" rx="1.5" fill="url(#cbr-f)" stroke="#1a0808" stroke-width="1.5"/><path d="M 7,38 Q 0,32 -10,33 Q -22,36 -28,50 Q -22,64 -10,67 Q 0,68 7,62 Z" fill="url(#cbr-b)" stroke="#1a0808" stroke-width="2.5"/><path d="M 5,40 Q -4,38 -22,46" fill="none" stroke="#888878" stroke-width="2.5"/><path d="M 5,46 Q -4,45 -24,49" fill="none" stroke="#888878" stroke-width="2.5"/><path d="M 5,50 Q -4,50 -24,50" fill="none" stroke="#888878" stroke-width="2.5"/><path d="M 5,54 Q -4,55 -24,51" fill="none" stroke="#888878" stroke-width="2.5"/><path d="M 5,60 Q -4,62 -22,54" fill="none" stroke="#888878" stroke-width="2.5"/><ellipse cx="-5" cy="41" rx="9" ry="4" fill="rgba(255,255,255,0.4)"/><path d="M -25,47 Q -31,50 -25,53 Q -28,50 -25,47 Z" fill="url(#cbr-p)" stroke="#1a3060" stroke-width="1.5"/><path d="M -26,53 Q -27,59 -24,61 Q -22,62 -20,60 Q -19,57 -21,54 Z" fill="url(#cbr-p)" stroke="#1a3060" stroke-width="1.2"/></g></svg>PLAYMAT STUDIO <span class="beta-badge" style="font-size:9px;vertical-align:middle;margin-left:4px;">BETA</span></button>
+					            <button class="tool-tab-btn" data-tab="batch">&#x2728; BATCH ENHANCE</button>
+					            <button class="tool-tab-btn" data-tab="converter">&#x1F504; FORMAT CONVERTER</button>
+					            <button class="tool-tab-btn" data-tab="host">&#x2601; IMAGE HOST</button>
+					        </div>
+
+					        <!-- Playmat Studio editor: editor launches immediately when this tab is clicked via switchTab() -->
+					        <div id="tab-panel-adv-editor" class="tool-tab-panel active"></div>
+
+					        <!-- Batch Enhance -->
+					        <div id="tab-panel-batch" class="tool-tab-panel">
+					            <div id="batch-drop-zone" class="ps-drop-zone">
+					                <div class="dz-icon">&#x1F4E4;</div>
+					                <p class="dz-title">&#x2728; Batch Enhance</p>
+					                <p class="dz-sub">Drag &amp; drop images, or click to select</p>
+					                <p class="dz-note">Automatically boosts color and contrast so your artwork looks vivid and sharp when printed &mdash; no manual adjustments needed.</p>
+					            </div>
+					            <input type="file" id="batch-file-in" accept="image/*" multiple style="display:none;">
+					            <div id="batch-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
+					            <div id="batch-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
+					            <div id="batch-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
+					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="batch-clear-btn">&#x2715; CLEAR</button>
+					                </div>
+					            </div>
+					        </div>
+
+					        <!-- Format Converter -->
+					        <div id="tab-panel-converter" class="tool-tab-panel">
+					            <div class="ps-tool-controls">
+					                <span class="ps-panel-label">&#x1F504; CONVERT TO:</span>
+					                <select id="converter-format-sel" class="ui-select" style="width:auto; min-width:180px; padding:8px 12px; font-size:13px;">
+					                    <option value="jpeg">JPG &mdash; 99% quality</option>
+					                    <option value="png">PNG &mdash; lossless</option>
+					                    <option value="webp">WEBP &mdash; 95% quality</option>
+					                </select>
+					            </div>
+					            <div id="converter-drop-zone" class="ps-drop-zone">
+					                <div class="dz-icon">&#x1F504;</div>
+					                <p class="dz-title">&#x1F4C4; Format Converter</p>
+					                <p class="dz-sub">Drag &amp; drop images to convert, or click to select</p>
+					                <p class="dz-note">PNG &middot; WEBP &middot; GIF &middot; AVIF &middot; BMP &middot; JPG &#x2192; any format</p>
+					            </div>
+					            <input type="file" id="converter-file-in" accept="image/*" multiple style="display:none;">
+					            <div id="converter-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
+					            <div id="converter-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
+					            <div id="converter-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
+					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="converter-clear-btn">&#x2715; CLEAR</button>
+					                </div>
+					            </div>
+					        </div>
+
+					        <!-- Image Hosting -->
+				        <div id="tab-panel-host" class="tool-tab-panel">
+				            <div id="upload-customer-banner" style="display:none; background:rgba(48,187,173,0.12); border:1px solid rgba(48,187,173,0.35); border-radius:8px; padding:12px 16px; margin-bottom:16px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:#d0f0ee; line-height:1.5;">
+				                Upload your file below, then copy the link and paste it wherever you need it!
+				            </div>
+				            <div id="host-drop-zone" class="ps-drop-zone">
+				                <div class="dz-icon">&#x2601;</div>
+				                <p class="dz-title">&#x1F517; Image Hosting</p>
+				                <p class="dz-sub">Drag &amp; drop an image, or click to select</p>
+				                <p class="dz-note">Hosted for 7 days &middot; Max 50 MB &middot; JPG &middot; PNG &middot; WEBP &middot; GIF &middot; AVIF</p>
+				            </div>
+				            <input type="file" id="host-file-in" accept="image/*" style="display:none;">
+
+				            <div id="host-status" style="display:none; color:#30BBAD; font-size:13px; margin-bottom:12px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; letter-spacing:0.5px;"></div>
+
+				            <!-- Result card (shown after a successful upload) -->
+				            <div id="host-result" style="display:none; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:20px; margin-bottom:20px; display:none;">
+				                <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+				                    <img id="host-preview" src="" alt="Preview" style="width:120px; height:80px; object-fit:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.12); flex-shrink:0; display:block;">
+				                    <div style="flex:1; min-width:200px;">
+				                        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Plus Jakarta Sans',sans-serif; margin-bottom:6px;">Hosted URL</div>
+				                        <div style="display:flex; gap:8px; align-items:center;">
+				                            <input id="host-url-input" type="text" readonly style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:8px 10px; font-size:12px; color:#f0eeff; font-family:monospace; outline:none;">
+				                            <button class="action-btn" style="width:auto; padding:8px 16px; margin:0; font-size:12px; flex-shrink:0;" id="host-copy-btn">COPY</button>
+				                        </div>
+				                        <div id="host-expiry" style="font-size:12px; color:#9888c0; margin-top:8px; font-family:'Plus Jakarta Sans',sans-serif;"></div>
+				                        <button class="action-btn btn-secondary" style="width:auto; padding:6px 14px; margin-top:12px; font-size:12px;" id="host-upload-another-btn">&#x2B06; UPLOAD ANOTHER</button>
+				                    </div>
+				                </div>
+				            </div>
+
+				            <!-- Upload history from localStorage -->
+				            <div id="host-history" style="display:none;">
+				                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+				                    <span style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Plus Jakarta Sans',sans-serif;">Recent Uploads</span>
+				                    <button class="action-btn btn-secondary" style="width:auto; padding:4px 10px; margin:0; font-size:11px;" id="host-clear-history-btn">CLEAR ALL</button>
+				                </div>
+				                <div id="host-history-list"></div>
+				            </div>
+				        </div>
+
+				        <input type="file" id="simple-file-in" accept="image/*" style="display:none;">
+					    </div>
+
+
+					    <div id="simple-backdrop">
+					        <div id="simple-modal">
+					            <div id="simple-header">
+					                <span style="font-weight:600; font-size:22px; color:var(--brand-hover); text-transform:uppercase; letter-spacing:1px; font-family:'Plus Jakarta Sans', sans-serif;">Playmat Studio <span style="font-size:16px; color:#ffffff; font-weight:600; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:1px; text-transform:uppercase;">| Quick Upload</span></span>
+					                <button class="action-btn btn-secondary" style="width:auto; padding: 6px 12px; margin:0; font-size:12px;" id="s-restart-btn">RESTART</button>
+					                <button id="s-fs-toggle-btn" class="action-btn" style="width:auto; padding:6px 12px; margin:0; font-size:12px; background:var(--brand-hover);">&#x26F6; FULL SCREEN</button>
+					            </div>
+
+					            <div id="simple-canvas-wrap">
+					                <div id="simple-canvas-inner">
+					                    <canvas id="s-main-canvas"></canvas>
+					                    <canvas id="s-layout-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; opacity: 1;"></canvas>
+					                </div>
+					            </div>
+
+					            <div id="simple-info-bar" class="canvas-info-bar">
+					                <span id="si-size">Mat size: —</span>
+					                <span id="si-dpi">Image DPI: —</span>
+					                <span><span class="info-red">Red area:</span> Bleed — your art <strong>must</strong> cover this fully, right to the canvas edge</span>
+					                <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
+					            </div>
+
+					            <div id="simple-tools">
+					                <div class="simple-tool-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:30px; align-items:start;">
+
+					                    <div>
+					                        <label style="color: var(--brand-hover); font-size:11px; font-weight:bold; text-transform:uppercase; display:block; margin-bottom:10px;">Artwork &amp; Filters</label>
+					                        <div style="display:flex; width:100%; gap:8px; margin-bottom:15px;">
+					                            <button class="action-btn" style="flex:2;" id="s-upload-file-btn">📁 UPLOAD FILE</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" id="s-paste-url-btn">🔗 PASTE URL</button>
+					                        </div>
+
+					                        <div style="display:flex; width:100%; gap:10px; align-items:center; margin-bottom:15px;">
+					                            <input type="range" id="s-zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="flex:2;">
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-rotate-btn">↻ ROTATE</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-fit-btn">[ ] FIT</button>
+					                        </div>
+
+					                        <div style="display:flex; width:100%; gap:8px;">
+					                            <button id="s-btn-enhance" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">🪄 ENHANCE</button>
+					                            <button id="s-btn-grayscale" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">◑ GRAYSCALE</button>
+					                        </div>
+					                        <button class="action-btn btn-secondary" style="width:100%; margin-top:8px; font-size:10px; padding:6px 8px;" id="s-guides-btn">SHOW/HIDE PRINT GUIDES</button>
+					                    </div>
+
+					                    <div>
+					                        <label style="color: var(--brand-hover); font-size:11px; font-weight:bold; text-transform:uppercase; display:block; margin-bottom:10px;">Game Layouts (Optional)</label>
+					                        <select id="s-game-sel" class="ui-select" style="margin:0; margin-bottom:10px;"><option value="">-- Select Game (Optional) --</option></select>
+					                        <select id="s-format-sel" class="ui-select hidden-field" style="margin:0; margin-bottom:10px;"></select>
+					                        <select id="s-hand-sel" class="ui-select hidden-field" style="margin:0; margin-bottom:10px;"></select>
+
+					                        <div id="s-rb-extras-wrap" class="hidden-field" style="margin-bottom:10px;">
+					                            <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px; font-weight:bold; text-transform:uppercase;">Points Overlay</label>
+					                            <select id="s-rb-points-sel" class="ui-select" style="margin:0; padding:8px;">
+					                                <option value="none">None</option>
+					                                <option value="basic">Basic Points</option>
+					                                <option value="basic_1_14">Basic Points 1-14</option>
+					                                <option value="project">Project Points</option>
+					                                <option value="project_1_14">Project Points 1-14</option>
+					                                <option value="lunar">Lunar Points</option>
+					                                <option value="lunar_1_14">Lunar Points 1-14</option>
+					                                <option value="khasino">Khasino Points</option>
+					                            </select>
+					                        </div>
+
+					                        <div id="s-color-wrap" class="hidden-field">
+					                            <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px; font-weight:bold; text-transform:uppercase;">Zone Color</label>
+					                            <input type="color" id="s-col" value="#ffffff" class="color-swatch" style="height:38px;">
+					                        </div>
+					                    </div>
+					                </div>
+
+					                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top:20px;">
+					                    <div id="simple-bleed-warning" class="bleed-warning-banner">
+					                        &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
+					                        Scale your artwork to fill the entire canvas including the red bleed area.
+					                    </div>
+					                    <div class="action-row-3">
+					                        <button id="simple-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; GET PRINTED</button>
+					                        <button id="simple-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; DOWNLOAD</button>
+					                        <button id="simple-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; SHARE</button>
+					                    </div>
+					                </div>
+
+					                <div style="text-align:center; padding-top: 15px;">
+					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
+					                </div>
+					            </div>
+					        </div>
+					        <div class="version-tag">v1.7.1</div>
+					    </div>
+
+
+					    <div id="adv-backdrop">
+					    <div id="playmat-tool-root">
+					        <div id="editor-top-bar">
+					            <div class="etb-group">
+					                <button class="action-btn" id="adv-upload-file-btn">📁 UPLOAD FILE</button>
+					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;">
+					                <button class="action-btn btn-secondary" id="adv-paste-url-btn">🔗 PASTE URL</button>
+					            </div>
+					            <div class="etb-group">
+					                <div id="canvas-size-btns">
+					                    <span class="canvas-sz-label">CANVAS:</span>
+					                    <button class="action-btn btn-secondary canvas-sz-btn canvas-sz-active" data-sz="auto">AUTO</button>
+					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="s">S</button>
+					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="m">M</button>
+					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="l">L</button>
+					                </div>
+					                <button class="action-btn btn-secondary" id="adv-restart-btn">↺ RESTART</button>
+					                <button id="fs-toggle-btn" class="action-btn" style="background: var(--brand-hover);">⛶ FULL SCREEN</button>
+					            </div>
+					        </div>
+					        <div id="editor-main">
+					        <div id="sidebar">
+
+					            <div class="acc-card">
+					            <button class="acc-btn" data-acc="acc-size">ARTWORK <span>▼</span></button>
+					            <div id="acc-size" class="acc-content" style="display:block;">
+
+					                <div class="slider-row" style="margin-top: 15px;">
+					                    <label>Art Scale</label>
+					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="width:100%;">
+					                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn">RESET ART SCALE &amp; CENTER</button>
+					                </div>
+
+					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Rotate &amp; Flip</label>
+					                    <div style="display:flex; gap:8px; margin-bottom: 10px;">
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-rotate-btn">ROTATE 90°</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipx-btn">FLIP H</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipy-btn">FLIP V</button>
+					                    </div>
+					                    <div style="display:flex; gap:10px; align-items:center; margin-bottom: 10px;">
+					                        <input type="range" id="transform-rotation" min="-180" max="180" value="0" style="flex:1;">
+					                        <span id="rotation-val" style="font-size: 13px; width: 35px; text-align: right; color:var(--brand-text-pri);">0°</span>
+					                    </div>
+					                    <button class="action-btn btn-secondary" style="margin:0;" id="adv-reset-rotation-btn">RESET ROTATION</button>
+					                </div>
+
+					                <div style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+					                    <label style="font-size: 12px; color: var(--brand-text-sec); display: block; margin-bottom: 10px;">No artwork? Try a solid color:</label>
+					                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+					                        <input type="color" id="bg-color-picker" value="#000000" class="color-swatch" style="width: 50px;">
+					                        <input type="text" id="bg-color-hex" value="#000000" class="ui-select" style="margin:0; width:80px; padding:8px !important; font-family:monospace; background-image:none !important;">
+					                    </div>
+					                </div>
+
+					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality <span class="info-tooltip" data-tip="AI upscaling improves low-resolution artwork before printing. Works best on images that look blurry or pixelated. Results may vary depending on the source image.">?</span></label>
+					                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); line-height: 1.2; width: 100%;">
+					                        ✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>
+					                    </button>
+					                </div>
+
+					            </div>
+					            </div>
+
+					            <div class="acc-card">
+					            <button class="acc-btn" data-acc="acc-layouts">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
+					            <div id="acc-layouts" class="acc-content" style="display:block;">
+					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
+					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
+					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
+
+					                <div id="rb-extras-wrap" class="hidden-field" style="margin-top:15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+					                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px; font-weight:bold; text-transform:uppercase;">Points Overlay</label>
+					                    <select id="rb-points-sel" class="ui-select" style="margin:0; padding:8px;">
+					                        <option value="none">None</option>
+					                        <option value="basic">Basic Points</option>
+					                        <option value="basic_1_14">Basic Points 1-14</option>
+					                        <option value="project">Project Points</option>
+					                        <option value="project_1_14">Project Points 1-14</option>
+					                        <option value="lunar">Lunar Points</option>
+					                        <option value="lunar_1_14">Lunar Points 1-14</option>
+					                        <option value="khasino">Khasino Points</option>
+					                    </select>
+					                </div>
+
+					                <div id="zone-style-wrap" class="hidden-field">
+					                    <div class="slider-row">
+					                        <label>Zone Color Mode</label>
+					                        <select id="mode-sel" class="ui-select">
+					                            <option value="solid">Solid Color</option>
+					                            <option value="gradient">Gradient</option>
+					                        </select>
+
+					                        <label style="margin-top:15px;">Primary Color</label>
+					                        <div style="display: flex; gap: 8px;">
+					                            <input type="color" id="col-1" value="#ffffff" class="color-swatch" style="flex:1;">
+					                            <input type="text" id="col-1-hex" value="#ffffff" class="ui-select" style="margin:0; width:90px; padding:8px !important; font-family:monospace; background-image:none !important;">
+					                        </div>
+
+					                        <div id="grad-controls" class="hidden-field">
+					                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+					                                <label style="margin:0;">Secondary Color</label>
+					                                <label style="margin:0; font-size:12px; cursor:pointer; color:var(--brand-text-sec);"><input type="checkbox" id="col-2-trans"> Transparent</label>
+					                            </div>
+					                            <div style="display: flex; gap: 8px; margin-top:6px;">
+					                                <input type="color" id="col-2" value="#000000" class="color-swatch" style="flex:1;">
+					                                <input type="text" id="col-2-hex" value="#000000" class="ui-select" style="margin:0; width:90px; padding:8px !important; font-family:monospace; background-image:none !important;">
+					                            </div>
+
+					                            <label style="margin-top:15px;">Gradient Angle</label>
+					                            <div style="display: flex; align-items: center; gap: 10px;">
+					                                <input type="range" id="angle-in" min="0" max="360" value="180" style="flex:1;">
+					                                <span id="angle-val" style="font-size: 13px; width: 35px; text-align: right; color: var(--brand-text-pri);">180°</span>
+					                                <div id="angle-compass" class="compass" style="transform: rotate(180deg);">↑</div>
+					                            </div>
+					                        </div>
+
+					                        <label style="margin-top:20px;">Overlay Opacity</label>
+					                        <input type="range" id="op-in" min="0.1" max="1" step="0.1" value="1" style="width:100%;">
+					                    </div>
+
+					                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+
+					                    <div class="inner-panel">
+					                        <span class="panel-title">FRAME BREAKING</span>
+					                        <button id="ai-fb-btn" class="action-btn" style="background:var(--brand-hover); margin-bottom:10px; line-height:1.2;">
+					                            ✨ AUTO FRAME BREAK<br><span style="font-size: 10px; font-weight: normal;">(experimental)</span>
+					                        </button>
+					                        <button id="ai-fb-clear-btn" class="action-btn btn-secondary hidden-field" style="margin-bottom:15px; border: 1px solid var(--danger-red); color: var(--danger-red);">🗑️ REMOVE AI POP-OUT</button>
+
+					                        <button id="mask-toggle-btn" class="action-btn btn-secondary btn-eraser">ENABLE MANUAL ERASER</button>
+					                        <div id="mask-controls" class="hidden-field">
+					                            <label style="font-size:11px; margin-top:10px; display:block; color:var(--brand-text-sec);">Eraser Size</label>
+					                            <input type="range" id="brush-size" min="10" max="150" value="40">
+					                            <div style="display: flex; gap: 8px; margin-top: 10px;">
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-undo-btn">UNDO</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-reset-btn">RESET</button>
+					                            </div>
+					                        </div>
+					                    </div>
+
+					                    <div class="inner-panel">
+					                        <span class="panel-title">ZONE RECOLORING</span>
+					                        <button id="recolor-toggle-btn" class="action-btn btn-secondary btn-recolor">ENABLE RECOLOR BRUSH</button>
+					                        <div id="recolor-controls" class="hidden-field">
+					                            <div style="display:flex; gap:10px; margin-bottom:10px; margin-top:10px;">
+					                                <div style="flex:1;">
+					                                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Brush Size</label>
+					                                    <input type="range" id="recolor-size" min="5" max="100" value="30" style="width:100%;">
+					                                </div>
+					                                <div>
+					                                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Paint Color</label>
+					                                    <input type="color" id="recolor-color" value="#ff0000" class="color-swatch" style="width:50px; height:30px;">
+					                                </div>
+					                            </div>
+					                            <div style="display: flex; gap: 8px;">
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-undo-btn">UNDO</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-reset-btn">RESET</button>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+
+					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 6px; font-weight: bold; text-transform: uppercase;">Custom Overlay</label>
+					                    <p style="font-size:11px; color:#f0eeff !important; line-height:1.4; margin:0 0 10px;">Upload a PNG/image to layer over your artwork — drag &amp; resize freely on the canvas.</p>
+					                    <button class="action-btn btn-secondary" id="adv-overlay-upload-btn" style="width:100%;">📐 UPLOAD OVERLAY</button>
+					                    <input type="file" id="adv-overlay-file-in" accept="image/*" style="display:none;">
+					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; font-size:11px; padding:7px;" id="adv-overlay-lock-btn">🔒 Proportions Locked</button>
+					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; border-color:var(--danger-red); color:var(--danger-red);" id="adv-overlay-clear-btn">🗑️ REMOVE OVERLAY</button>
+					                </div>
+					            </div>
+					            </div>
+
+					            <div class="acc-card">
+					            <button class="acc-btn" data-acc="acc-art">ADJUSTMENTS <span>▼</span></button>
+					            <div id="acc-art" class="acc-content" style="display:block;">
+
+					                <div class="inner-panel">
+					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
+					                    <p style="font-size:11px; color:#f0eeff !important; line-height:1.4; margin-bottom:15px; margin-top:0; display:none;">
+					                        Images on digital screens look much brighter than physical ink. Use our Auto-Optimize tool to perfectly calibrate your art for printing!
+					                    </p>
+					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px; display:none;">🪄 AUTO-OPTIMIZE FOR PRINT</button>
+
+					                    <div class="slider-row" style="margin-top:0;">
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Brightness <span class="adj-tip" title="Lightens or darkens the overall image.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-brightness">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-brightness',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-brightness" min="-0.3" max="0.3" step="0.01" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Contrast <span class="adj-tip" title="Increases or decreases the difference between light and dark areas.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-contrast">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-contrast',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-contrast" min="-0.3" max="0.3" step="0.01" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Saturation <span class="adj-tip" title="Boosts or reduces the intensity and richness of colors.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-saturation">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-saturation',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-saturation" min="-0.5" max="0.5" step="0.01" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Vibrance <span class="adj-tip" title="Boosts muted colors while leaving already-vivid tones largely unchanged.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-vibrance">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-vibrance',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-vibrance" min="-0.5" max="0.5" step="0.01" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Hue Shift <span class="adj-tip" title="Rotates all colors around the color wheel by the given number of degrees.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-hue">0°</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-hue',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-hue" min="-180" max="180" step="1" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Blur <span class="adj-tip" title="Softens the image by blurring fine detail and hard edges.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-blur">0px</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-blur',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-blur" min="0" max="20" step="0.5" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Shadows <span class="adj-tip" title="Lifts (positive) or crushes (negative) the dark tones in the image.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-shadows">0</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-shadows',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-shadows" min="-100" max="100" step="1" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Vignette <span class="adj-tip" title="Darkens the corners and edges of the image to draw focus inward.">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-vignette">0%</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-vignette',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-vignette" min="0" max="100" step="1" value="0">
+					                        </div>
+
+					                        <div class="adj-item">
+					                            <div class="adj-header">
+					                                <span class="adj-name">Warmth <span class="adj-tip" title="Shifts the image toward warm golden tones (positive) or cool blue tones (negative).">?</span></span>
+					                                <div class="adj-right"><span class="adj-val" id="val-filter-warmth">0</span><button class="adj-reset" title="Reset" onclick="window.resetSingleFilter('filter-warmth',0)">↺</button></div>
+					                            </div>
+					                            <input type="range" id="filter-warmth" min="-100" max="100" step="1" value="0">
+					                        </div>
+					                    </div>
+
+					                    <div style="margin-top:15px; margin-bottom:5px;">
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Presets</label>
+					                        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vibrant')" data-tip="Boosts contrast &amp; saturation for vivid, punchy colors">Vibrant</button>
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('faded')" data-tip="Softens contrast &amp; desaturates for a washed-out film look">Faded</button>
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('velvet')" data-tip="Warm vignette with lifted shadows for a rich, moody feel">Velvet</button>
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('vintage')" data-tip="Warm hue shift &amp; vignette for a classic aged look">Vintage</button>
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('frosted')" data-tip="Cool tones with soft blur for an icy, diffused effect">Frosted</button>
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('golden')" data-tip="Warm golden tones &amp; lifted shadows for a sun-kissed glow">Golden</button>
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('ink')" data-tip="High contrast near-monochrome with deep, dramatic blacks">Ink</button>
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('bw')" data-tip="Full grayscale conversion, removing all color">B&amp;W</button>
+					                            <button class="action-btn btn-secondary preset-btn-tip" style="flex:1; margin:0; font-size:11px; padding:6px 4px; min-width:60px;" onclick="window.applyFilterPreset('neutral')" data-tip="Resets all adjustments back to defaults">Neutral</button>
+					                            <input type="range" id="filter-grayscale" min="0" max="1" step="1" value="0" style="display:none;" aria-hidden="true">
+					                        </div>
+					                    </div>
+
+					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn">RESET COLORS</button>
+					                </div>
+
+					                <button class="action-btn btn-secondary" style="margin-top:10px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">SHOW/HIDE PRINT GUIDES</button>
+
+					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+
+					                <div class="inner-panel">
+					                    <span class="panel-title">TEXT</span>
+					                    <button class="action-btn" style="background: var(--brand-hover); margin-bottom:15px;" id="adv-add-text-btn">+ ADD TEXT</button>
+
+					                    <div id="adv-text-tools" class="hidden-field" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:6px; border: 1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
+					                        <select id="adv-font-family" class="ui-select">
+					                            <option value="Rubik">Rubik</option> <option value="Bangers">Bangers</option> <option value="Oswald">Oswald</option> <option value="Permanent Marker">Marker</option> <option value="Cinzel">Cinzel</option> <option value="Pacifico">Pacifico</option>
+					                        </select>
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Font Size</label>
+					                        <input type="range" id="adv-text-size-in" min="10" max="200" value="40" style="width:100%; margin-bottom:12px;">
+					                        <div style="display:flex; gap:6px; margin-bottom:12px;">
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:14px; font-weight:bold;" id="adv-text-bold-btn">B</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:14px; font-style:italic;" id="adv-text-italic-btn"><i>I</i></button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-left" title="Align Left">&#8676;</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-center" title="Align Center">&#8801;</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; margin:0; font-size:13px;" id="adv-text-align-right" title="Align Right">&#8677;</button>
+					                        </div>
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline Width</label>
+					                        <input type="range" id="adv-text-stroke-width" min="0" max="20" step="0.5" value="2" style="width:100%; margin-bottom:12px;">
+					                        <div style="display:flex; gap:10px;">
+					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Fill</label><input type="color" id="adv-text-col" class="color-swatch" value="#ffffff"></div>
+					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline</label><input type="color" id="adv-text-stroke" class="color-swatch" value="#000000"></div>
+					                        </div>
+					                        <button class="action-btn" style="background:var(--danger-red); margin-top:15px;" id="adv-delete-btn">DELETE SELECTED</button>
+					                    </div>
+					                </div>
+
+					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+
+					            </div>
+					            </div>
+
+					            <div class="sidebar-spacer" style="flex-grow: 1;"></div>
+
+					        </div>
+
+					        <div id="canvas-column">
+					            <div id="zoom-toolbar">
+					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">VIEW:</span>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-in-btn">+</button>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-out-btn">-</button>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">RESET</button>
+					            </div>
+
+					            <div id="canvas-wrapper">
+					                <canvas id="main-canvas"></canvas>
+					                <canvas id="layout-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; opacity: 1;"></canvas>
+					                <canvas id="fg-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 20; opacity: 1;"></canvas>
+				                <canvas id="vignette-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5; opacity: 1;"></canvas>
+					                <div id="recolor-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 30; pointer-events: none; mask-size: 100% 100%; -webkit-mask-size: 100% 100%;">
+					                    <canvas id="recolor-canvas"></canvas>
+					                </div>
+					                <div id="eraser-interaction" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none;"></div>
+					            </div>
+
+					            <div id="adv-info-bar" class="canvas-info-bar">
+					                <span id="ai-size">Mat size: —</span>
+					                <span id="ai-dpi">Image DPI: —</span>
+					                <span><span class="info-red">Red area:</span> Bleed — your art <strong>must</strong> cover this fully, right to the canvas edge</span>
+					                <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
+					            </div>
+					            <div id="adv-canvas-actions">
+					                <div id="adv-bleed-warning" class="bleed-warning-banner">
+					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
+					                    Scale your artwork to fill the entire canvas including the red bleed area.
+					                </div>
+					                <div class="action-row-3">
+					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; GET PRINTED</button>
+					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; DOWNLOAD</button>
+					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; SHARE</button>
+					                </div>
+					                <div style="text-align:center; padding-top: 12px;">
+					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
+					                </div>
+					            </div>
+					        </div>
+					        </div><!-- /#editor-main -->
+					    </div>
+					    <div class="version-tag" style="color:rgba(255,255,255,0.2); z-index:10001;">v1.7.1</div>
+					    </div><!-- /#adv-backdrop -->
+					</div>
+					</div><!-- /#designer-visibility-wrapper -->
+
+					<!-- ═══ END TOOL HTML ════════════════════════════════════════ -->
+
+			</section>
+
+		</div>
+
+		<script src="assets/js/tool.js?v=8"></script>
+
+
+		<!-- Hidden trigger so tool.js privacy listener has an element to bind -->
+		<a id="footer-privacy-link" href="#" style="display:none;" aria-hidden="true"></a>
+
+		<!-- Privacy Policy Modal -->
+		<div id="privacy-modal">
+			<div class="privacy-box">
+				<div class="privacy-header">
+					<h2>Privacy Policy</h2>
+					<button class="privacy-close" id="privacy-close-btn" aria-label="Close">&times;</button>
+				</div>
+				<div class="privacy-body">
+					<p><strong>Effective Date: March 2025</strong></p>
+					<p>Playmat Studio is a free, browser-based image preparation tool. This policy explains what data is collected, how it is used, and your rights under applicable privacy law including the GDPR (EU/UK) and the CCPA (California).</p>
+
+					<h3>1. Data We Collect</h3>
+					<p>We collect <strong>no personal information</strong> and require no account, registration, or login. The following data may be processed during normal use:</p>
+					<ul>
+						<li><strong>Image files you upload</strong> &mdash; processed locally in your browser. They are never transmitted to our servers except as described in Section 3.</li>
+						<li><strong>Browser local storage</strong> &mdash; used solely to remember recent upload history within your own browser. This data never leaves your device and is not accessible to us.</li>
+						<li><strong>Contact form submissions</strong> &mdash; if you use the contact form, your name, email address, and message are transmitted to us so we can respond. This data is not shared with third parties and is retained only as long as necessary to address your enquiry.</li>
+					</ul>
+
+					<h3>2. In-Browser Processing</h3>
+					<p>All core image-processing tasks &mdash; resizing, cropping, colour correction, format conversion, overlay rendering, and export &mdash; run <strong>entirely within your browser</strong> using the HTML5 Canvas API and the Fabric.js library. Your artwork is never uploaded to any server during these operations.</p>
+
+					<h3>3. Optional Cloud AI Features</h3>
+					<p>Two features optionally transmit image data to a serverless cloud environment:</p>
+					<ul>
+						<li><strong>AI Resolution Enhancer</strong> &mdash; sends your image to a serverless processing function to upscale it to higher resolution.</li>
+						<li><strong>AI Frame Break (background removal)</strong> &mdash; sends your image to a serverless processing function to isolate the foreground subject.</li>
+					</ul>
+					<p>These transmissions occur <strong>only when you explicitly initiate the feature</strong> by clicking the corresponding button and confirming the prompt. Image data sent to these functions is processed transiently and is <strong>not stored, logged, or retained</strong> after the response is returned to your browser. No metadata identifying you is attached to these requests.</p>
+
+					<h3>4. Cookies &amp; Tracking</h3>
+					<p>We do <strong>not</strong> use tracking cookies, advertising cookies, analytics scripts, or any third-party tracking technology. The site uses only browser local storage as described above.</p>
+
+					<h3>5. Third-Party Services</h3>
+					<p>All libraries used (Fabric.js and others) are loaded and executed locally. The site does not embed third-party widgets, social buttons, or advertising networks that could independently collect your data.</p>
+
+					<h3>6. Data Retention</h3>
+					<p>We hold no persistent user data on our servers. Local storage data (upload history) is retained in your own browser until you clear it via the &ldquo;Clear History&rdquo; button or your browser settings. Contact form submissions are retained only as long as needed to resolve your request.</p>
+
+					<h3>7. Your Rights (GDPR &amp; UK GDPR)</h3>
+					<p>If you are located in the European Economic Area or the United Kingdom, you have the right to access, rectify, erase, or restrict the processing of any personal data we hold about you (limited to contact form submissions). To exercise these rights, contact us via the contact form on this site. We will respond within 30 days.</p>
+
+					<h3>8. Your Rights (CCPA &mdash; California Residents)</h3>
+					<p>We do not sell, share, or disclose personal information to third parties for commercial purposes. California residents have the right to know what personal information is collected and to request deletion. Because we collect only contact form submissions and retain them for the limited purpose of responding to you, there is nothing to &ldquo;sell&rdquo; and deletion requests are honoured upon request.</p>
+
+					<h3>9. Children&rsquo;s Privacy</h3>
+					<p>This site is not directed to children under 13 (or under 16 in the EEA). We do not knowingly collect information from minors. If you believe a minor has submitted information via the contact form, please contact us and we will delete it promptly.</p>
+
+					<h3>10. Changes to This Policy</h3>
+					<p>We may update this policy to reflect changes in technology or law. The effective date at the top of this page will be updated accordingly. Continued use of the site after changes are posted constitutes acceptance of the revised policy.</p>
+
+					<h3>11. Contact</h3>
+					<p>For privacy-related questions or to exercise your rights, use the <a href="#contact" id="privacy-contact-link" style="color:var(--ps-teal);">contact form</a> on this site.</p>
+				</div>
+			</div>
+		</div>
+
+
+		// Force tool wrapper to 90vw — always 90% of browser window, no more
+		(function(){
+			function applyToolWidth(){
+				var el = document.getElementById('designer-visibility-wrapper');
+				if (!el) return;
+				el.style.setProperty('width', '100%', 'important');
+				el.style.setProperty('max-width', '100%', 'important');
+				el.style.setProperty('margin', '0', 'important');
+				el.style.setProperty('box-sizing', 'border-box', 'important');
+			}
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', applyToolWidth);
+			} else {
+				applyToolWidth();
+			}
+			window.addEventListener('resize', applyToolWidth, {passive: true});
+		})();
+
+		// Contact form — submit via Resend worker
+		(function(){
+			var CONTACT_WORKER = 'https://contact.playmatstudio.com';
+			var form      = document.getElementById('contact-form');
+			var status    = document.getElementById('contact-status');
+			var submitBtn = document.getElementById('contact-submit');
+			if (!form) return;
+
+			function showStatus(msg, ok) {
+				status.textContent = msg;
+				status.style.display = 'block';
+				status.style.background = ok ? 'rgba(131,187,48,0.15)' : 'rgba(187,48,62,0.15)';
+				status.style.border = ok ? '1px solid rgba(131,187,48,0.4)' : '1px solid rgba(187,48,62,0.4)';
+				status.style.color = ok ? '#83BB30' : '#e05060';
+			}
+
+			form.addEventListener('submit', function(e) {
+				e.preventDefault();
+				var name    = document.getElementById('contact-name').value.trim();
+				var email   = document.getElementById('contact-email').value.trim();
+				var message = document.getElementById('contact-message').value.trim();
+				if (!name || !email || !message) {
+					showStatus('Please fill in all fields.', false);
+					return;
+				}
+				submitBtn.disabled = true;
+				submitBtn.textContent = 'Sending…';
+				status.style.display = 'none';
+
+				fetch(CONTACT_WORKER, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ name: name, email: email, message: message })
+				})
+				.then(function(res) { return res.json(); })
+				.then(function(data) {
+					if (data.ok) {
+						showStatus('Message sent! We’ll get back to you soon.', true);
+						form.reset();
+					} else {
+						showStatus(data.error || 'Something went wrong. Please try again.', false);
+					}
+				})
+				.catch(function() {
+					showStatus('Could not send message. Please check your connection and try again.', false);
+				})
+				.finally(function() {
+					submitBtn.disabled = false;
+					submitBtn.textContent = 'Send Message';
+				});
+			});
+		})();
+		</script>
+
+	<div id="share-result-modal" style="display:none; position:fixed; inset:0; z-index:9999999; background:rgba(0,0,0,0.82); align-items:center; justify-content:center;">
+    <div style="background:#181228; border:1px solid rgba(104,48,187,0.4); border-radius:12px; padding:32px; max-width:480px; width:90%; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+        <button id="share-result-close" style="position:absolute; top:12px; right:14px; background:none !important; border:none !important; color:#30BBAD; font-size:18px; cursor:pointer; line-height:1; width:28px !important; height:28px !important; min-height:unset; padding:0 !important; display:flex; align-items:center; justify-content:center; border-radius:4px; font-weight:bold; flex-direction:row;">&#10005;</button>
+        <h3 style="margin:0 0 8px; color:#f0eeff; font-size:18px;">&#128279; Share Your Design</h3>
+        <p id="share-expiry-note" style="margin:0 0 16px; color:#9888c0; font-size:13px;"></p>
+        <div style="display:flex; gap:8px;">
+            <input id="share-url-output" type="text" readonly style="flex:1; background:#0d0a1a; border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:10px 12px; color:#f0eeff; font-size:13px; outline:none; font-family:monospace;" />
+            <button id="share-copy-btn" class="action-btn" style="width:auto; padding:0 16px; height:40px; font-size:13px; margin:0;">COPY</button>
+        </div>
+    </div>
+</div>
+
+	<div id="get-printed-modal" style="display:none; position:fixed; inset:0; z-index:9999999; background:rgba(0,0,0,0.82); align-items:center; justify-content:center;">
+    <div style="background:#181228; border:1px solid rgba(48,187,173,0.4); border-radius:12px; padding:32px; max-width:500px; width:90%; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+        <button id="get-printed-close" style="position:absolute; top:12px; right:14px; background:none !important; border:none !important; color:#30BBAD; font-size:18px; cursor:pointer; line-height:1; width:28px !important; height:28px !important; min-height:unset; padding:0 !important; display:flex; align-items:center; justify-content:center; border-radius:4px; font-weight:bold; flex-direction:row;">&#10005;</button>
+        <h3 style="margin:0 0 8px; color:#f0eeff; font-size:18px;">&#128424;&#65039; Get Your Design Printed</h3>
+        <p style="margin:0 0 6px; color:#9888c0; font-size:13px;">Your design has been uploaded. Copy the link below, then click <strong style="color:#30BBAD;">Open Print Site</strong> and paste it into the image URL field to order your playmat.</p>
+        <p id="print-expiry-note" style="margin:0 0 14px; color:#6b5f8a; font-size:12px;"></p>
+        <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <input id="print-url-output" type="text" readonly style="flex:1; background:#0d0a1a; border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:10px 12px; color:#f0eeff; font-size:13px; outline:none; font-family:monospace;" />
+            <button id="print-copy-btn" class="action-btn" style="width:auto; padding:0 16px; height:40px; font-size:13px; margin:0;">COPY</button>
+        </div>
+        <a href="https://www.rubicongamesupplies.com/collections/custom-playmats/?bg_ref=gBU3NKBThS" target="_blank" rel="noopener" class="action-btn" style="display:flex; box-sizing:border-box; width:100%; height:48px; font-size:15px; margin:0; background:#83BB30; text-decoration:none; color:#fff; border-radius:6px; align-items:center; justify-content:center; gap:8px;">&#128424;&#65039; OPEN PRINT SITE</a>
+    </div>
+</div>
+</body>
+</html>
+
+
