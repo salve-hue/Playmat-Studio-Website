@@ -1,0 +1,33 @@
+name: Sync beta to main
+
+on:
+  push:
+    branches:
+      - 'claude/setup-standalone-demo-site-gfFAb'
+    paths:
+      - 'beta/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync beta/index.html to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          cp beta/index.html /tmp/beta-index.html
+          git fetch origin main
+          git checkout main
+          mkdir -p beta
+          cp /tmp/beta-index.html beta/index.html
+          git add beta/index.html
+          git diff --staged --quiet || git commit -m "sync: beta/index.html from feature branch [skip ci]"
+          git push origin main
