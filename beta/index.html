@@ -49,11 +49,8 @@
 				margin: 0 !important;
 				box-sizing: border-box !important;
 			}
-			/* Beta: hide landing step, other tools, and quick-upload editor */
-			#landing-ui p, .tool-tab-bar,
-			#tab-panel-batch, #tab-panel-converter, #tab-panel-host,
-			#simple-backdrop { display: none !important; }
-			/* Strip the container box */
+			/* Beta: hide the tab bar only — tool.js manages everything else */
+			.tool-tab-bar { display: none !important; }
 			.designer-container-wrap {
 				max-width: 100% !important;
 				box-shadow: none !important;
@@ -781,7 +778,7 @@
 
 		<script src="https://playmatstudio.com/assets/js/tool.js?v=8"></script>
 		<script>
-			/* Auto-launch the advanced editor once tool.js reveals the wrapper */
+			/* Auto-launch the advanced editor — poll until tool.js makes the wrapper visible */
 			(function () {
 				function launch() {
 					var std = document.querySelector('.mat-size-btn[data-size="standard"]');
@@ -791,14 +788,13 @@
 				}
 				var wrapper = document.getElementById('designer-visibility-wrapper');
 				if (!wrapper) { setTimeout(launch, 500); return; }
-				var obs = new MutationObserver(function () {
-					if (wrapper.style.display !== 'none') {
-						obs.disconnect();
+				var interval = setInterval(function () {
+					if (window.getComputedStyle(wrapper).display !== 'none') {
+						clearInterval(interval);
 						launch();
 					}
-				});
-				obs.observe(wrapper, { attributes: true, attributeFilter: ['style'] });
-				if (wrapper.style.display !== 'none') { launch(); }
+				}, 50);
+				setTimeout(function () { clearInterval(interval); }, 10000);
 			})();
 		</script>
 
