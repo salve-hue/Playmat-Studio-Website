@@ -41,6 +41,11 @@ jobs:
           cp -r branch-site/. deploy/preview/
           rm -rf deploy/preview/.git deploy/preview/.github deploy/preview/CNAME
           printf 'User-agent: *\nDisallow: /\n' > deploy/preview/robots.txt
+          if [ -d branch-site/beta ]; then
+            mkdir -p deploy/beta
+            cp -r branch-site/beta/. deploy/beta/
+            printf 'User-agent: *\nDisallow: /\n' > deploy/beta/robots.txt
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
