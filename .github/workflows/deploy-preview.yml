@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - preview
-      - 'claude/**'
 
 concurrency:
   group: pages

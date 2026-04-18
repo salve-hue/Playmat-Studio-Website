@@ -38,5 +38,5 @@ jobs:
           cp /tmp/tool.css assets/css/tool.css
           cp /tmp/index.html index.html
           git add beta/index.html assets/js/tool.js assets/css/tool.css index.html
-          git diff --staged --quiet || git commit -m "sync: tool files from feature branch [skip ci]"
+          git diff --staged --quiet || git commit -m "sync: tool files from feature branch"
           git push origin main
