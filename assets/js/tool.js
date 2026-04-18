@@ -652,8 +652,10 @@
             window.initDesignerVisibility();
         });
     } else {
-        window.updateLandingVars();
-        window.initDesignerVisibility();
+        setTimeout(function() {
+            window.updateLandingVars();
+            window.initDesignerVisibility();
+        }, 0);
     }
 
     // ============================================================
