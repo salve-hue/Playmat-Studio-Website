@@ -49,17 +49,6 @@
 				margin: 0 !important;
 				box-sizing: border-box !important;
 			}
-			/* Beta: hide the tab bar only — tool.js manages everything else */
-			.tool-tab-bar { display: none !important; }
-			.designer-container-wrap {
-				max-width: 100% !important;
-				box-shadow: none !important;
-				border: none !important;
-				border-radius: 0 !important;
-				background: transparent !important;
-				padding: 0 !important;
-				margin: 0 !important;
-			}
 		</style>
 		<!-- Tool dependencies -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
@@ -777,26 +766,6 @@
 		</div>
 
 		<script src="https://playmatstudio.com/assets/js/tool.js?v=8"></script>
-		<script>
-			/* Auto-launch the advanced editor — poll until tool.js makes the wrapper visible */
-			(function () {
-				function launch() {
-					var std = document.querySelector('.mat-size-btn[data-size="standard"]');
-					if (std) std.click();
-					var tab = document.querySelector('.tool-tab-btn[data-tab="adv-editor"]');
-					if (tab) tab.click();
-				}
-				var wrapper = document.getElementById('designer-visibility-wrapper');
-				if (!wrapper) { setTimeout(launch, 500); return; }
-				var interval = setInterval(function () {
-					if (window.getComputedStyle(wrapper).display !== 'none') {
-						clearInterval(interval);
-						launch();
-					}
-				}, 50);
-				setTimeout(function () { clearInterval(interval); }, 10000);
-			})();
-		</script>
 
 
 		<!-- Hidden trigger so tool.js privacy listener has an element to bind -->
