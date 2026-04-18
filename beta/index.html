@@ -50,10 +50,10 @@
 				box-sizing: border-box !important;
 			}
 		</style>
-		<!-- Tool dependencies -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
+		<!-- Tool dependencies — data-cfasync="false" opts out of Cloudflare Rocket Loader -->
+		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
 		        integrity="sha384-sLpuECXYCB5TUyTbC06pftm/rgurDambREZmV4eRHwEqJzCQtU6lxI2Ve00z4XW5" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
 		        integrity="sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG" crossorigin="anonymous"></script>
 	</head>
 	<body class="is-preload">
@@ -765,7 +765,26 @@
 
 		</div>
 
-		<script src="https://playmatstudio.com/assets/js/tool.js?v=9"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=9"></script>
+		<script data-cfasync="false">
+		// Explicit fallback: if Cloudflare or any other factor prevented
+		// tool.js's DOMContentLoaded listener from firing, force-initialize
+		// the tool once all resources have finished loading.
+		(function() {
+			function ensureToolInit() {
+				if (typeof window.initDesignerVisibility !== 'function') return;
+				var wrapper = document.getElementById('designer-visibility-wrapper');
+				if (wrapper && wrapper.style.display === 'none') {
+					window.initDesignerVisibility();
+				}
+			}
+			if (document.readyState === 'complete') {
+				ensureToolInit();
+			} else {
+				window.addEventListener('load', ensureToolInit);
+			}
+		})();
+		</script>
 
 
 		<!-- Hidden trigger so tool.js privacy listener has an element to bind -->

@@ -1,6 +1,6 @@
     fabric.Object.prototype.objectCaching = false;
     fabric.textureSize = 16384;
-
+ 
     var _dbg = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
     // Escape HTML special chars before inserting any user-derived string into innerHTML.
@@ -652,8 +652,10 @@
             window.initDesignerVisibility();
         });
     } else {
-        window.updateLandingVars();
-        window.initDesignerVisibility();
+        setTimeout(function() {
+            window.updateLandingVars();
+            window.initDesignerVisibility();
+        }, 0);
     }
 
     // ============================================================

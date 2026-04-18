@@ -6,19 +6,19 @@
 -->
 <html lang="en">
 	<head>
-		<title>Playmat Studio &mdash; Your Playmat Starts Here.</title>
+		<title>Playmat Studio &mdash; Tool Demo</title>
 		<meta charset="utf-8" />
 		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="0" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!-- Security headers (C2, M1) -->
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://contact.playmatstudio.com https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://playmatstudio.com; script-src 'self' https://playmatstudio.com https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://playmatstudio.com https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://playmatstudio.com https://fonts.gstatic.com; img-src 'self' https://playmatstudio.com https: data: blob:; connect-src 'self' https://playmatstudio.com https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
 		<meta http-equiv="X-Content-Type-Options" content="nosniff" />
 		<meta name="referrer" content="strict-origin-when-cross-origin" />
 		<meta name="description" content="Free browser-based tools to design, enhance, and download print-ready game mat artwork. No installs. No account. No cost." />
 		<!-- Favicons -->
-		<link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href="https://playmatstudio.com/images/favicon.svg" />
 		<meta name="theme-color" content="#0b0912" />
 
 		<!-- Open Graph / Twitter Card -->
@@ -34,14 +34,15 @@
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link rel="preload" href="assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
+		<link rel="preload" href="https://playmatstudio.com/assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
-		<link rel="stylesheet" href="assets/css/main.css?v=9" />
-		<link rel="stylesheet" href="assets/css/custom.css?v=16" />
-		<link rel="stylesheet" href="assets/css/tool.css?v=10" />
+		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/custom.css?v=16" />
+		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/tool.css?v=10" />
 		<style>
-			/* Tool is now a direct child of section#tools (outside .inner),
-			   so width:100% naturally fills the full viewport width */
+			html, body { height: 100%; }
+			#wrapper { min-height: 100vh; display: flex; flex-direction: column; }
+			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
+			section#tools .inner { max-width: none !important; padding: 0 !important; }
 			#designer-visibility-wrapper {
 				width: 100% !important;
 				max-width: 100% !important;
@@ -49,7 +50,6 @@
 				box-sizing: border-box !important;
 			}
 		</style>
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<!-- Tool dependencies -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
 		        integrity="sha384-sLpuECXYCB5TUyTbC06pftm/rgurDambREZmV4eRHwEqJzCQtU6lxI2Ve00z4XW5" crossorigin="anonymous"></script>
@@ -67,186 +67,16 @@
 
 					<!-- Logo -->
 					<a href="index.html" class="logo">
-						<span class="symbol"><img src="images/Playmat Studio Logo v3.svg" alt="Playmat Studio logo" /></span>
+						<span class="symbol"><img src="https://playmatstudio.com/images/Playmat%20Studio%20Logo%20v3.svg" alt="Playmat Studio logo" /></span>
 					</a>
-
-					<!-- Nav -->
-					<nav>
-						<ul>
-							<li class="ps-nav-link"><a href="#how-it-works">How It Works</a></li>
-							<li class="ps-nav-link"><a href="#features">Features</a></li>
-							<li class="ps-nav-link"><a href="#about">About</a></li>
-							<li class="ps-nav-link"><a href="#contact">Contact</a></li>
-							<li><a href="#tools" class="button primary ps-nav-cta">Jump to the Tool &darr;</a></li>
-							<li class="ps-nav-hamburger"><a href="#menu">Menu</a></li>
-						</ul>
-					</nav>
 
 				</div>
 			</header>
 
-			<!-- Menu (off-canvas) -->
-			<nav id="menu">
-				<h2>Menu</h2>
-				<ul>
-					<li><a href="index.html">Home</a></li>
-					<li><a href="#how-it-works">How It Works</a></li>
-					<li><a href="#features">Features</a></li>
-					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
-					<li><a href="#tools">Jump to the Tool &darr;</a></li>
-				</ul>
-			</nav>
-
-			<!-- Main — hero only -->
-			<div id="main">
-				<div class="inner">
-
-					<!-- Hero -->
-					<header>
-						<h1>Your Playmat Starts Here.</h1>
-						<p>Free browser-based tools to prepare your artwork for professional printing.<br />
-						No installs. No account. No cost. Everything runs in your browser.</p>
-						<ul class="actions">
-							<li><a href="#tools" class="button primary">Jump to the Tool &nbsp;&darr;</a></li>
-						</ul>
-					</header>
-
-				</div>
-			</div>
-
-			<!-- How It Works -->
-			<section id="how-it-works" class="ps-steps">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>How It Works</h2>
-						<p>Three steps from your artwork to a print-ready file.</p>
-					</header>
-					<div class="ps-steps-grid">
-
-						<div class="ps-step">
-							<span class="icon solid fa-upload ps-step-icon"></span>
-							<h3>Upload Your Art</h3>
-							<p>Drop any image &mdash; JPG, PNG, WEBP, or paste from a URL. The tool auto-fits it to your chosen mat size with full bleed.</p>
-						</div>
-
-						<div class="ps-step">
-							<span class="icon solid fa-sliders-h ps-step-icon"></span>
-							<h3>Customize</h3>
-							<p>Add game zone overlays, enhance colors, upscale with AI, adjust zoom and position &mdash; or keep it simple with Quick Upload.</p>
-						</div>
-
-						<div class="ps-step">
-							<span class="icon solid fa-download ps-step-icon"></span>
-							<h3>Download &amp; Print</h3>
-							<p>Export a 300&nbsp;DPI JPG with proper DPI metadata &mdash; exactly what print-on-demand vendors need to produce a sharp, professional mat.</p>
-						</div>
-
-					</div>
-				</div>
-			</section>
-
-			<!-- Feature Tiles -->
-			<section id="features" class="ps-features">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>Features</h2>
-						<p>Everything you need, from upload to print-ready file.</p>
-					</header>
-					<section class="tiles">
-
-						<!-- 1: Quick Upload -->
-						<article class="style1">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg> Quick Upload</h2>
-								<div class="content">
-									<p>Drop your art and get a print-ready 300&nbsp;DPI JPG in seconds.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 2: Advanced Editor -->
-						<article class="style2">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm2.92 1.83H5v-.74l9.06-9.06.74.74-9.88 9.06z"/><path d="M20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> Advanced Editor</h2>
-								<div class="content">
-									<p>Full canvas editor with AI upscaling, overlays, recolor, and transform tools.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 3: Batch Enhance -->
-						<article class="style3">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l1.45 4.05L17.5 8.5l-4.05 1.45L12 14l-1.45-4.05L6.5 8.5l4.05-1.45z"/><path d="M5.5 13l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/><path d="M18.5 12l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg> Batch Enhance</h2>
-								<div class="content">
-									<p>Auto color-correct multiple images and download them individually or as a ZIP.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 4: Format Converter -->
-						<article class="style4">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg> Format Converter</h2>
-								<div class="content">
-									<p>Convert any image to JPG, PNG, or WEBP &mdash; single file or batch ZIP download.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 5: Game Overlays -->
-						<article class="style5">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="8" y="1" width="13" height="17" rx="2" fill-opacity="0.3"/><rect x="5" y="4" width="13" height="17" rx="2" fill-opacity="0.6"/><rect x="2" y="7" width="13" height="17" rx="2"/></svg> Game Overlays</h2>
-								<div class="content">
-									<p>Apply pre-made zone layouts for MTG, Pok&eacute;mon, and more at full print resolution.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 6: 300 DPI Output -->
-						<article class="style6">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 2a8 8 0 110 16A8 8 0 0112 4z"/><circle cx="12" cy="12" r="3"/><rect x="11" y="2" width="2" height="2"/><rect x="11" y="20" width="2" height="2"/><rect x="2" y="11" width="2" height="2"/><rect x="20" y="11" width="2" height="2"/></svg> 300&nbsp;DPI Output</h2>
-								<div class="content">
-									<p>Every export writes proper 300&nbsp;DPI metadata &mdash; exactly what print vendors require.</p>
-								</div>
-							</a>
-						</article>
-
-					</section>
-				</div>
-			</section>
-
 			<!-- Tools — native embed -->
 			<a id="upload" style="display:block; visibility:hidden; position:relative; top:-80px;"></a>
 			<section id="tools" class="ps-tools">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>The Tools</h2>
-						<p>Everything in one place &mdash; no new tab needed.</p>
-					</header>
-
-					<!-- ═══ TOOL HTML (native embed) ══════════════════════════════ -->
+				<!-- ═══ TOOL HTML (native embed) ══════════════════════════════ -->
 
 					<div id="fs-backdrop"></div>
 					<div id="brush-cursor"></div>
@@ -345,8 +175,6 @@
 					        </div>
 					    </div>
 					</div>
-			</div><!-- /.inner -->
-
 			<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
 
 					    <div id="landing-ui">
@@ -935,91 +763,13 @@
 
 			</section>
 
-			<!-- About -->
-			<section id="about" class="ps-about">
-				<div class="inner">
-					<header class="ps-section-header ps-about-header">
-						<h2>About Playmat Studio</h2>
-					</header>
-					<div class="ps-about-body">
-						<p>Playmat Studio is a free, browser-based image prep tool built for tabletop game players who want to print custom playmats with their own artwork. No installs, no subscriptions, no sign-up &mdash; just open the tool and start designing.</p>
-						<p>Playmat Studio is a community-driven project designed for anyone who wants to create custom playmats with their own artwork. Every feature is informed by real user feedback and requests. There are no ads, no fees, and no account required—just a free tool that improves as more people use and share it. If there’s something you’d like to see added, reach out—community input directly shapes what gets built next.</p>
-					</div>
-				</div>
-			</section>
-
-			<!-- Contact -->
-			<section id="contact" class="ps-contact">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>Contact</h2>
-						<p>Questions, feedback, or just want to say hi? We&rsquo;d love to hear from you.</p>
-					</header>
-					<div class="ps-contact-grid">
-						<div class="ps-contact-info">
-							<p>Whether you have a question about the tools, a feature request, or anything else &mdash; send us a message and we&rsquo;ll get back to you as soon as we can.</p>
-						</div>
-						<form id="contact-form" class="ps-contact-form" action="#" method="post" novalidate>
-							<div class="ps-form-row">
-								<div class="ps-field">
-									<label for="contact-name">Name</label>
-									<input type="text" id="contact-name" name="name" placeholder="Your name" required />
-								</div>
-								<div class="ps-field">
-									<label for="contact-email">Email</label>
-									<input type="email" id="contact-email" name="email" placeholder="you@example.com" required />
-								</div>
-							</div>
-							<div class="ps-field">
-								<label for="contact-message">Message</label>
-								<textarea id="contact-message" name="message" placeholder="What's on your mind?" required></textarea>
-							</div>
-							<div id="contact-status" role="status" aria-live="polite" style="display:none; padding:10px 14px; border-radius:6px; margin-bottom:14px; font-size:14px; font-weight:600;"></div>
-							<ul class="actions">
-								<li><button type="submit" id="contact-submit" class="button primary">Send Message</button></li>
-							</ul>
-						</form>
-					</div>
-				</div>
-			</section>
-
-			<!-- Footer -->
-			<footer id="footer">
-				<div class="inner">
-					<section class="ps-footer-col">
-						<h2 class="ps-footer-brand"><a href="index.html" class="logo"><span class="symbol"><img src="images/logo.svg" alt="Playmat Studio logo" /></span><span class="title">Playmat Studio</span></a></h2>
-						<p>Free browser-based tools to design and download print-ready game mat artwork. No installs required.</p>
-					</section>
-					<section class="ps-footer-col">
-						<h2>Links</h2>
-						<ul class="ps-footer-list">
-							<li><a href="#" id="footer-privacy-link">Privacy Policy</a></li>
-							<li><a href="#" id="footer-changelog-link">Changelog</a></li>
-							<li><a href="#how-it-works">How It Works</a></li>
-							<li><a href="#features">Features</a></li>
-							<li><a href="#about">About</a></li>
-							<li><a href="#contact">Contact</a></li>
-						</ul>
-					</section>
-					<ul class="copyright">
-						<li>&copy; Playmat Studio. All rights reserved.</li>
-					</ul>
-				</div>
-			</footer>
-
 		</div>
 
-		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js?v=5"></script>
-		<script src="assets/js/tool.js?v=8"></script>
+		<script src="https://playmatstudio.com/assets/js/tool.js?v=9"></script>
 
 
-		<!-- Back to Top -->
-		<a id="back-to-top" href="#" aria-label="Back to top">&#8679;</a>
+		<!-- Hidden trigger so tool.js privacy listener has an element to bind -->
+		<a id="footer-privacy-link" href="#" style="display:none;" aria-hidden="true"></a>
 
 		<!-- Privacy Policy Modal -->
 		<div id="privacy-modal">
@@ -1078,448 +828,6 @@
 			</div>
 		</div>
 
-		<!-- Changelog Modal -->
-		<div id="changelog-modal">
-			<div class="changelog-box">
-				<div class="changelog-header">
-					<div class="changelog-header-left">
-						<h2>Changelog</h2>
-						<span class="changelog-beta-badge">Beta &mdash; Active Development</span>
-					</div>
-					<button class="changelog-close" id="changelog-close-btn" aria-label="Close">&times;</button>
-				</div>
-				<div class="changelog-body">
-					<div class="cl-timeline">
-						<div class="cl-entry cl-latest">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.7.2b</span>
-								<span class="cl-tag cl-tag-latest">Latest</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">March 2026</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Security improvements from the March review, a redesigned Advanced Editor sidebar, and several visual and usability fixes.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-security">Security</p>
-										<ul class="cl-list">
-											<li>Added protections that prevent the site from loading unauthorized scripts or connecting to untrusted sources</li>
-											<li>Image links from outside the site are now checked to make sure they don&rsquo;t point to restricted addresses before being loaded</li>
-											<li>Added extra browser security settings across the whole site to help protect your connection and browsing data</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Advanced Editor sidebar reorganised &mdash; Art Scale and rotation controls now appear before Background Fill and Enhance Quality, matching a more natural editing order</li>
-											<li>Each sidebar section now has its own collapsible card, making it easier to find what you need and scroll through</li>
-											<li>Show/Hide Print Guides moved outside the Color Correction panel (it is a view aid, not a color tool)</li>
-											<li>Fullscreen mode now dims and blurs the background page while the editor is open</li>
-											<li>Editor tab carries a BETA badge; the redundant title bar above the canvas has been removed</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>Hover tooltips on image adjustment preset buttons explain what each preset does before you apply it</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-fixed">Fixed</p>
-										<ul class="cl-list">
-											<li>Scrolling over a filter slider (mouse wheel or touch swipe) no longer accidentally changes its value</li>
-											<li>Sidebar accordion cards no longer collapse to a minimal height when their content is taller than the panel</li>
-											<li>Fullscreen mode no longer overflows the right edge of the viewport on some screen sizes</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.7.1b</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">March 2026</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Behind-the-scenes maintenance and a full security review. No user-facing changes.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Internal documentation updated to reflect the current state of the site</li>
-											<li>Site metadata refreshed following the security review</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-security">Security</p>
-										<ul class="cl-list">
-											<li>A thorough security review of the entire site was completed</li>
-											<li>Issues found were recorded and a fix plan put in place; updates are coming in the next release</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.7.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">February 2026</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Image Hosting tool launched. Get a shareable link for any design in seconds.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>New <strong>Image Hosting</strong> tool &mdash; upload a design and receive a shareable link instantly</li>
-											<li>Hosted files expire automatically after 7 days</li>
-											<li>Supports files up to 50&thinsp;MB across all common image formats</li>
-											<li>Upload history stored locally in your browser, including expiry dates for each link</li>
-											<li>Share link dialog for easily copying and distributing hosted URLs</li>
-											<li>Direct link to recommended print services added to the editor</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Tool navigation updated to accommodate the new fifth tab cleanly at all screen sizes</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.6.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">December 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">AI-powered upscaling and background removal arrive in the Advanced Editor.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li><strong>AI Upscaler</strong> &mdash; enhance the resolution of your artwork using cloud AI processing</li>
-											<li><strong>AI Background Removal</strong> &mdash; automatically isolate the subject of your image as a separate layer</li>
-											<li>Confirmation prompt before any AI feature runs, clearly explaining that your image will be processed by an external service</li>
-											<li>Success notification shown on completion of AI processing</li>
-											<li>AI results are returned as a new layer in the editor, leaving original artwork untouched</li>
-											<li>Recolor brush tool &mdash; paint a custom color directly onto any area of your canvas (adjustable brush size, circle or square tip)</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Advanced Editor toolbar updated to surface the new AI and brush tools clearly</li>
-											<li>Export now correctly merges all active layers into a single print-ready file</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.5.2b</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">November 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Contact form improvements and site-wide security updates.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-fixed">Fixed</p>
-										<ul class="cl-list">
-											<li>Contact form now properly cleans up messages before they&rsquo;re sent</li>
-											<li>Limits on how long each field can be are now checked on our end to prevent misuse</li>
-											<li>Contact form status messages now correctly announced to screen readers</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-security">Security</p>
-										<ul class="cl-list">
-											<li>The contact form now only accepts messages sent from the Playmat Studio website</li>
-											<li>Additional security protections added across the whole site to keep your connection and data safe</li>
-											<li>Improved how the site loads in your browser: the main page always loads fresh, while images and other files load faster and update automatically when changed</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.5.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">October 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Batch Enhance and Format Converter tools added. Process multiple images at once.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li><strong>Batch Enhance</strong> tool &mdash; drag and drop multiple images for automatic color correction in one step</li>
-											<li>Download corrected images individually or all together as a single ZIP archive</li>
-											<li><strong>Format Converter</strong> tool &mdash; convert images between JPG, PNG, and WEBP, individually or in bulk</li>
-											<li>Output format selector with ZIP download option for batch conversions</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Tool section restructured to support four separate panels without visual clutter</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.4.1b</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">September 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Overlay library expanded with Riftbound points support and three new game templates.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>Riftbound points overlay configuration &mdash; choose from multiple zone layout variants for different game formats</li>
-											<li>Riftbound points selector available in both editors</li>
-											<li>New overlay templates: Neuroscape, Star Wars: Unlimited, and Grand Archive</li>
-											<li>Total overlay library now exceeds 48 templates</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-fixed">Fixed</p>
-										<ul class="cl-list">
-											<li>Left/right handedness now correctly mirrors overlays in the Quick Upload editor</li>
-											<li>Changing the selected game now correctly resets the format and handedness dropdowns</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.4.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">August 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Advanced Editor (Beta) launched &mdash; edit your designs with full controls, add text overlays, and save in multiple file formats.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li><strong>Advanced Editor</strong> (Beta) &mdash; a powerful editor with adjustable side panels and a moveable toolbar</li>
-											<li>Collapsible sidebar panels: Artwork, Game Layout, Adjustments, and Text</li>
-											<li>Text overlay tool with 9 font choices, fill color, outline color, size, and free positioning on the canvas</li>
-											<li>Color adjustment sliders: brightness, contrast, and saturation</li>
-											<li>Eraser brush for manually removing areas of artwork (adjustable size, circle or square tip)</li>
-											<li>Gradient overlay with adjustable angle and opacity</li>
-											<li>Flip horizontal and flip vertical transformations</li>
-											<li>Export in JPG, PNG, or WEBP &mdash; all at 300&thinsp;DPI with print quality settings built in</li>
-											<li>Automatically rearranges to fit on smaller screens</li>
-											<li>In-app help documentation accessible from the editor</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Editing with large images is now smoother and faster</li>
-											<li>9 fonts suited to game-themed designs added</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.3.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">June 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Game overlay system introduced. MTG, Pok&eacute;mon, and One Piece templates available at launch.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>Game layout overlays with Game, Format, and Handedness options &mdash; each choice updates the next automatically</li>
-											<li>Launch overlays: Magic: The Gathering (60-Card and Commander), Pok&eacute;mon, and One Piece Card Game</li>
-											<li>A warning now appears if your design doesn&rsquo;t fully cover the printable area, including the edges</li>
-											<li>Overlay opacity control in the Quick Upload tool</li>
-											<li>Specialty mat sizes added: Victor, Secundus, Primus, Tiro, Veteranus, and Gladiator</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>The editor was updated to support game overlays displayed on top of your artwork</li>
-											<li>Downloaded files now have a unique name to avoid replacing files you&rsquo;ve already saved</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.2.1b</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">May 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Responsive polish, caching improvements, and editor fixes.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>The site&rsquo;s appearance now always loads fresh after an update &mdash; no more outdated-looking pages</li>
-											<li>Mobile navigation behaviour refined at narrower screen widths</li>
-											<li>Back-to-top button now appears only after scrolling down, keeping the page clean on load</li>
-											<li>Low-resolution upload warning added &mdash; alerts you if your image may not print at full quality</li>
-											<li>Consistent in-app error messaging introduced across all tools</li>
-											<li>Import image from URL now available via a dedicated dialog</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-fixed">Fixed</p>
-										<ul class="cl-list">
-											<li>Zoom slider range corrected in the Quick Upload tool</li>
-											<li>Rotate controls now apply correctly to the uploaded artwork in all editors</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.2.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">April 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Contact form launched. Social sharing previews and search engine visibility added.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>Contact form &mdash; messages delivered directly to the support inbox with reply-to set to the sender</li>
-											<li>A preview image and description now appear when the site link is shared on social media or messaging apps</li>
-											<li>App icon for saving the site to a phone or tablet home screen</li>
-											<li>Custom error page for broken or mistyped URLs</li>
-											<li>The site is now findable on Google and other search engines</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.1.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">March 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Full site structure established. Quick Upload tool launched. Public beta begins.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>The full site was built out: navigation, main banner, how-it-works, features, tools, about, contact, and footer sections</li>
-											<li><strong>Quick Upload</strong> &mdash; upload artwork, zoom, rotate, fit to canvas, enhance or grayscale filter, download at 300&thinsp;DPI</li>
-											<li>Standard, Expanded, and Extended mat sizes</li>
-											<li>The site&rsquo;s look and feel was finalized: colors, fonts, and icons</li>
-											<li>The site works on all screen sizes, from large desktops to small phones</li>
-											<li>A slide-out navigation menu for mobile devices</li>
-											<li>Custom domain live at playmatstudio.com</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.0.0b</span>
-								<span class="cl-tag cl-tag-initial">Initial</span>
-								<span class="cl-vdate">January 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">First version. The site was built and the brand style was established.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>The site was first created and published online</li>
-											<li>Brand color palette and visual identity established</li>
-											<li>The basic structure of the site was set up</li>
-											<li>Hosting and custom domain configured</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div><!-- /.cl-timeline -->
-				</div><!-- /.changelog-body -->
-			</div><!-- /.changelog-box -->
-		</div><!-- /#changelog-modal -->
-
-		<script>
-			// Back-to-top visibility — only show after user scrolls past the About section
-			(function(){
-				var btn = document.getElementById('back-to-top');
-				var aboutEl = document.getElementById('about');
-				var _threshold = 800;
-				function _calcThreshold(){
-					if(aboutEl){ var r = aboutEl.getBoundingClientRect(); _threshold = r.bottom + window.pageYOffset; }
-				}
-				_calcThreshold();
-				window.addEventListener('resize', _calcThreshold, {passive:true});
-				window.addEventListener('scroll', function(){
-					if(window.scrollY > _threshold){ btn.classList.add('visible'); }
-					else { btn.classList.remove('visible'); }
-				}, {passive:true});
-				btn.addEventListener('click', function(e){
-					e.preventDefault();
-					window.scrollTo({top:0, behavior:'smooth'});
-				});
-				// Close privacy modal on backdrop click
-				document.getElementById('privacy-modal').addEventListener('click', function(e){
-					if(e.target === this) this.style.display = 'none';
-				});
-
-				// Changelog modal
-				var clModal     = document.getElementById('changelog-modal');
-				var clOpenBtn   = document.getElementById('footer-changelog-link');
-				var clCloseBtn  = document.getElementById('changelog-close-btn');
-
-				clOpenBtn.addEventListener('click', function(e){
-					e.preventDefault();
-					clModal.style.display = 'flex';
-					document.body.style.overflow = 'hidden';
-				});
-				clCloseBtn.addEventListener('click', function(){
-					clModal.style.display = 'none';
-					document.body.style.overflow = '';
-				});
-				clModal.addEventListener('click', function(e){
-					if(e.target === this){
-						this.style.display = 'none';
-						document.body.style.overflow = '';
-					}
-				});
-				document.addEventListener('keydown', function(e){
-					if(e.key === 'Escape' && clModal.style.display === 'flex'){
-						clModal.style.display = 'none';
-						document.body.style.overflow = '';
-					}
-				});
-			})();
-		</script>
 
 		<script>
 		// Force tool wrapper to 90vw — always 90% of browser window, no more
@@ -1621,5 +929,4 @@
 </div>
 </body>
 </html>
-
 
