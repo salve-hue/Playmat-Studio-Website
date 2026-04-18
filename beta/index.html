@@ -48,13 +48,15 @@
 				max-width: 100% !important;
 				margin: 0 !important;
 				box-sizing: border-box !important;
+				/* Always visible — tool.js sets display:'' once initialized, CSS ensures it
+				   never stays hidden even if JS initialization fires late */
+				display: block !important;
 			}
 		</style>
-		<!-- Tool dependencies — data-cfasync="false" opts out of Cloudflare Rocket Loader -->
-		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
-		        integrity="sha384-sLpuECXYCB5TUyTbC06pftm/rgurDambREZmV4eRHwEqJzCQtU6lxI2Ve00z4XW5" crossorigin="anonymous"></script>
-		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
-		        integrity="sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG" crossorigin="anonymous"></script>
+		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
+		     data-cfasync="false" opts out of Cloudflare Rocket Loader -->
+		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 	</head>
 	<body class="is-preload">
 
@@ -767,21 +769,37 @@
 
 		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=9"></script>
 		<script data-cfasync="false">
-		// Explicit fallback: if Cloudflare or any other factor prevented
-		// tool.js's DOMContentLoaded listener from firing, force-initialize
-		// the tool once all resources have finished loading.
+		// Belt-and-suspenders: ensure the tool fully initializes regardless
+		// of whether Rocket Loader, Cloudflare transforms, or any other factor
+		// prevented tool.js's own DOMContentLoaded listener from running.
 		(function() {
 			function ensureToolInit() {
-				if (typeof window.initDesignerVisibility !== 'function') return;
-				var wrapper = document.getElementById('designer-visibility-wrapper');
-				if (wrapper && wrapper.style.display === 'none') {
-					window.initDesignerVisibility();
+				// Phase 1: initDesignerVisibility sets up event listeners and calls switchTab
+				if (typeof window.initDesignerVisibility === 'function') {
+					var wrapper = document.getElementById('designer-visibility-wrapper');
+					// Only call if the inline style is still 'none' (i.e. not already called)
+					if (wrapper && window.getComputedStyle(wrapper).display === 'none') {
+						window.initDesignerVisibility();
+						return;
+					}
+				}
+				// Phase 2: wrapper is visible but editor not yet moved into tab panel
+				if (typeof window.switchTab === 'function') {
+					var adv = document.getElementById('adv-backdrop');
+					if (adv && !adv.classList.contains('tab-mode')) {
+						window.switchTab('adv-editor');
+					}
 				}
 			}
+			// Run at load (after all scripts executed) then again at 1 s as last resort
 			if (document.readyState === 'complete') {
 				ensureToolInit();
+				setTimeout(ensureToolInit, 1000);
 			} else {
-				window.addEventListener('load', ensureToolInit);
+				window.addEventListener('load', function() {
+					ensureToolInit();
+					setTimeout(ensureToolInit, 1000);
+				});
 			}
 		})();
 		</script>
