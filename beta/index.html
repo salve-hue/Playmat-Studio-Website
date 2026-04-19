@@ -64,12 +64,58 @@
 			/* No margin above the editor area */
 			.designer-container-wrap { margin-top: 0 !important; }
 
-			/* Editor fills the viewport below the header + mat-size bar.
-			   220px was the original offset (header + tab bar + intro text).
-			   Tab bar (~44px) + intro text (~46px) hidden → ~130px remaining. */
+			/* Editor fills the viewport below the header + mat-size bar. */
 			#adv-backdrop.tab-mode #playmat-tool-root {
-				height: calc(100vh - 130px) !important;
+				height: calc(100vh - 155px) !important;
 				border-radius: 0 !important;
+			}
+
+			/* ── Two-column size selector ────────────────────────────── */
+			.size-selector-wrap {
+				display: flex;
+				align-items: flex-start;
+				gap: 0;
+				margin-bottom: 16px;
+				flex-wrap: wrap;
+			}
+			.size-group { flex: 0 0 auto; }
+			.size-group-label {
+				font-size: 10px;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 1.8px;
+				display: block;
+				margin-bottom: 8px;
+				padding-left: 2px;
+			}
+			.size-group--playmat .size-group-label { color: #30BBAD; }
+			.size-group--deskmat {
+				border-left: 1px solid rgba(255,255,255,0.1);
+				margin-left: 20px;
+				padding-left: 20px;
+			}
+			.size-group--deskmat .size-group-label { color: #C4952A; }
+			.size-group .mat-size-btn-group {
+				justify-content: flex-start;
+				margin: 0;
+			}
+			/* Deskmat active/hover uses amber instead of teal */
+			.size-group--deskmat .mat-size-btn.active {
+				background: rgba(196,149,42,0.12) !important;
+				border-color: #C4952A !important;
+			}
+			.size-group--deskmat .mat-size-btn.active .msb-name { color: #C4952A !important; }
+			.size-group--deskmat .mat-size-btn.active .msb-icon rect {
+				fill: rgba(196,149,42,0.12);
+				stroke: #C4952A;
+			}
+			.size-group--deskmat .mat-size-btn:hover {
+				background: rgba(196,149,42,0.08) !important;
+				border-color: rgba(196,149,42,0.6) !important;
+			}
+			.size-group--deskmat .mat-size-btn:hover .msb-name { color: #C4952A !important; }
+			.size-group--deskmat .mat-size-btn:hover .msb-icon rect {
+				stroke: rgba(196,149,42,0.7);
 			}
 		</style>
 		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
@@ -201,23 +247,67 @@
 					    <div id="landing-ui">
 					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>
 
-					        <span class="landing-label">MAT SIZE</span>
-					        <div class="mat-size-btn-group">
-					            <button class="mat-size-btn active" data-size="standard">
-					                <span class="msb-name">Standard</span>
-					                <span class="msb-dim">24&Prime; &times; 14&Prime;</span>
-					                <svg class="msb-icon" viewBox="0 0 49 29" width="49" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
-					            </button>
-					            <button class="mat-size-btn" data-size="extended">
-					                <span class="msb-name">Extended</span>
-					                <span class="msb-dim">28&Prime; &times; 14&Prime;</span>
-					                <svg class="msb-icon" viewBox="0 0 57 29" width="57" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
-					            </button>
-					            <button class="mat-size-btn" data-size="expanded">
-					                <span class="msb-name">Expanded</span>
-					                <span class="msb-dim">28&Prime; &times; 16&Prime;</span>
-					                <svg class="msb-icon" viewBox="0 0 57 33" width="57" height="33" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
-					            </button>
+					        <div class="size-selector-wrap">
+
+					            <!-- Playmats -->
+					            <div class="size-group size-group--playmat">
+					                <span class="size-group-label">Playmats</span>
+					                <div class="mat-size-btn-group">
+					                    <button class="mat-size-btn active" data-size="standard">
+					                        <span class="msb-name">Standard</span>
+					                        <span class="msb-dim">24&Prime; &times; 14&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 49 29" width="49" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="extended">
+					                        <span class="msb-name">Extended</span>
+					                        <span class="msb-dim">28&Prime; &times; 14&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 57 29" width="57" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="expanded">
+					                        <span class="msb-name">Expanded</span>
+					                        <span class="msb-dim">28&Prime; &times; 16&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 57 33" width="57" height="33" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
+					                    </button>
+					                </div>
+					            </div>
+
+					            <!-- Deskmats -->
+					            <div class="size-group size-group--deskmat">
+					                <span class="size-group-label">Deskmats</span>
+					                <div class="mat-size-btn-group">
+					                    <button class="mat-size-btn" data-size="tiro">
+					                        <span class="msb-name">Tiro</span>
+					                        <span class="msb-dim">10&Prime; &times; 8&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 21 17" width="21" height="17" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="19" height="15" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="veteranus">
+					                        <span class="msb-name">Veteranus</span>
+					                        <span class="msb-dim">12&Prime; &times; 10&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 25 21" width="25" height="21" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="23" height="19" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="gladiator">
+					                        <span class="msb-name">Gladiator</span>
+					                        <span class="msb-dim">18&Prime; &times; 12&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 37 25" width="37" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="35" height="23" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="victor">
+					                        <span class="msb-name">Victor</span>
+					                        <span class="msb-dim">24&Prime; &times; 12&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 49 25" width="49" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="23" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="secundus">
+					                        <span class="msb-name">Secundus</span>
+					                        <span class="msb-dim">28&Prime; &times; 12&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 57 25" width="57" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="23" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="primus">
+					                        <span class="msb-name">Primus</span>
+					                        <span class="msb-dim">32&Prime; &times; 12&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 65 25" width="65" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="63" height="23" rx="3"/></svg>
+					                    </button>
+					                </div>
+					            </div>
+
 					        </div>
 
 					        <div class="tool-tab-bar">
