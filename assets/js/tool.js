@@ -1092,7 +1092,12 @@
     window.setAxisLock = function(axis) {
         APP.axisLock = (APP.axisLock === axis) ? null : axis;
         document.querySelectorAll('.axis-lock-btn').forEach(function(b) {
-            b.classList.toggle('active', b.dataset.axis === APP.axisLock);
+            var on = b.dataset.axis === APP.axisLock;
+            b.classList.toggle('active', on);
+            b.style.background   = on ? 'var(--brand-hover)' : '';
+            b.style.borderColor  = on ? 'var(--brand-hover)' : '';
+            b.style.color        = on ? '#0b0912' : '';
+            b.style.fontWeight   = on ? '800' : '';
         });
         _applyAxisLock();
     };
