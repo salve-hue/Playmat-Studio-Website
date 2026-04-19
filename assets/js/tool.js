@@ -1094,10 +1094,17 @@
         document.querySelectorAll('.axis-lock-btn').forEach(function(b) {
             var on = b.dataset.axis === APP.axisLock;
             b.classList.toggle('active', on);
-            b.style.background   = on ? 'var(--brand-hover)' : '';
-            b.style.borderColor  = on ? 'var(--brand-hover)' : '';
-            b.style.color        = on ? '#0b0912' : '';
-            b.style.fontWeight   = on ? '800' : '';
+            if (on) {
+                b.style.setProperty('background',   '#30BBAD', 'important');
+                b.style.setProperty('border-color', '#30BBAD', 'important');
+                b.style.setProperty('color',        '#0b0912', 'important');
+                b.style.setProperty('font-weight',  '800',     'important');
+            } else {
+                b.style.removeProperty('background');
+                b.style.removeProperty('border-color');
+                b.style.removeProperty('color');
+                b.style.removeProperty('font-weight');
+            }
         });
         _applyAxisLock();
     };
