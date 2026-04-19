@@ -1026,7 +1026,7 @@
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=12"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=13"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────
@@ -1071,6 +1071,28 @@
 					}
 				};
 			}
+
+			// ── Axis lock button highlight (belt-and-suspenders) ────────
+			// Runs after onclick fires so .active class is already toggled.
+			document.addEventListener('click', function(e) {
+				var btn = e.target && e.target.closest && e.target.closest('.axis-lock-btn');
+				if (!btn) return;
+				setTimeout(function() {
+					document.querySelectorAll('.axis-lock-btn').forEach(function(b) {
+						if (b.classList.contains('active')) {
+							b.style.setProperty('background',   '#30BBAD', 'important');
+							b.style.setProperty('border-color', '#30BBAD', 'important');
+							b.style.setProperty('color',        '#0b0912', 'important');
+							b.style.setProperty('font-weight',  '800',     'important');
+						} else {
+							b.style.removeProperty('background');
+							b.style.removeProperty('border-color');
+							b.style.removeProperty('color');
+							b.style.removeProperty('font-weight');
+						}
+					});
+				}, 0);
+			});
 
 			// ── Upload bar button handlers ───────────────────────────────
 			function initUploadBar() {
