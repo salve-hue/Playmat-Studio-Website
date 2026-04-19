@@ -774,11 +774,12 @@
 		// prevented tool.js's own DOMContentLoaded listener from running.
 		(function() {
 			function ensureToolInit() {
-				// Phase 1: initDesignerVisibility sets up event listeners and calls switchTab
+				// Phase 1: initDesignerVisibility — call if it hasn't run yet.
+				// Check the inline style directly; getComputedStyle is unreliable here
+				// because the CSS !important on the wrapper overrides display:none.
 				if (typeof window.initDesignerVisibility === 'function') {
 					var wrapper = document.getElementById('designer-visibility-wrapper');
-					// Only call if the inline style is still 'none' (i.e. not already called)
-					if (wrapper && window.getComputedStyle(wrapper).display === 'none') {
+					if (wrapper && wrapper.style.display === 'none') {
 						window.initDesignerVisibility();
 						return;
 					}
