@@ -800,6 +800,7 @@
                 targetCanvas.add(img).sendToBack(img);
                 if (isAdv) {
                     window.clearAutoFrameBreak(); window.forceFit(); window.toggleAcc('acc-size', true);
+                    _applyAxisLock();
                     _autoFullscreenIfDesktop();
                 } else {
                     APP.s_baseArtScale = Math.max(APP.canvasW / img.width, APP.canvasH / img.height);
@@ -1076,11 +1077,24 @@
         if (window.sCanvas) window.initSimpleCanvas();
     };
 
+    function _applyAxisLock() {
+        var lockX = APP.axisLock === 'y'; // LOCK Y = vertical only = freeze X
+        var lockY = APP.axisLock === 'x'; // LOCK X = horizontal only = freeze Y
+        if (!window.canvas) return;
+        window.canvas.getObjects().forEach(function(obj) {
+            if (obj.name === 'art' || obj.name === 'overlay') {
+                obj.set({ lockMovementX: lockX, lockMovementY: lockY });
+            }
+        });
+        window.canvas.requestRenderAll();
+    }
+
     window.setAxisLock = function(axis) {
         APP.axisLock = (APP.axisLock === axis) ? null : axis;
         document.querySelectorAll('.axis-lock-btn').forEach(function(b) {
             b.classList.toggle('active', b.dataset.axis === APP.axisLock);
         });
+        _applyAxisLock();
     };
 
     window.workspaceZoom = (amt) => {
@@ -1105,15 +1119,6 @@
             window.canvas.on('object:modified', function(){ window.updateBleedWarnings(window.canvas); });
             window.canvas.on('object:added',    function(){ window.updateBleedWarnings(window.canvas); });
             window.initEraserInteraction();
-            var _lockOriginTop = null, _lockOriginLeft = null;
-            window.canvas.on('mouse:down', function(e) {
-                if (e.target) { _lockOriginTop = e.target.top; _lockOriginLeft = e.target.left; }
-            });
-            window.canvas.on('object:moving', function(e) {
-                var obj = e.target;
-                if (APP.axisLock === 'x') obj.set('top',  _lockOriginTop  !== null ? _lockOriginTop  : obj.top);
-                else if (APP.axisLock === 'y') obj.set('left', _lockOriginLeft !== null ? _lockOriginLeft : obj.left);
-            });
         }
         window.changeSize();
     };
@@ -1353,6 +1358,7 @@
                 window.canvas.getObjects().forEach(o => { if(o.name==='art') window.canvas.remove(o); });
                 window.canvas.add(img).sendToBack(img);
                 window.clearAutoFrameBreak(); window.forceFit(); window.toggleAcc('acc-size', true);
+                _applyAxisLock();
                 _autoFullscreenIfDesktop();
                 window.updateBleedWarnings(window.canvas);
             });
