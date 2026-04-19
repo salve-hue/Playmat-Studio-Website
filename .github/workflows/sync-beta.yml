@@ -6,12 +6,16 @@ on:
       - 'claude/setup-standalone-demo-site-gfFAb'
     paths:
       - 'beta/**'
+      - 'assets/js/tool.js'
+      - 'assets/css/tool.css'
+      - 'index.html'
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
     steps:
       - name: Checkout feature branch
         uses: actions/checkout@v4
@@ -19,15 +23,29 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Sync beta/index.html to main
+      - name: Sync files to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           cp beta/index.html /tmp/beta-index.html
+          cp assets/js/tool.js /tmp/tool.js
+          cp assets/css/tool.css /tmp/tool.css
+          cp index.html /tmp/index.html
           git fetch origin main
           git checkout main
-          mkdir -p beta
+          mkdir -p beta assets/js assets/css
           cp /tmp/beta-index.html beta/index.html
-          git add beta/index.html
-          git diff --staged --quiet || git commit -m "sync: beta/index.html from feature branch [skip ci]"
+          cp /tmp/tool.js assets/js/tool.js
+          cp /tmp/tool.css assets/css/tool.css
+          cp /tmp/index.html index.html
+          git add beta/index.html assets/js/tool.js assets/css/tool.css index.html
+          git diff --staged --quiet || git commit -m "sync: tool files from feature branch"
           git push origin main
+
+      - name: Trigger Pages deployment
+        run: |
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy-main.yml/dispatches" \
+            -d '{"ref":"main"}'
