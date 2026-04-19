@@ -102,12 +102,12 @@
         "standard":  { w: 24.5, h: 14.5, label: '24" x 14"'  },  // Standard Playmat
         "expanded":  { w: 28.5, h: 16.5, label: '28" x 16"'  },  // Expanded Playmat
         "extended":  { w: 28.5, h: 14.5, label: '28" x 14"'  },  // Extended Playmat
-        "victor":    { w: 24.0, h: 12.0, label: '24" x 12"'  },  // Victor Deskmat
-        "secundus":  { w: 28.0, h: 12.0, label: '28" x 12"'  },  // Secundus Deskmat
-        "primus":    { w: 32.0, h: 12.0, label: '32" x 12"'  },  // Primus Deskmat
-        "tiro":      { w: 10.0, h:  8.0, label: '10" x 8"'   },  // Tiro Mousepad
-        "veteranus": { w: 12.5, h: 10.5, label: '12.5" x 10.5"' },  // Veteranus Mousepad
-        "gladiator": { w: 18.0, h: 12.0, label: '18" x 12"'  },  // Gladiator Mousepad
+        "victor":    { w: 24.5, h: 12.5, label: '24" x 12"'  },  // Victor Deskmat
+        "secundus":  { w: 28.5, h: 12.5, label: '28" x 12"'  },  // Secundus Deskmat
+        "primus":    { w: 31.5, h: 12.5, label: '32" x 12"'  },  // Primus Deskmat
+        "tiro":      { w: 10.5, h:  8.5, label: '10" x 8"'   },  // Tiro Mousepad
+        "veteranus": { w: 12.5, h: 10.5, label: '12" x 10"'  },  // Veteranus Mousepad
+        "gladiator": { w: 18.5, h: 12.5, label: '18" x 12"'  },  // Gladiator Mousepad
     };
 
     const LAYOUT_RAW = [
