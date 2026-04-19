@@ -48,9 +48,28 @@
 				max-width: 100% !important;
 				margin: 0 !important;
 				box-sizing: border-box !important;
-				/* Always visible — tool.js sets display:'' once initialized, CSS ensures it
-				   never stays hidden even if JS initialization fires late */
 				display: block !important;
+			}
+
+			/* ── Beta standalone: single-tool, full-page layout ─────── */
+			/* Hide tab navigation and non-editor panels */
+			.tool-tab-bar,
+			#tab-panel-batch,
+			#tab-panel-converter,
+			#tab-panel-host { display: none !important; }
+
+			/* Remove intro copy above the mat-size selector */
+			#landing-ui > p { display: none !important; }
+
+			/* No margin above the editor area */
+			.designer-container-wrap { margin-top: 0 !important; }
+
+			/* Editor fills the viewport below the header + mat-size bar.
+			   220px was the original offset (header + tab bar + intro text).
+			   Tab bar (~44px) + intro text (~46px) hidden → ~130px remaining. */
+			#adv-backdrop.tab-mode #playmat-tool-root {
+				height: calc(100vh - 130px) !important;
+				border-radius: 0 !important;
 			}
 		</style>
 		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
