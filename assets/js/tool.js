@@ -66,6 +66,7 @@
         s_filters:         { enhance: false, grayscale: false },
         activePointsUrl:   null,
         _bleedConfirmCallback: null,
+        axisLock: null,
     };
 
     // Keep legacy window aliases so any external code still works
@@ -799,6 +800,7 @@
                 targetCanvas.add(img).sendToBack(img);
                 if (isAdv) {
                     window.clearAutoFrameBreak(); window.forceFit(); window.toggleAcc('acc-size', true);
+                    _autoFullscreenIfDesktop();
                 } else {
                     APP.s_baseArtScale = Math.max(APP.canvasW / img.width, APP.canvasH / img.height);
                     img.scale(APP.s_baseArtScale).set({ left: APP.canvasW / 2, top: APP.canvasH / 2, angle: 0 });
@@ -978,6 +980,13 @@
     window._fsOrigNextSibling = null;
     window._fsOrigStyle = '';
 
+    function _autoFullscreenIfDesktop() {
+        if (window.innerWidth <= 900) return;
+        var root = document.getElementById('playmat-tool-root');
+        if (!root || root.classList.contains('app-fullscreen-mode')) return;
+        window.toggleFullScreen();
+    }
+
     function _applyFsStyles(el) {
         var props = [
             ['position','fixed'],['top','5vh'],['left','5vw'],['width','90vw'],
@@ -1067,6 +1076,13 @@
         if (window.sCanvas) window.initSimpleCanvas();
     };
 
+    window.setAxisLock = function(axis) {
+        APP.axisLock = (APP.axisLock === axis) ? null : axis;
+        document.querySelectorAll('.axis-lock-btn').forEach(function(b) {
+            b.classList.toggle('active', b.dataset.axis === APP.axisLock);
+        });
+    };
+
     window.workspaceZoom = (amt) => {
         if (amt === 0) APP.currentZoom = 1; else APP.currentZoom += amt;
         APP.currentZoom = Math.max(0.5, Math.min(APP.currentZoom, 3));
@@ -1089,6 +1105,15 @@
             window.canvas.on('object:modified', function(){ window.updateBleedWarnings(window.canvas); });
             window.canvas.on('object:added',    function(){ window.updateBleedWarnings(window.canvas); });
             window.initEraserInteraction();
+            var _lockOriginTop = null, _lockOriginLeft = null;
+            window.canvas.on('mouse:down', function(e) {
+                if (e.target) { _lockOriginTop = e.target.top; _lockOriginLeft = e.target.left; }
+            });
+            window.canvas.on('object:moving', function(e) {
+                var obj = e.target;
+                if (APP.axisLock === 'x') obj.set('top',  _lockOriginTop  !== null ? _lockOriginTop  : obj.top);
+                else if (APP.axisLock === 'y') obj.set('left', _lockOriginLeft !== null ? _lockOriginLeft : obj.left);
+            });
         }
         window.changeSize();
     };
@@ -1306,7 +1331,7 @@
         } else { isAdv?window.renderLayout():window.renderSimpleLayout(); }
     };
 
-    window.setSolidBackground = (color) => { window.canvas.backgroundColor=String(color); window.canvas.renderAll(); };
+    window.setSolidBackground = (color) => { window.canvas.backgroundColor=String(color); window.canvas.renderAll(); _autoFullscreenIfDesktop(); };
     window.clearArtwork = () => { const a=window.canvas.getObjects().find(o=>o.name==='art'); if(a) { window.canvas.remove(a); window.canvas.renderAll(); window.clearAutoFrameBreak(); } };
 
     window.drawAdvGuides = function(w, h, inches) {
@@ -1328,6 +1353,7 @@
                 window.canvas.getObjects().forEach(o => { if(o.name==='art') window.canvas.remove(o); });
                 window.canvas.add(img).sendToBack(img);
                 window.clearAutoFrameBreak(); window.forceFit(); window.toggleAcc('acc-size', true);
+                _autoFullscreenIfDesktop();
                 window.updateBleedWarnings(window.canvas);
             });
         };
@@ -2139,6 +2165,10 @@
                 window.initCanvas();
                 window.updateInfoBars(null);
                 window.populateGameDropdowns();
+                setTimeout(function() {
+                    if (window.canvas)  window.canvas.calcOffset();
+                    if (window.rCanvas) window.rCanvas.calcOffset();
+                }, 150);
             });
             return;
         }

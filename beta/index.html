@@ -117,6 +117,21 @@
 			.size-group--deskmat .mat-size-btn:hover .msb-icon rect {
 				stroke: rgba(196,149,42,0.7);
 			}
+
+			/* ── Center the size-selector-wrap ──────────────────────────── */
+			#landing-ui {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			#tab-panel-adv-editor { width: 100%; }
+
+			/* ── Axis lock button active state ───────────────────────────── */
+			.axis-lock-btn.active {
+				background: rgba(48,187,173,0.2) !important;
+				border-color: var(--brand-hover) !important;
+				color: var(--brand-hover) !important;
+			}
 		</style>
 		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
 		     data-cfasync="false" opts out of Cloudflare Rocket Loader -->
@@ -256,17 +271,17 @@
 					                    <button class="mat-size-btn active" data-size="standard">
 					                        <span class="msb-name">Standard</span>
 					                        <span class="msb-dim">24&Prime; &times; 14&Prime;</span>
-					                        <svg class="msb-icon" viewBox="0 0 49 29" width="49" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
+					                        <svg class="msb-icon" viewBox="0 0 49 29" width="42" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
 					                    </button>
 					                    <button class="mat-size-btn" data-size="extended">
 					                        <span class="msb-name">Extended</span>
 					                        <span class="msb-dim">28&Prime; &times; 14&Prime;</span>
-					                        <svg class="msb-icon" viewBox="0 0 57 29" width="57" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
+					                        <svg class="msb-icon" viewBox="0 0 57 29" width="49" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
 					                    </button>
 					                    <button class="mat-size-btn" data-size="expanded">
 					                        <span class="msb-name">Expanded</span>
 					                        <span class="msb-dim">28&Prime; &times; 16&Prime;</span>
-					                        <svg class="msb-icon" viewBox="0 0 57 33" width="57" height="33" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
+					                        <svg class="msb-icon" viewBox="0 0 57 33" width="43" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
 					                    </button>
 					                </div>
 					            </div>
@@ -535,6 +550,13 @@
 					                    <label>Art Scale</label>
 					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="width:100%;">
 					                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn">RESET ART SCALE &amp; CENTER</button>
+					                    <div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px;">
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Axis Lock</label>
+					                        <div style="display:flex; gap:8px;">
+					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="x" style="flex:1; margin:0;" onclick="window.setAxisLock('x')">LOCK X</button>
+					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="y" style="flex:1; margin:0;" onclick="window.setAxisLock('y')">LOCK Y</button>
+					                        </div>
+					                    </div>
 					                </div>
 
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
