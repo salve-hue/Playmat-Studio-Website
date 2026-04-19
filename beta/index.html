@@ -74,25 +74,32 @@
 			.size-selector-wrap {
 				display: flex;
 				align-items: flex-start;
-				gap: 0;
+				gap: 10px;
 				margin-bottom: 16px;
 				flex-wrap: wrap;
 			}
-			.size-group { flex: 0 0 auto; }
+			.size-group {
+				flex: 0 0 auto;
+				padding: 12px 16px;
+				border-radius: 8px;
+			}
 			.size-group-label {
-				font-size: 10px;
+				font-size: 13px;
 				font-weight: 700;
 				text-transform: uppercase;
-				letter-spacing: 1.8px;
+				letter-spacing: 2px;
 				display: block;
-				margin-bottom: 8px;
+				margin-bottom: 10px;
 				padding-left: 2px;
+			}
+			.size-group--playmat {
+				background: rgba(48,187,173,0.07);
+				border: 1px solid rgba(48,187,173,0.22);
 			}
 			.size-group--playmat .size-group-label { color: #30BBAD; }
 			.size-group--deskmat {
-				border-left: 1px solid rgba(255,255,255,0.1);
-				margin-left: 20px;
-				padding-left: 20px;
+				background: rgba(196,149,42,0.07);
+				border: 1px solid rgba(196,149,42,0.22);
 			}
 			.size-group--deskmat .size-group-label { color: #C4952A; }
 			.size-group .mat-size-btn-group {
