@@ -32,3 +32,21 @@ After changing `tool.js` or `tool.css` in the main repo, bump the `?v=` cache-bu
 ## GitHub Pages
 
 This repo is intended to be served via GitHub Pages from the `main` branch root. The page will be available at the repo's GitHub Pages URL (e.g. `https://salve-hue.github.io/Playmat-Studio-Website/` or a custom domain if a CNAME is configured).
+
+## Deployment workflow
+
+After every set of changes, **always push directly to `main`** in addition to the feature branch. The sync workflow (`sync-beta.yml`) copies files to main but GitHub Actions' loop-prevention means the downstream `deploy-main.yml` won't fire from a bot-authored push. The sync workflow now explicitly dispatches `deploy-main.yml` via the API, but a direct push from a user/Claude context is the most reliable trigger.
+
+Deployment sequence after making changes:
+1. Commit and push to the feature branch (`claude/setup-standalone-demo-site-gfFAb`)
+2. Check out `main`, pull, copy the changed files from the feature branch, commit, and push to `main`
+3. Return to the feature branch
+
+```bash
+git fetch origin main && git checkout main && git pull origin main
+git show <feature-branch>:<file> > <file>   # repeat for each changed file
+git add <files> && git commit -m "deploy: <description>" && git push origin main
+git checkout claude/setup-standalone-demo-site-gfFAb
+```
+
+Also bump the `?v=` cache-buster on `tool.js` in `beta/index.html` whenever `tool.js` changes.
