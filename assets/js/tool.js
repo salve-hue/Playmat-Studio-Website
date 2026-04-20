@@ -1272,10 +1272,10 @@
             const isLightbox   = backdrop && !backdrop.classList.contains('tab-mode');
             const isFullscreen = root && root.classList.contains('app-fullscreen-mode');
             if (isLightbox || isFullscreen) {
-                // In fullscreen the root is fixed at top:5vh, height:90vh.
+                // In fullscreen L mode the root expands to 100vh; otherwise capped at 90vh.
                 // In lightbox the backdrop has a computed padding-top before the root starts.
                 const availH = isFullscreen
-                    ? window.innerHeight * 0.90
+                    ? window.innerHeight
                     : window.innerHeight - (parseFloat(getComputedStyle(backdrop).paddingTop) || 40);
                 const infoBar2    = document.getElementById('adv-info-bar');
                 const infoH2      = infoBar2    ? (infoBar2.offsetHeight    || 40)  : 40;
