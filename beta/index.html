@@ -66,6 +66,27 @@
 			/* Suppress fullscreen toggle — users restart instead */
 			#fs-toggle-btn { display: none !important; }
 
+			/* ── Global link reset (main.css not loaded on beta) ────────── */
+			a { text-decoration: none !important; }
+
+			/* ── Beta nav — plain text links, no pill backgrounds ───────── */
+			#header .logo .symbol img { width: 5.5em !important; height: auto !important; }
+			#header nav ul { gap: 0.4em !important; }
+			#header nav ul li.ps-nav-link a {
+				background-color: transparent !important;
+				color: rgba(255,255,255,0.82) !important;
+				font-size: 16px !important;
+				font-weight: 600 !important;
+				padding: 0.35em 0.75em !important;
+				border-radius: 4px !important;
+				border-bottom: none !important;
+				letter-spacing: 0.01em !important;
+			}
+			#header nav ul li.ps-nav-link a:hover {
+				color: #ffffff !important;
+				background-color: rgba(255,255,255,0.08) !important;
+			}
+
 			/* ── Beta landing overlay ───────────────────────────────────── */
 			#beta-landing {
 				position: fixed;
