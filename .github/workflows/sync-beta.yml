@@ -8,7 +8,6 @@ on:
       - 'beta/**'
       - 'assets/js/tool.js'
       - 'assets/css/tool.css'
-      - 'index.html'
 
 jobs:
   sync:
@@ -30,15 +29,13 @@ jobs:
           cp beta/index.html /tmp/beta-index.html
           cp assets/js/tool.js /tmp/tool.js
           cp assets/css/tool.css /tmp/tool.css
-          cp index.html /tmp/index.html
           git fetch origin main
           git checkout main
           mkdir -p beta assets/js assets/css
           cp /tmp/beta-index.html beta/index.html
           cp /tmp/tool.js assets/js/tool.js
           cp /tmp/tool.css assets/css/tool.css
-          cp /tmp/index.html index.html
-          git add beta/index.html assets/js/tool.js assets/css/tool.css index.html
+          git add beta/index.html assets/js/tool.js assets/css/tool.css
           git diff --staged --quiet || git commit -m "sync: tool files from feature branch"
           git push origin main
 
