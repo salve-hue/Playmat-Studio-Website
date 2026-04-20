@@ -161,11 +161,12 @@
 			/* ── Upload bar: step 2, fades in after size selected ───────── */
 			#landing-upload-bar {
 				display: flex;
+				flex-wrap: wrap;
 				gap: 12px;
 				justify-content: center;
 				margin-top: 28px;
 				width: 100%;
-				max-width: 380px;
+				max-width: 560px;
 				opacity: 0;
 				transform: translateY(10px);
 				transition: opacity 0.4s ease, transform 0.4s ease;
@@ -383,6 +384,7 @@
 					<div id="landing-upload-bar">
 						<button class="action-btn" id="landing-upload-btn">&#128193; UPLOAD FILE</button>
 						<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; PASTE URL</button>
+					<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; SOLID COLOR</button>
 					</div>
 				</div><!-- /#beta-landing-inner -->
 			</div><!-- /#beta-landing -->
@@ -1107,6 +1109,17 @@
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
 					setTimeout(function() { window.promptPasteUrl(); }, 100);
+				});
+				document.getElementById('landing-color-btn').addEventListener('click', function() {
+					var adv = document.getElementById('adv-backdrop');
+					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					setTimeout(function() {
+						if (typeof window.toggleFullScreen === 'function') window.toggleFullScreen();
+						setTimeout(function() {
+							var picker = document.getElementById('bg-color-picker');
+							if (picker) picker.click();
+						}, 400);
+					}, 100);
 				});
 			}
 
