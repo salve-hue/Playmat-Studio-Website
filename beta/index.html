@@ -205,6 +205,69 @@
 				opacity: 0; transition: opacity 0.2s ease;
 			}
 			#mat-tooltip.visible { opacity: 1; }
+
+			/* ── Lightbox ────────────────────────────────────────────────── */
+			#lb-overlay {
+				position: fixed; inset: 0; z-index: 800;
+				background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+				display: flex; align-items: center; justify-content: center;
+				padding: 24px; opacity: 0; pointer-events: none;
+				transition: opacity 0.25s ease;
+			}
+			#lb-overlay.open { opacity: 1; pointer-events: auto; }
+			#lb-modal {
+				background: #13101f; border: 1px solid rgba(104,48,187,0.35);
+				border-radius: 12px; padding: 40px 40px 32px;
+				max-width: 680px; width: 100%; max-height: 82vh;
+				overflow-y: auto; position: relative;
+				box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+				transform: translateY(10px); transition: transform 0.25s ease;
+			}
+			#lb-overlay.open #lb-modal { transform: translateY(0); }
+			#lb-close {
+				position: absolute; top: 14px; right: 18px;
+				background: none; border: none; color: rgba(255,255,255,0.4);
+				font-size: 22px; line-height: 1; cursor: pointer; padding: 4px 8px;
+				transition: color 0.15s;
+			}
+			#lb-close:hover { color: #fff; }
+			/* Lightbox typography */
+			#lb-modal h2 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 22px; font-weight: 700; color: #f0eeff; margin: 0 0 6px; }
+			#lb-modal .lb-subtitle { font-size: 14px; color: var(--brand-text-sec); margin: 0 0 28px; }
+			#lb-modal p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.75); margin: 0 0 14px; }
+			/* How It Works */
+			.lb-steps { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 4px; }
+			.lb-step { flex: 1 1 160px; background: rgba(104,48,187,0.08); border: 1px solid rgba(104,48,187,0.2); border-radius: 8px; padding: 20px 16px; text-align: center; }
+			.lb-step-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+			.lb-step h3 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 14px; font-weight: 700; color: #f0eeff; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-step p { font-size: 13px; margin: 0; }
+			/* Features */
+			.lb-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; }
+			.lb-feature { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; }
+			.lb-feature h3 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 13px; font-weight: 700; color: var(--brand-hover); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-feature p { font-size: 13px; margin: 0; }
+			/* Contact form */
+			.lb-form-row { display: flex; gap: 14px; margin-bottom: 14px; }
+			.lb-field { display: flex; flex-direction: column; flex: 1; gap: 6px; }
+			.lb-field label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-field input, .lb-field textarea {
+				background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+				border-radius: 6px; padding: 10px 12px; color: #f0eeff;
+				font-family: 'Plus Jakarta Sans',sans-serif; font-size: 14px;
+				transition: border-color 0.15s; outline: none; width: 100%; box-sizing: border-box;
+			}
+			.lb-field input:focus, .lb-field textarea:focus { border-color: var(--brand-hover); }
+			.lb-field textarea { min-height: 110px; resize: vertical; }
+			.lb-submit { margin-top: 6px; }
+			.lb-submit button {
+				background: var(--brand-hover); border: none; border-radius: 6px;
+				padding: 12px 28px; color: #0b0912; font-family: 'Plus Jakarta Sans',sans-serif;
+				font-size: 13px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+				cursor: pointer; transition: opacity 0.15s;
+			}
+			.lb-submit button:hover { opacity: 0.85; }
+			.lb-submit button:disabled { opacity: 0.5; cursor: default; }
+			#lb-contact-status { display:none; padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px; font-weight: 600; }
 		</style>
 		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
 		     data-cfasync="false" opts out of Cloudflare Rocket Loader -->
@@ -224,6 +287,16 @@
 					<a href="index.html" class="logo">
 						<span class="symbol"><img src="https://playmatstudio.com/images/Playmat%20Studio%20Logo%20v3.svg" alt="Playmat Studio logo" /></span>
 					</a>
+
+					<!-- Nav -->
+					<nav>
+						<ul>
+							<li class="ps-nav-link"><a href="#" data-lb="how-it-works">How It Works</a></li>
+							<li class="ps-nav-link"><a href="#" data-lb="features">Features</a></li>
+							<li class="ps-nav-link"><a href="#" data-lb="about">About</a></li>
+							<li class="ps-nav-link"><a href="#" data-lb="contact">Contact</a></li>
+						</ul>
+					</nav>
 
 				</div>
 			</header>
@@ -1340,6 +1413,168 @@
         <a href="https://www.rubicongamesupplies.com/collections/custom-playmats/?bg_ref=gBU3NKBThS" target="_blank" rel="noopener" class="action-btn" style="display:flex; box-sizing:border-box; width:100%; height:48px; font-size:15px; margin:0; background:#83BB30; text-decoration:none; color:#fff; border-radius:6px; align-items:center; justify-content:center; gap:8px;">&#128424;&#65039; OPEN PRINT SITE</a>
     </div>
 </div>
+
+<!-- ── Lightbox overlay ───────────────────────────────────────────────── -->
+<div id="lb-overlay">
+	<div id="lb-modal">
+		<button id="lb-close" aria-label="Close">&times;</button>
+		<div id="lb-body"></div>
+	</div>
+</div>
+
+<!-- ── Lightbox content panels (hidden, cloned into modal on open) ──── -->
+<div id="lb-panel-how-it-works" hidden>
+	<h2>How It Works</h2>
+	<p class="lb-subtitle">Three steps from your artwork to a print-ready file.</p>
+	<div class="lb-steps">
+		<div class="lb-step">
+			<span class="lb-step-icon">&#128228;</span>
+			<h3>Upload Your Art</h3>
+			<p>Drop any image &mdash; JPG, PNG, WEBP, or paste a URL. The tool auto-fits it to your chosen mat size with full bleed.</p>
+		</div>
+		<div class="lb-step">
+			<span class="lb-step-icon">&#127912;</span>
+			<h3>Customize</h3>
+			<p>Add game zone overlays, enhance colors, upscale with AI, adjust zoom and position &mdash; or keep it simple.</p>
+		</div>
+		<div class="lb-step">
+			<span class="lb-step-icon">&#128229;</span>
+			<h3>Download &amp; Print</h3>
+			<p>Export a 300&nbsp;DPI JPG with proper metadata &mdash; exactly what print-on-demand vendors need for a sharp, professional mat.</p>
+		</div>
+	</div>
+</div>
+
+<div id="lb-panel-features" hidden>
+	<h2>Features</h2>
+	<p class="lb-subtitle">Everything you need, from upload to print-ready file.</p>
+	<div class="lb-features">
+		<div class="lb-feature">
+			<h3>&#9889; Quick Upload</h3>
+			<p>Drop your art and get a print-ready 300&nbsp;DPI JPG in seconds.</p>
+		</div>
+		<div class="lb-feature">
+			<h3>&#9998; Advanced Editor</h3>
+			<p>Full canvas editor with AI upscaling, overlays, recolor, and transform tools.</p>
+		</div>
+		<div class="lb-feature">
+			<h3>&#10024; Batch Enhance</h3>
+			<p>Auto color-correct multiple images and download them as a ZIP.</p>
+		</div>
+		<div class="lb-feature">
+			<h3>&#128260; Format Converter</h3>
+			<p>Convert any image to JPG, PNG, or WEBP &mdash; single file or batch.</p>
+		</div>
+		<div class="lb-feature">
+			<h3>&#127918; Game Overlays</h3>
+			<p>Pre-made zone layouts for MTG, Pok&eacute;mon, and more at full print resolution.</p>
+		</div>
+		<div class="lb-feature">
+			<h3>&#127919; 300&nbsp;DPI Output</h3>
+			<p>Every export writes proper 300&nbsp;DPI metadata &mdash; exactly what print vendors require.</p>
+		</div>
+	</div>
+</div>
+
+<div id="lb-panel-about" hidden>
+	<h2>About Playmat Studio</h2>
+	<p>Playmat Studio is a free, browser-based image prep tool built for tabletop game players who want to print custom playmats with their own artwork. No installs, no subscriptions, no sign-up &mdash; just open the tool and start designing.</p>
+	<p>Playmat Studio is a community-driven project designed for anyone who wants to create custom playmats with their own artwork. Every feature is informed by real user feedback and requests. There are no ads, no fees, and no account required &mdash; just a free tool that improves as more people use and share it. If there&rsquo;s something you&rsquo;d like to see added, reach out &mdash; community input directly shapes what gets built next.</p>
+</div>
+
+<div id="lb-panel-contact" hidden>
+	<h2>Contact</h2>
+	<p class="lb-subtitle">Questions, feedback, or just want to say hi? We&rsquo;d love to hear from you.</p>
+	<form id="lb-contact-form" novalidate>
+		<div class="lb-form-row">
+			<div class="lb-field">
+				<label for="lb-contact-name">Name</label>
+				<input type="text" id="lb-contact-name" placeholder="Your name" required />
+			</div>
+			<div class="lb-field">
+				<label for="lb-contact-email">Email</label>
+				<input type="email" id="lb-contact-email" placeholder="you@example.com" required />
+			</div>
+		</div>
+		<div class="lb-field" style="margin-bottom:14px;">
+			<label for="lb-contact-message">Message</label>
+			<textarea id="lb-contact-message" placeholder="What&apos;s on your mind?" required></textarea>
+		</div>
+		<div id="lb-contact-status"></div>
+		<div class="lb-submit">
+			<button type="submit" id="lb-contact-submit">Send Message</button>
+		</div>
+	</form>
+</div>
+
+<script>
+(function() {
+	// ── Lightbox open/close ────────────────────────────────────────────
+	var overlay = document.getElementById('lb-overlay');
+	var body    = document.getElementById('lb-body');
+
+	function openLb(key) {
+		var panel = document.getElementById('lb-panel-' + key);
+		if (!panel) return;
+		body.innerHTML = panel.innerHTML;
+		overlay.classList.add('open');
+		document.body.style.overflow = 'hidden';
+		if (key === 'contact') initLbContactForm();
+	}
+	function closeLb() {
+		overlay.classList.remove('open');
+		document.body.style.overflow = '';
+	}
+
+	document.querySelectorAll('[data-lb]').forEach(function(link) {
+		link.addEventListener('click', function(e) { e.preventDefault(); openLb(link.dataset.lb); });
+	});
+	document.getElementById('lb-close').addEventListener('click', closeLb);
+	overlay.addEventListener('click', function(e) { if (e.target === overlay) closeLb(); });
+	document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLb(); });
+
+	// ── Contact form inside lightbox ───────────────────────────────────
+	function initLbContactForm() {
+		var form   = document.getElementById('lb-contact-form');
+		var status = document.getElementById('lb-contact-status');
+		var btn    = document.getElementById('lb-contact-submit');
+		if (!form) return;
+		form.addEventListener('submit', function(e) {
+			e.preventDefault();
+			var name    = document.getElementById('lb-contact-name').value.trim();
+			var email   = document.getElementById('lb-contact-email').value.trim();
+			var message = document.getElementById('lb-contact-message').value.trim();
+			if (!name || !email || !message) {
+				showStatus('Please fill in all fields.', false); return;
+			}
+			btn.disabled = true; btn.textContent = 'Sending\u2026';
+			status.style.display = 'none';
+			fetch('https://contact.playmatstudio.com', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ name: name, email: email, message: message })
+			})
+			.then(function(r) { return r.json(); })
+			.then(function(d) {
+				if (d.ok) { showStatus('Message sent! We\u2019ll get back to you soon.', true); form.reset(); }
+				else       { showStatus(d.error || 'Something went wrong. Please try again.', false); }
+			})
+			.catch(function() { showStatus('Could not send message. Please check your connection.', false); })
+			.finally(function() { btn.disabled = false; btn.textContent = 'Send Message'; });
+
+			function showStatus(msg, ok) {
+				status.textContent = msg;
+				status.style.display = 'block';
+				status.style.background = ok ? 'rgba(131,187,48,0.15)' : 'rgba(187,48,62,0.15)';
+				status.style.border = ok ? '1px solid rgba(131,187,48,0.4)' : '1px solid rgba(187,48,62,0.4)';
+				status.style.color = ok ? '#83BB30' : '#e05060';
+				status.style.borderRadius = '6px'; status.style.padding = '10px 14px';
+				status.style.fontSize = '13px'; status.style.fontWeight = '600';
+			}
+		});
+	}
+})();
+</script>
 </body>
 </html>
 
