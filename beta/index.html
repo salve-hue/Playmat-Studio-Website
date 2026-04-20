@@ -40,7 +40,7 @@
 		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/custom.css?v=16" />
 		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/tool.css?v=10" />
 		<style>
-			html, body { height: 100%; }
+			html, body { height: 100%; overflow: hidden; }
 			#wrapper { min-height: 100vh; display: flex; flex-direction: column; }
 			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
 			section#tools .inner { max-width: none !important; padding: 0 !important; }
@@ -1560,13 +1560,11 @@
 		if (!panel) return;
 		body.innerHTML = panel.innerHTML;
 		overlay.classList.add('open');
-		document.body.style.overflow = 'hidden';
 		setNavActive(key);
 		if (key === 'contact') initLbContactForm();
 	}
 	function closeLb() {
 		overlay.classList.remove('open');
-		document.body.style.overflow = '';
 		setNavActive(null);
 	}
 
