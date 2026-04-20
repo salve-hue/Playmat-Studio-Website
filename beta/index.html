@@ -194,6 +194,17 @@
 				color: #0b0912 !important;
 				font-weight: 800 !important;
 			}
+			/* ── Size button tooltip ─────────────────────────────────────── */
+			#mat-tooltip {
+				position: fixed; z-index: 600; pointer-events: none;
+				background: #1a1528; border: 1px solid rgba(104,48,187,0.45);
+				border-radius: 8px; padding: 10px 14px; max-width: 220px;
+				font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px;
+				line-height: 1.5; color: rgba(255,255,255,0.82);
+				box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+				opacity: 0; transition: opacity 0.2s ease;
+			}
+			#mat-tooltip.visible { opacity: 1; }
 		</style>
 		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
 		     data-cfasync="false" opts out of Cloudflare Rocket Loader -->
@@ -329,17 +340,17 @@
 						<div class="size-group size-group--playmat">
 							<span class="size-group-label">Playmats</span>
 							<div class="mat-size-btn-group">
-								<button class="mat-size-btn" data-size="standard">
+								<button class="mat-size-btn" data-size="standard" data-tip="The classic TCG size. Fits a full Magic: The Gathering, Pokémon, or Yu-Gi-Oh! play area. The most popular choice for competitive and casual players alike.">
 									<span class="msb-name">Standard</span>
 									<span class="msb-dim">24&Prime; &times; 14&Prime;</span>
 									<svg class="msb-icon" viewBox="0 0 49 29" width="42" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
 								</button>
-								<button class="mat-size-btn" data-size="extended">
+								<button class="mat-size-btn" data-size="extended" data-tip="Extra width for two-player setups or games that need more table space. A favourite for Commander/EDH and larger board games.">
 									<span class="msb-name">Extended</span>
 									<span class="msb-dim">28&Prime; &times; 14&Prime;</span>
 									<svg class="msb-icon" viewBox="0 0 57 29" width="49" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
 								</button>
-								<button class="mat-size-btn" data-size="expanded">
+								<button class="mat-size-btn" data-size="expanded" data-tip="Maximum playmat coverage. Ideal for RPG sessions, large board games, or players who want a full table surface to work with.">
 									<span class="msb-name">Expanded</span>
 									<span class="msb-dim">28&Prime; &times; 16&Prime;</span>
 									<svg class="msb-icon" viewBox="0 0 57 33" width="43" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
@@ -350,32 +361,32 @@
 						<div class="size-group size-group--deskmat">
 							<span class="size-group-label">Deskmats</span>
 							<div class="mat-size-btn-group">
-								<button class="mat-size-btn" data-size="tiro">
+								<button class="mat-size-btn" data-size="tiro" data-tip="Compact desk pad. Great for laptop setups, small desks, or anyone who wants a quality surface without a lot of bulk.">
 									<span class="msb-name">Tiro</span>
 									<span class="msb-dim">10&quot; &times; 8&quot;</span>
 									<svg class="msb-icon" viewBox="0 0 21 18" width="21" height="18" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="19" height="16" rx="3"/></svg>
 								</button>
-								<button class="mat-size-btn" data-size="veteranus">
+								<button class="mat-size-btn" data-size="veteranus" data-tip="Mid-size desk pad. Comfortably fits a standard keyboard and mouse. A solid everyday choice for office and home use.">
 									<span class="msb-name">Veteranus</span>
 									<span class="msb-dim">12&quot; &times; 10&quot;</span>
 									<svg class="msb-icon" viewBox="0 0 25 21" width="25" height="21" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="23" height="19" rx="3"/></svg>
 								</button>
-								<button class="mat-size-btn" data-size="gladiator">
+								<button class="mat-size-btn" data-size="gladiator" data-tip="Wide gaming desk pad. Covers keyboard, mouse, and surrounding space. Popular with PC gamers who want full peripheral coverage.">
 									<span class="msb-name">Gladiator</span>
 									<span class="msb-dim">18&quot; &times; 12&quot;</span>
 									<svg class="msb-icon" viewBox="0 0 33 25" width="33" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="31" height="23" rx="3"/></svg>
 								</button>
-								<button class="mat-size-btn" data-size="victor">
+								<button class="mat-size-btn" data-size="victor" data-tip="Full desk coverage for gaming rigs and workstations. Extends across multiple peripherals and gives a clean, unified look to your setup.">
 									<span class="msb-name">Victor</span>
 									<span class="msb-dim">24&Prime; &times; 12&Prime;</span>
 									<svg class="msb-icon" viewBox="0 0 49 25" width="49" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="23" rx="3"/></svg>
 								</button>
-								<button class="mat-size-btn" data-size="secundus">
+								<button class="mat-size-btn" data-size="secundus" data-tip="Extended desk mat for wide monitor setups and multi-peripheral arrangements. Ideal for content creators and power users.">
 									<span class="msb-name">Secundus</span>
 									<span class="msb-dim">28&Prime; &times; 12&Prime;</span>
 									<svg class="msb-icon" viewBox="0 0 57 25" width="57" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="23" rx="3"/></svg>
 								</button>
-								<button class="mat-size-btn" data-size="primus">
+								<button class="mat-size-btn" data-size="primus" data-tip="Maximum desk coverage. Built for ultra-wide displays, dual monitor setups, and full workstation builds where nothing is left uncovered.">
 									<span class="msb-name">Primus</span>
 									<span class="msb-dim">32&Prime; &times; 12&Prime;</span>
 									<svg class="msb-icon" viewBox="0 0 65 25" width="65" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="63" height="23" rx="3"/></svg>
@@ -392,6 +403,7 @@
 					</div>
 				</div><!-- /#beta-landing-inner -->
 			</div><!-- /#beta-landing -->
+			<div id="mat-tooltip"></div>
 
 			<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
 
@@ -1126,6 +1138,38 @@
 					}, 100);
 				});
 			}
+
+			// ── Size button tooltips (2-second hover delay) ──────────────
+			(function() {
+				var tip = document.getElementById('mat-tooltip');
+				var timer = null;
+				document.querySelectorAll('.mat-size-btn[data-tip]').forEach(function(btn) {
+					btn.addEventListener('mouseenter', function(e) {
+						timer = setTimeout(function() {
+							tip.textContent = btn.dataset.tip;
+							var r = btn.getBoundingClientRect();
+							var tx = r.left + r.width / 2;
+							var ty = r.top - 12;
+							tip.style.left = '0px'; tip.style.top = '0px';
+							tip.classList.add('visible');
+							var tw = tip.offsetWidth, th = tip.offsetHeight;
+							tx = Math.min(Math.max(tx - tw / 2, 8), window.innerWidth - tw - 8);
+							ty = ty - th;
+							if (ty < 8) ty = r.bottom + 12;
+							tip.style.left = tx + 'px';
+							tip.style.top  = ty + 'px';
+						}, 2000);
+					});
+					btn.addEventListener('mouseleave', function() {
+						clearTimeout(timer);
+						tip.classList.remove('visible');
+					});
+					btn.addEventListener('click', function() {
+						clearTimeout(timer);
+						tip.classList.remove('visible');
+					});
+				});
+			})();
 
 			window.addEventListener('load', function() {
 				ensureToolInit();
