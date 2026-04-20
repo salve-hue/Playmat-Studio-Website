@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /preview/
+Disallow: /beta/
 
 Sitemap: https://playmatstudio.com/sitemap.xml
