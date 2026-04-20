@@ -107,7 +107,7 @@
 				align-items: center;
 				justify-content: center;
 				padding: 40px 24px;
-				overflow-y: auto;
+				overflow: hidden;
 				transition: opacity 0.5s ease;
 			}
 			#beta-landing.exiting {
@@ -134,15 +134,27 @@
 			}
 
 			#beta-landing-tagline {
-				font-size: var(--fs-md);
+				font-size: var(--fs-sm);
 				font-weight: 500;
 				color: var(--brand-hover);
 				letter-spacing: 2px;
 				text-transform: uppercase;
 				text-align: center;
-				margin: 0 0 28px;
+				margin: 18px 0 0;
 				font-family: 'Plus Jakarta Sans', sans-serif;
-				opacity: 0.8;
+				opacity: 0.7;
+			}
+			#beta-landing-footer {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				text-align: center;
+				padding: 14px 24px;
+				font-size: var(--fs-sm);
+				font-family: 'Plus Jakarta Sans', sans-serif;
+				color: rgba(255,255,255,0.2);
+				letter-spacing: 0.5px;
 			}
 
 			/* ── Size groups: stacked vertically, full width ────────────── */
@@ -458,7 +470,6 @@
 			<div id="beta-landing">
 				<div id="beta-landing-inner">
 					<p id="beta-landing-heading">Choose your mat size to get started</p>
-					<p id="beta-landing-tagline">Your Playmat Starts Here.</p>
 
 					<div class="size-selector-wrap">
 
@@ -524,9 +535,11 @@
 					<div id="landing-upload-bar">
 						<button class="action-btn" id="landing-upload-btn">&#128193; UPLOAD FILE</button>
 						<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; PASTE URL</button>
-					<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; SOLID COLOR</button>
+						<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; SOLID COLOR</button>
 					</div>
+					<p id="beta-landing-tagline">Your Playmat Starts Here.</p>
 				</div><!-- /#beta-landing-inner -->
+				<footer id="beta-landing-footer">&#169; 2026 Playmat Studio</footer>
 			</div><!-- /#beta-landing -->
 			<div id="mat-tooltip"></div>
 
