@@ -40,6 +40,20 @@
 		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/custom.css?v=16" />
 		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/tool.css?v=10" />
 		<style>
+			/* ── 3-tier font size system ─────────────────────────────────── */
+			:root {
+				--fs-lg: 22px;   /* headings: landing, lightbox h2, modal h3 */
+				--fs-md: 14px;   /* body: nav, descriptions, inputs, buttons  */
+				--fs-sm: 11px;   /* labels: field labels, tooltips, micro UI  */
+			}
+			/* Normalize tool overlay modal headings (inline style → !important) */
+			.overlay-box h3 { font-size: var(--fs-lg) !important; }
+			/* Share / print result modal headings */
+			#share-result-modal h3,
+			#get-printed-modal h3 { font-size: var(--fs-lg) !important; }
+			#share-result-modal p,
+			#get-printed-modal p  { font-size: var(--fs-md) !important; }
+
 			html, body { height: 100%; overflow: hidden; }
 			#wrapper { min-height: 100vh; display: flex; flex-direction: column; }
 			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
@@ -73,7 +87,7 @@
 
 			/* ── Beta nav ────────────────────────────────────────────────── */
 			#header nav ul li.ps-nav-link a {
-				font-size: 16px !important;
+				font-size: var(--fs-md) !important;
 				border-bottom: none !important;
 			}
 			#header nav ul li.ps-nav-link a:hover { border-bottom: none !important; }
@@ -110,7 +124,7 @@
 			#beta-landing .beta-logo { display: block; margin-bottom: 20px; }
 			#beta-landing .beta-logo img { height: 44px; width: auto; }
 			#beta-landing-heading {
-				font-size: 32px;
+				font-size: var(--fs-lg);
 				font-weight: 600;
 				color: rgba(255,255,255,0.7);
 				margin: 0 0 8px;
@@ -120,7 +134,7 @@
 			}
 
 			#beta-landing-tagline {
-				font-size: 13px;
+				font-size: var(--fs-md);
 				font-weight: 500;
 				color: var(--brand-hover);
 				letter-spacing: 2px;
@@ -147,7 +161,7 @@
 				border-radius: 8px;
 			}
 			.size-group-label {
-				font-size: 18px;
+				font-size: var(--fs-md);
 				font-weight: 700;
 				text-transform: uppercase;
 				letter-spacing: 2px;
@@ -235,7 +249,7 @@
 				position: fixed; z-index: 600; pointer-events: none;
 				background: #1a1528; border: 1px solid rgba(104,48,187,0.45);
 				border-radius: 8px; padding: 10px 14px; max-width: 220px;
-				font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px;
+				font-family: 'Plus Jakarta Sans', sans-serif; font-size: var(--fs-sm);
 				line-height: 1.5; color: rgba(255,255,255,0.82);
 				box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 				opacity: 0; transition: opacity 0.2s ease;
@@ -264,33 +278,33 @@
 			#lb-close {
 				position: absolute; top: 14px; right: 18px;
 				background: none; border: none; color: rgba(255,255,255,0.4);
-				font-size: 22px; line-height: 1; cursor: pointer; padding: 4px 8px;
+				font-size: var(--fs-lg); line-height: 1; cursor: pointer; padding: 4px 8px;
 				transition: color 0.15s;
 			}
 			#lb-close:hover { color: #fff; }
 			/* Lightbox typography */
-			#lb-modal h2 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 22px; font-weight: 700; color: #f0eeff; margin: 0 0 6px; }
-			#lb-modal .lb-subtitle { font-size: 14px; color: var(--brand-text-sec); margin: 0 0 28px; }
-			#lb-modal p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.75); margin: 0 0 14px; }
+			#lb-modal h2 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: var(--fs-lg); font-weight: 700; color: #f0eeff; margin: 0 0 6px; }
+			#lb-modal .lb-subtitle { font-size: var(--fs-md); color: var(--brand-text-sec); margin: 0 0 28px; }
+			#lb-modal p { font-size: var(--fs-md); line-height: 1.7; color: rgba(255,255,255,0.75); margin: 0 0 14px; }
 			/* How It Works */
 			.lb-steps { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 4px; }
 			.lb-step { flex: 1 1 160px; background: rgba(104,48,187,0.08); border: 1px solid rgba(104,48,187,0.2); border-radius: 8px; padding: 20px 16px; text-align: center; }
 			.lb-step-icon { margin-bottom: 14px; display: flex; justify-content: center; color: var(--brand-hover); }
-			.lb-step h3 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 14px; font-weight: 700; color: #f0eeff; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-			.lb-step p { font-size: 13px; margin: 0; }
+			.lb-step h3 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: var(--fs-md); font-weight: 700; color: #f0eeff; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-step p { font-size: var(--fs-md); margin: 0; }
 			/* Features */
 			.lb-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; }
 			.lb-feature { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; }
-			.lb-feature h3 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 13px; font-weight: 700; color: var(--brand-hover); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-			.lb-feature p { font-size: 13px; margin: 0; }
+			.lb-feature h3 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: var(--fs-md); font-weight: 700; color: var(--brand-hover); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-feature p { font-size: var(--fs-md); margin: 0; }
 			/* Contact form */
 			.lb-form-row { display: flex; gap: 14px; margin-bottom: 14px; }
 			.lb-field { display: flex; flex-direction: column; flex: 1; gap: 6px; }
-			.lb-field label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-field label { font-size: var(--fs-sm); font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
 			.lb-field input, .lb-field textarea {
 				background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
 				border-radius: 6px; padding: 10px 12px; color: #f0eeff;
-				font-family: 'Plus Jakarta Sans',sans-serif; font-size: 14px;
+				font-family: 'Plus Jakarta Sans',sans-serif; font-size: var(--fs-md);
 				transition: border-color 0.15s; outline: none; width: 100%; box-sizing: border-box;
 			}
 			.lb-field input:focus, .lb-field textarea:focus { border-color: var(--brand-hover); }
@@ -299,12 +313,12 @@
 			.lb-submit button {
 				background: var(--brand-hover); border: none; border-radius: 6px;
 				padding: 12px 28px; color: #0b0912; font-family: 'Plus Jakarta Sans',sans-serif;
-				font-size: 13px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+				font-size: var(--fs-md); font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
 				cursor: pointer; transition: opacity 0.15s;
 			}
 			.lb-submit button:hover { opacity: 0.85; }
 			.lb-submit button:disabled { opacity: 0.5; cursor: default; }
-			#lb-contact-status { display:none; padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px; font-weight: 600; }
+			#lb-contact-status { display:none; padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: var(--fs-md); font-weight: 600; }
 		</style>
 		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
 		     data-cfasync="false" opts out of Cloudflare Rocket Loader -->
