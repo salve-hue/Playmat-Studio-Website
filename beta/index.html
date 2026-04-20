@@ -46,8 +46,8 @@
 				--fs-md: 14px;   /* body: nav, descriptions, inputs, buttons  */
 				--fs-sm: 11px;   /* labels: field labels, tooltips, micro UI  */
 			}
-			/* Normalize tool overlay modal headings (inline style → !important) */
-			.overlay-box h3 { font-size: var(--fs-lg) !important; }
+			/* Normalize tool overlay modal headings */
+			.overlay-box h3 { font-size: var(--fs-lg) !important; text-transform: none !important; }
 			/* Share / print result modal headings */
 			#share-result-modal h3,
 			#get-printed-modal h3 { font-size: var(--fs-lg) !important; }
@@ -79,6 +79,19 @@
 			}
 			/* Suppress fullscreen toggle — users restart instead */
 			#fs-toggle-btn { display: none !important; }
+
+			/* ── Title case: override text-transform:uppercase from tool.css ── */
+			.action-btn,
+			.acc-btn,
+			.panel-title,
+			.ps-panel-label,
+			.canvas-sz-label,
+			.canvas-sz-btn { text-transform: none !important; }
+			/* Labels that carry inline text-transform:uppercase */
+			#sidebar label, #simple-tools label,
+			#simple-header > span,
+			#host-result div[style*="text-transform"],
+			#host-history span[style*="text-transform"] { text-transform: none !important; }
 
 			/* ── Global fixes (main.css not loaded on beta) ─────────────── */
 			a { text-decoration: none !important; }
@@ -378,8 +391,8 @@
 					        <h3 id="app-alert-title" style="margin-top:0; font-size:20px; text-transform:uppercase;">Notice</h3>
 					        <p id="app-alert-text" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px; white-space: pre-wrap;"></p>
 					        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-					            <button class="action-btn" id="app-alert-btn" style="width:auto; padding:12px 30px;">OKAY</button>
-					            <button class="action-btn" id="app-alert-retry-btn" style="width:auto; padding:12px 30px; display:none;">RETRY</button>
+					            <button class="action-btn" id="app-alert-btn" style="width:auto; padding:12px 30px;">Okay</button>
+					            <button class="action-btn" id="app-alert-retry-btn" style="width:auto; padding:12px 30px; display:none;">Retry</button>
 					        </div>
 					    </div>
 					</div>
@@ -389,8 +402,8 @@
 					        <h3 style="color:var(--danger-red); margin-top:0; font-size:20px; text-transform:uppercase;">Resolution Warning</h3>
 					        <p id="dpi-warning-text" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;"></p>
 					        <div style="display:flex; gap:10px; justify-content:center;">
-					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="dpi-help-btn">NEED HELP?</button>
-					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 30px; margin:0;" id="dpi-understand-btn">I UNDERSTAND</button>
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="dpi-help-btn">Need Help?</button>
+					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 30px; margin:0;" id="dpi-understand-btn">I Understand</button>
 					        </div>
 					    </div>
 					</div>
@@ -403,8 +416,8 @@
 					            It usually takes <strong>5 to 10 seconds</strong> to process.
 					        </p>
 					        <div style="display:flex; gap:10px; justify-content:center;">
-					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-warn-cancel-btn">CANCEL</button>
-					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-warn-proceed-btn">PROCEED</button>
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-warn-cancel-btn">Cancel</button>
+					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-warn-proceed-btn">Proceed</button>
 					        </div>
 					    </div>
 					</div>
@@ -417,8 +430,8 @@
 					            It usually takes <strong>5 to 10 seconds</strong>.
 					        </p>
 					        <div style="display:flex; gap:10px; justify-content:center;">
-					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-upscale-cancel-btn">CANCEL</button>
-					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-upscale-proceed-btn">PROCEED</button>
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-upscale-cancel-btn">Cancel</button>
+					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-upscale-proceed-btn">Proceed</button>
 					        </div>
 					    </div>
 					</div>
@@ -430,7 +443,7 @@
 					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
 					            Your image has been successfully upscaled and optimized for high-quality printing!
 					        </p>
-					        <button class="action-btn" style="background:var(--success-green); width:auto; padding:12px 30px; margin:0 auto;" id="ai-success-btn">AWESOME</button>
+					        <button class="action-btn" style="background:var(--success-green); width:auto; padding:12px 30px; margin:0 auto;" id="ai-success-btn">Awesome</button>
 					    </div>
 					</div>
 
@@ -440,7 +453,7 @@
 					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">🔗 Import from Web</h3>
 					        <p style="color:var(--brand-text-sec); font-size:14px; margin-bottom:20px;">Paste a direct link to an image (ending in .jpg, .png, .webp) to load it onto the canvas.</p>
 					        <input type="text" id="paste-url-input" class="ui-select" placeholder="https://example.com/image.jpg" style="margin-bottom: 15px;" />
-					        <button class="action-btn" style="background:var(--brand-hover);" id="url-paste-submit">IMPORT IMAGE</button>
+					        <button class="action-btn" style="background:var(--brand-hover);" id="url-paste-submit">Import Image</button>
 					    </div>
 					</div>
 
@@ -461,7 +474,7 @@
 					            Scale your artwork outward so it fills the entire canvas &mdash; including the red bleed area &mdash; to avoid white borders.
 					        </p>
 					        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 24px; margin:0;" id="bleed-back-btn">&larr; GO BACK AND FIX</button>
+					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 24px; margin:0;" id="bleed-back-btn">&larr; Go Back And Fix</button>
 					            <button class="action-btn" style="background:rgba(255,255,255,0.15); width:auto; padding:12px 20px; margin:0; font-size:12px;" id="bleed-proceed-btn">Proceed anyway (I accept white borders)</button>
 					        </div>
 					    </div>
@@ -533,9 +546,9 @@
 					</div><!-- /.size-selector-wrap -->
 
 					<div id="landing-upload-bar">
-						<button class="action-btn" id="landing-upload-btn">&#128193; UPLOAD FILE</button>
-						<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; PASTE URL</button>
-						<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; SOLID COLOR</button>
+						<button class="action-btn" id="landing-upload-btn">&#128193; Upload File</button>
+						<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; Paste URL</button>
+						<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; Solid Color</button>
 					</div>
 					<p id="beta-landing-tagline">Your Playmat Starts Here.</p>
 				</div><!-- /#beta-landing-inner -->
@@ -634,8 +647,8 @@
 					            <div id="batch-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
 					            <div id="batch-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
 					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
-					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="batch-clear-btn">&#x2715; CLEAR</button>
+					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; Download All</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="batch-clear-btn">&#x2715; Clear</button>
 					                </div>
 					            </div>
 					        </div>
@@ -643,7 +656,7 @@
 					        <!-- Format Converter -->
 					        <div id="tab-panel-converter" class="tool-tab-panel">
 					            <div class="ps-tool-controls">
-					                <span class="ps-panel-label">&#x1F504; CONVERT TO:</span>
+					                <span class="ps-panel-label">&#x1F504; Convert To:</span>
 					                <select id="converter-format-sel" class="ui-select" style="width:auto; min-width:180px; padding:8px 12px; font-size:13px;">
 					                    <option value="jpeg">JPG &mdash; 99% quality</option>
 					                    <option value="png">PNG &mdash; lossless</option>
@@ -661,8 +674,8 @@
 					            <div id="converter-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
 					            <div id="converter-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
 					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
-					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="converter-clear-btn">&#x2715; CLEAR</button>
+					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; Download All</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="converter-clear-btn">&#x2715; Clear</button>
 					                </div>
 					            </div>
 					        </div>
@@ -690,10 +703,10 @@
 				                        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Plus Jakarta Sans',sans-serif; margin-bottom:6px;">Hosted URL</div>
 				                        <div style="display:flex; gap:8px; align-items:center;">
 				                            <input id="host-url-input" type="text" readonly style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:8px 10px; font-size:12px; color:#f0eeff; font-family:monospace; outline:none;">
-				                            <button class="action-btn" style="width:auto; padding:8px 16px; margin:0; font-size:12px; flex-shrink:0;" id="host-copy-btn">COPY</button>
+				                            <button class="action-btn" style="width:auto; padding:8px 16px; margin:0; font-size:12px; flex-shrink:0;" id="host-copy-btn">Copy</button>
 				                        </div>
 				                        <div id="host-expiry" style="font-size:12px; color:#9888c0; margin-top:8px; font-family:'Plus Jakarta Sans',sans-serif;"></div>
-				                        <button class="action-btn btn-secondary" style="width:auto; padding:6px 14px; margin-top:12px; font-size:12px;" id="host-upload-another-btn">&#x2B06; UPLOAD ANOTHER</button>
+				                        <button class="action-btn btn-secondary" style="width:auto; padding:6px 14px; margin-top:12px; font-size:12px;" id="host-upload-another-btn">&#x2B06; Upload Another</button>
 				                    </div>
 				                </div>
 				            </div>
@@ -702,7 +715,7 @@
 				            <div id="host-history" style="display:none;">
 				                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
 				                    <span style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Plus Jakarta Sans',sans-serif;">Recent Uploads</span>
-				                    <button class="action-btn btn-secondary" style="width:auto; padding:4px 10px; margin:0; font-size:11px;" id="host-clear-history-btn">CLEAR ALL</button>
+				                    <button class="action-btn btn-secondary" style="width:auto; padding:4px 10px; margin:0; font-size:11px;" id="host-clear-history-btn">Clear All</button>
 				                </div>
 				                <div id="host-history-list"></div>
 				            </div>
@@ -716,8 +729,8 @@
 					        <div id="simple-modal">
 					            <div id="simple-header">
 					                <span style="font-weight:600; font-size:22px; color:var(--brand-hover); text-transform:uppercase; letter-spacing:1px; font-family:'Plus Jakarta Sans', sans-serif;">Playmat Studio <span style="font-size:16px; color:#ffffff; font-weight:600; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:1px; text-transform:uppercase;">| Quick Upload</span></span>
-					                <button class="action-btn btn-secondary" style="width:auto; padding: 6px 12px; margin:0; font-size:12px;" id="s-restart-btn">RESTART</button>
-					                <button id="s-fs-toggle-btn" class="action-btn" style="width:auto; padding:6px 12px; margin:0; font-size:12px; background:var(--brand-hover);">&#x26F6; FULL SCREEN</button>
+					                <button class="action-btn btn-secondary" style="width:auto; padding: 6px 12px; margin:0; font-size:12px;" id="s-restart-btn">Restart</button>
+					                <button id="s-fs-toggle-btn" class="action-btn" style="width:auto; padding:6px 12px; margin:0; font-size:12px; background:var(--brand-hover);">&#x26F6; Full Screen</button>
 					            </div>
 
 					            <div id="simple-canvas-wrap">
@@ -740,21 +753,21 @@
 					                    <div>
 					                        <label style="color: var(--brand-hover); font-size:11px; font-weight:bold; text-transform:uppercase; display:block; margin-bottom:10px;">Artwork &amp; Filters</label>
 					                        <div style="display:flex; width:100%; gap:8px; margin-bottom:15px;">
-					                            <button class="action-btn" style="flex:2;" id="s-upload-file-btn">📁 UPLOAD FILE</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" id="s-paste-url-btn">🔗 PASTE URL</button>
+					                            <button class="action-btn" style="flex:2;" id="s-upload-file-btn">📁 Upload File</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" id="s-paste-url-btn">🔗 Paste URL</button>
 					                        </div>
 
 					                        <div style="display:flex; width:100%; gap:10px; align-items:center; margin-bottom:15px;">
 					                            <input type="range" id="s-zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="flex:2;">
-					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-rotate-btn">↻ ROTATE</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-fit-btn">[ ] FIT</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-rotate-btn">↻ Rotate</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-fit-btn">[ ] Fit</button>
 					                        </div>
 
 					                        <div style="display:flex; width:100%; gap:8px;">
-					                            <button id="s-btn-enhance" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">🪄 ENHANCE</button>
-					                            <button id="s-btn-grayscale" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">◑ GRAYSCALE</button>
+					                            <button id="s-btn-enhance" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">🪄 Enhance</button>
+					                            <button id="s-btn-grayscale" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">◑ Grayscale</button>
 					                        </div>
-					                        <button class="action-btn btn-secondary" style="width:100%; margin-top:8px; font-size:10px; padding:6px 8px;" id="s-guides-btn">SHOW/HIDE PRINT GUIDES</button>
+					                        <button class="action-btn btn-secondary" style="width:100%; margin-top:8px; font-size:10px; padding:6px 8px;" id="s-guides-btn">Show/Hide Print Guides</button>
 					                    </div>
 
 					                    <div>
@@ -790,9 +803,9 @@
 					                        Scale your artwork to fill the entire canvas including the red bleed area.
 					                    </div>
 					                    <div class="action-row-3">
-					                        <button id="simple-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; GET PRINTED</button>
-					                        <button id="simple-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; DOWNLOAD</button>
-					                        <button id="simple-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; SHARE</button>
+					                        <button id="simple-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
+					                        <button id="simple-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; Download</button>
+					                        <button id="simple-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; Share</button>
 					                    </div>
 					                </div>
 
@@ -809,38 +822,38 @@
 					    <div id="playmat-tool-root">
 					        <div id="editor-top-bar">
 					            <div class="etb-group">
-					                <button class="action-btn" id="adv-upload-file-btn">📁 UPLOAD FILE</button>
+					                <button class="action-btn" id="adv-upload-file-btn">📁 Upload File</button>
 					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;">
-					                <button class="action-btn btn-secondary" id="adv-paste-url-btn">🔗 PASTE URL</button>
+					                <button class="action-btn btn-secondary" id="adv-paste-url-btn">🔗 Paste URL</button>
 					            </div>
 					            <div class="etb-group">
 					                <div id="canvas-size-btns">
-					                    <span class="canvas-sz-label">CANVAS:</span>
-					                    <button class="action-btn btn-secondary canvas-sz-btn canvas-sz-active" data-sz="auto">AUTO</button>
+					                    <span class="canvas-sz-label">Canvas:</span>
+					                    <button class="action-btn btn-secondary canvas-sz-btn canvas-sz-active" data-sz="auto">Auto</button>
 					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="s">S</button>
 					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="m">M</button>
 					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="l">L</button>
 					                </div>
-					                <button class="action-btn btn-secondary" id="adv-restart-btn">↺ RESTART</button>
-					                <button id="fs-toggle-btn" class="action-btn" style="background: var(--brand-hover);">⛶ FULL SCREEN</button>
+					                <button class="action-btn btn-secondary" id="adv-restart-btn">↺ Restart</button>
+					                <button id="fs-toggle-btn" class="action-btn" style="background: var(--brand-hover);">⛶ Full Screen</button>
 					            </div>
 					        </div>
 					        <div id="editor-main">
 					        <div id="sidebar">
 
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-size">ARTWORK <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
 					            <div id="acc-size" class="acc-content" style="display:block;">
 
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
 					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="width:100%;">
-					                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn">RESET ART SCALE &amp; CENTER</button>
+					                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn">Reset Art Scale &amp; Center</button>
 					                    <div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px;">
 					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Axis Lock <span class="info-tooltip" data-tip="Lock X: artwork can only move left/right (vertical position frozen). Lock Y: artwork can only move up/down (horizontal position frozen). Click the active button again to unlock.">?</span></label>
 					                        <div style="display:flex; gap:8px;">
-					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="x" style="flex:1; margin:0;" onclick="window.setAxisLock('x')">LOCK X</button>
-					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="y" style="flex:1; margin:0;" onclick="window.setAxisLock('y')">LOCK Y</button>
+					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="x" style="flex:1; margin:0;" onclick="window.setAxisLock('x')">Lock X</button>
+					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="y" style="flex:1; margin:0;" onclick="window.setAxisLock('y')">Lock Y</button>
 					                        </div>
 					                    </div>
 					                </div>
@@ -848,15 +861,15 @@
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
 					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Rotate &amp; Flip</label>
 					                    <div style="display:flex; gap:8px; margin-bottom: 10px;">
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-rotate-btn">ROTATE 90°</button>
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipx-btn">FLIP H</button>
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipy-btn">FLIP V</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-rotate-btn">Rotate 90°</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipx-btn">Flip H</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipy-btn">Flip V</button>
 					                    </div>
 					                    <div style="display:flex; gap:10px; align-items:center; margin-bottom: 10px;">
 					                        <input type="range" id="transform-rotation" min="-180" max="180" value="0" style="flex:1;">
 					                        <span id="rotation-val" style="font-size: 13px; width: 35px; text-align: right; color:var(--brand-text-pri);">0°</span>
 					                    </div>
-					                    <button class="action-btn btn-secondary" style="margin:0;" id="adv-reset-rotation-btn">RESET ROTATION</button>
+					                    <button class="action-btn btn-secondary" style="margin:0;" id="adv-reset-rotation-btn">Reset Rotation</button>
 					                </div>
 
 					                <div style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
@@ -870,7 +883,7 @@
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
 					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality <span class="info-tooltip" data-tip="AI upscaling improves low-resolution artwork before printing. Works best on images that look blurry or pixelated. Results may vary depending on the source image.">?</span></label>
 					                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); line-height: 1.2; width: 100%;">
-					                        ✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>
+					                        ✨ Enhance Quality <span class="beta-badge">BETA</span>
 					                    </button>
 					                </div>
 
@@ -878,7 +891,7 @@
 					            </div>
 
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-layouts">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-layouts">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
 					            <div id="acc-layouts" class="acc-content" style="display:block;">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -937,26 +950,26 @@
 					                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
 
 					                    <div class="inner-panel">
-					                        <span class="panel-title">FRAME BREAKING</span>
+					                        <span class="panel-title">Frame Breaking</span>
 					                        <button id="ai-fb-btn" class="action-btn" style="background:var(--brand-hover); margin-bottom:10px; line-height:1.2;">
-					                            ✨ AUTO FRAME BREAK<br><span style="font-size: 10px; font-weight: normal;">(experimental)</span>
+					                            ✨ Auto Frame Break<br><span style="font-size: 10px; font-weight: normal;">(experimental)</span>
 					                        </button>
-					                        <button id="ai-fb-clear-btn" class="action-btn btn-secondary hidden-field" style="margin-bottom:15px; border: 1px solid var(--danger-red); color: var(--danger-red);">🗑️ REMOVE AI POP-OUT</button>
+					                        <button id="ai-fb-clear-btn" class="action-btn btn-secondary hidden-field" style="margin-bottom:15px; border: 1px solid var(--danger-red); color: var(--danger-red);">🗑️ Remove AI Pop-Out</button>
 
-					                        <button id="mask-toggle-btn" class="action-btn btn-secondary btn-eraser">ENABLE MANUAL ERASER</button>
+					                        <button id="mask-toggle-btn" class="action-btn btn-secondary btn-eraser">Enable Manual Eraser</button>
 					                        <div id="mask-controls" class="hidden-field">
 					                            <label style="font-size:11px; margin-top:10px; display:block; color:var(--brand-text-sec);">Eraser Size</label>
 					                            <input type="range" id="brush-size" min="10" max="150" value="40">
 					                            <div style="display: flex; gap: 8px; margin-top: 10px;">
-					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-undo-btn">UNDO</button>
-					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-reset-btn">RESET</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-undo-btn">Undo</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-reset-btn">Reset</button>
 					                            </div>
 					                        </div>
 					                    </div>
 
 					                    <div class="inner-panel">
-					                        <span class="panel-title">ZONE RECOLORING</span>
-					                        <button id="recolor-toggle-btn" class="action-btn btn-secondary btn-recolor">ENABLE RECOLOR BRUSH</button>
+					                        <span class="panel-title">Zone Recoloring</span>
+					                        <button id="recolor-toggle-btn" class="action-btn btn-secondary btn-recolor">Enable Recolor Brush</button>
 					                        <div id="recolor-controls" class="hidden-field">
 					                            <div style="display:flex; gap:10px; margin-bottom:10px; margin-top:10px;">
 					                                <div style="flex:1;">
@@ -969,8 +982,8 @@
 					                                </div>
 					                            </div>
 					                            <div style="display: flex; gap: 8px;">
-					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-undo-btn">UNDO</button>
-					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-reset-btn">RESET</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-undo-btn">Undo</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-reset-btn">Reset</button>
 					                            </div>
 					                        </div>
 					                    </div>
@@ -979,24 +992,24 @@
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
 					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 6px; font-weight: bold; text-transform: uppercase;">Custom Overlay</label>
 					                    <p style="font-size:11px; color:#f0eeff !important; line-height:1.4; margin:0 0 10px;">Upload a PNG/image to layer over your artwork — drag &amp; resize freely on the canvas.</p>
-					                    <button class="action-btn btn-secondary" id="adv-overlay-upload-btn" style="width:100%;">📐 UPLOAD OVERLAY</button>
+					                    <button class="action-btn btn-secondary" id="adv-overlay-upload-btn" style="width:100%;">📐 Upload Overlay</button>
 					                    <input type="file" id="adv-overlay-file-in" accept="image/*" style="display:none;">
 					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; font-size:11px; padding:7px;" id="adv-overlay-lock-btn">🔒 Proportions Locked</button>
-					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; border-color:var(--danger-red); color:var(--danger-red);" id="adv-overlay-clear-btn">🗑️ REMOVE OVERLAY</button>
+					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; border-color:var(--danger-red); color:var(--danger-red);" id="adv-overlay-clear-btn">🗑️ Remove Overlay</button>
 					                </div>
 					            </div>
 					            </div>
 
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-art">ADJUSTMENTS <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-art">Adjustments <span>▼</span></button>
 					            <div id="acc-art" class="acc-content" style="display:block;">
 
 					                <div class="inner-panel">
-					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
+					                    <span class="panel-title">Print Color Correction</span>
 					                    <p style="font-size:11px; color:#f0eeff !important; line-height:1.4; margin-bottom:15px; margin-top:0; display:none;">
 					                        Images on digital screens look much brighter than physical ink. Use our Auto-Optimize tool to perfectly calibrate your art for printing!
 					                    </p>
-					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px; display:none;">🪄 AUTO-OPTIMIZE FOR PRINT</button>
+					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px; display:none;">🪄 Auto-Optimize For Print</button>
 
 					                    <div class="slider-row" style="margin-top:0;">
 					                        <div class="adj-item">
@@ -1088,16 +1101,16 @@
 					                        </div>
 					                    </div>
 
-					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn">RESET COLORS</button>
+					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn">Reset Colors</button>
 					                </div>
 
-					                <button class="action-btn btn-secondary" style="margin-top:10px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">SHOW/HIDE PRINT GUIDES</button>
+					                <button class="action-btn btn-secondary" style="margin-top:10px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">Show/Hide Print Guides</button>
 
 					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
 
 					                <div class="inner-panel">
-					                    <span class="panel-title">TEXT</span>
-					                    <button class="action-btn" style="background: var(--brand-hover); margin-bottom:15px;" id="adv-add-text-btn">+ ADD TEXT</button>
+					                    <span class="panel-title">Text</span>
+					                    <button class="action-btn" style="background: var(--brand-hover); margin-bottom:15px;" id="adv-add-text-btn">+ Add Text</button>
 
 					                    <div id="adv-text-tools" class="hidden-field" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:6px; border: 1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
 					                        <select id="adv-font-family" class="ui-select">
@@ -1118,7 +1131,7 @@
 					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Fill</label><input type="color" id="adv-text-col" class="color-swatch" value="#ffffff"></div>
 					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline</label><input type="color" id="adv-text-stroke" class="color-swatch" value="#000000"></div>
 					                        </div>
-					                        <button class="action-btn" style="background:var(--danger-red); margin-top:15px;" id="adv-delete-btn">DELETE SELECTED</button>
+					                        <button class="action-btn" style="background:var(--danger-red); margin-top:15px;" id="adv-delete-btn">Delete Selected</button>
 					                    </div>
 					                </div>
 
@@ -1133,10 +1146,10 @@
 
 					        <div id="canvas-column">
 					            <div id="zoom-toolbar">
-					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">VIEW:</span>
+					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">View:</span>
 					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-in-btn">+</button>
 					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-out-btn">-</button>
-					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">RESET</button>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">Reset</button>
 					            </div>
 
 					            <div id="canvas-wrapper">
@@ -1162,9 +1175,9 @@
 					                    Scale your artwork to fill the entire canvas including the red bleed area.
 					                </div>
 					                <div class="action-row-3">
-					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; GET PRINTED</button>
-					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; DOWNLOAD</button>
-					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; SHARE</button>
+					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
+					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; Download</button>
+					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; Share</button>
 					                </div>
 					                <div style="text-align:center; padding-top: 12px;">
 					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
