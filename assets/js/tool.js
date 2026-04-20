@@ -106,9 +106,9 @@
         "victor":    { w: 24.5, h: 12.5, label: '24" x 12"'  },  // Victor Deskmat
         "secundus":  { w: 28.5, h: 12.5, label: '28" x 12"'  },  // Secundus Deskmat
         "primus":    { w: 31.5, h: 12.5, label: '32" x 12"'  },  // Primus Deskmat
-        "tiro":      { w: 10.7362, h:  8.7677, label: '260 × 210 mm' },  // Tiro Mousepad
-        "veteranus": { w: 12.3110, h: 10.3425, label: '300 × 250 mm' },  // Veteranus Mousepad
-        "gladiator": { w: 16.2480, h: 12.3110, label: '400 × 300 mm' },  // Gladiator Mousepad
+        "tiro":      { w: 10.7362, h:  8.7677, label: '10" × 8"'  },  // Tiro Mousepad
+        "veteranus": { w: 12.3110, h: 10.3425, label: '12" × 10"' },  // Veteranus Mousepad
+        "gladiator": { w: 16.2480, h: 12.3110, label: '18" × 12"' },  // Gladiator Mousepad
     };
 
     const LAYOUT_RAW = [
