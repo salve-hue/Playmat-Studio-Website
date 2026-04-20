@@ -1251,8 +1251,9 @@
     window.changeSize = function() {
         const conf=SIZE_DB[APP.activeSizeKey], col=document.getElementById('canvas-column');
         const isMobile=window.innerWidth<=900;
-        const hPad=isMobile?20:80, vPad=isMobile?20:64;
         const mode = APP.canvasSizeMode || 'auto';
+        const hPad = (mode === 'l') ? (isMobile ? 8 : 16) : (isMobile ? 20 : 80);
+        const vPad=isMobile?20:64;
         const root = document.getElementById('playmat-tool-root');
         // Large mode: let the editor box grow to fit the canvas — no height cap
         if (mode === 'l') { if (root) root.classList.add('size-mode-large'); }

@@ -316,7 +316,7 @@
     /* Tab-mode applies height: calc(100vh - 220px) !important with higher specificity (2,1,0) so we must match it */
     #adv-backdrop.tab-mode #playmat-tool-root.size-mode-large { height: auto !important; overflow: visible !important; }
     #playmat-tool-root.size-mode-large #editor-main { flex: none; height: auto; overflow: visible; }
-    #playmat-tool-root.size-mode-large #canvas-column { height: auto; overflow: visible; justify-content: flex-start; }
+    #playmat-tool-root.size-mode-large #canvas-column { height: auto; overflow: visible; justify-content: flex-start; padding: 8px; }
     #playmat-tool-root.size-mode-large #sidebar { position: sticky; top: 0; max-height: 100vh; overflow-y: auto; align-self: flex-start; }
     #canvas-wrapper { position: relative; line-height: 0; box-shadow: 0 0 40px rgba(0,0,0,0.6); transform-origin: center center; transition: transform 0.2s; cursor: none; flex-shrink: 0; margin-bottom: 16px; }
     .compass { width: 24px; height: 24px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: var(--brand-hover); }
