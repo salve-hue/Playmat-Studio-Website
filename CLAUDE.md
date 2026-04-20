@@ -35,17 +35,22 @@ This repo is intended to be served via GitHub Pages from the `main` branch root.
 
 ## Deployment workflow
 
-After every set of changes, **always push directly to `main`** in addition to the feature branch. The sync workflow (`sync-beta.yml`) copies files to main but GitHub Actions' loop-prevention means the downstream `deploy-main.yml` won't fire from a bot-authored push. The sync workflow now explicitly dispatches `deploy-main.yml` via the API, but a direct push from a user/Claude context is the most reliable trigger.
+**IMPORTANT: Never push to `main` unless the user explicitly requests it.** All development work goes to the feature branch only. The sync workflow (`sync-beta.yml`) automatically copies `beta/index.html`, `tool.js`, and `tool.css` to `main` on push.
 
-Deployment sequence after making changes:
+**Never sync or overwrite the root `index.html` on `main`.** It is the full main site homepage and must not be touched by the sync workflow or manual deploys. Only `beta/index.html`, `assets/js/tool.js`, and `assets/css/tool.css` are safe to sync.
+
+When the user explicitly asks to deploy:
 1. Commit and push to the feature branch (`claude/setup-standalone-demo-site-gfFAb`)
-2. Check out `main`, pull, copy the changed files from the feature branch, commit, and push to `main`
+2. Check out `main`, pull, copy only the changed tool files (never root `index.html`), commit, and push
 3. Return to the feature branch
 
 ```bash
 git fetch origin main && git checkout main && git pull origin main
-git show <feature-branch>:<file> > <file>   # repeat for each changed file
-git add <files> && git commit -m "deploy: <description>" && git push origin main
+git show <feature-branch>:beta/index.html > beta/index.html
+git show <feature-branch>:assets/js/tool.js > assets/js/tool.js   # if changed
+git show <feature-branch>:assets/css/tool.css > assets/css/tool.css  # if changed
+git add beta/index.html assets/js/tool.js assets/css/tool.css
+git commit -m "deploy: <description>" && git push origin main
 git checkout claude/setup-standalone-demo-site-gfFAb
 ```
 
