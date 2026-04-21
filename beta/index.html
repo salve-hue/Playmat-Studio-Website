@@ -77,6 +77,12 @@
 				height: calc(100vh - 155px) !important;
 				border-radius: 0 !important;
 			}
+			/* Large mode must escape the height cap above */
+			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large {
+				height: auto !important;
+				max-height: none !important;
+				overflow: visible !important;
+			}
 			/* Suppress fullscreen toggle — users restart instead */
 			#fs-toggle-btn { display: none !important; }
 
