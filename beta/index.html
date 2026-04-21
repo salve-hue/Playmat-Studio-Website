@@ -102,7 +102,20 @@
 			/* ── Global fixes (main.css not loaded on beta) ─────────────── */
 			a { text-decoration: none !important; }
 			/* Without main.css box-sizing reset, padding adds to 100% width → nav overflows */
-			#header .inner { box-sizing: border-box !important; }
+			#header .inner {
+				box-sizing: border-box !important;
+				display: grid !important;
+				grid-template-columns: 1fr auto 1fr !important;
+				align-items: center !important;
+			}
+			#header .inner .logo {
+				grid-column: 2 !important;
+				justify-self: center !important;
+			}
+			#header .inner nav {
+				grid-column: 3 !important;
+				justify-self: end !important;
+			}
 
 			/* ── Beta nav ────────────────────────────────────────────────── */
 			#header nav ul li.ps-nav-link a {
@@ -142,8 +155,8 @@
 				width: 100%;
 				max-width: 700px;
 			}
-			#beta-landing .beta-logo { display: block; margin-bottom: 36px; }
-			#beta-landing .beta-logo img { height: 48px; width: auto; }
+			#beta-landing .beta-logo { display: block; margin-bottom: 20px; }
+			#beta-landing .beta-logo img { height: 44px; width: auto; }
 			#beta-landing-heading {
 				font-size: var(--fs-lg);
 				font-weight: 600;
@@ -535,9 +548,6 @@
 				  <circle cx="1110" cy="290" r="2"  fill="#30BBAD" opacity="0.18"/>
 				</svg>
 				<div id="beta-landing-inner">
-					<div class="beta-logo">
-						<img src="https://playmatstudio.com/images/Playmat%20Studio%20Logo%20v3.svg" alt="Playmat Studio" />
-					</div>
 					<p id="beta-landing-heading">Choose your mat size to get started</p>
 
 					<div class="size-selector-wrap">
