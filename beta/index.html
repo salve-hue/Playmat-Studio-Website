@@ -512,23 +512,27 @@
 			<!-- ── Beta: two-step landing overlay ─────────────────────── -->
 			<div id="beta-landing">
 				<svg id="beta-bg-pattern" aria-hidden="true"
+				     viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
 				     style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"
 				     xmlns="http://www.w3.org/2000/svg">
-				  <defs>
-				    <pattern id="bg-p" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-				      <path d="M40 8 L72 40 L40 72 L8 40 Z" fill="none" stroke="#8B60CC" stroke-width="0.7"/>
-				      <circle cx="40" cy="40" r="1.8" fill="#8B60CC"/>
-				      <circle cx="0"  cy="0"  r="1.2" fill="#30BBAD"/>
-				      <circle cx="80" cy="0"  r="1.2" fill="#30BBAD"/>
-				      <circle cx="0"  cy="80" r="1.2" fill="#30BBAD"/>
-				      <circle cx="80" cy="80" r="1.2" fill="#30BBAD"/>
-				      <circle cx="40" cy="8"  r="0.8" fill="#8B60CC"/>
-				      <circle cx="72" cy="40" r="0.8" fill="#8B60CC"/>
-				      <circle cx="40" cy="72" r="0.8" fill="#8B60CC"/>
-				      <circle cx="8"  cy="40" r="0.8" fill="#8B60CC"/>
-				    </pattern>
-				  </defs>
-				  <rect width="100%" height="100%" fill="url(#bg-p)" opacity="0.18"/>
+				  <!-- large rings anchored to corners -->
+				  <circle cx="-60" cy="100" r="360" fill="none" stroke="#8B60CC" stroke-width="1.2" opacity="0.18"/>
+				  <circle cx="1260" cy="720" r="400" fill="none" stroke="#30BBAD" stroke-width="1.2" opacity="0.18"/>
+				  <!-- mid-size rings -->
+				  <circle cx="1080" cy="60" r="190" fill="none" stroke="#8B60CC" stroke-width="0.9" opacity="0.13"/>
+				  <circle cx="160" cy="740" r="140" fill="none" stroke="#30BBAD" stroke-width="0.9" opacity="0.13"/>
+				  <!-- inner accent ring -->
+				  <circle cx="600" cy="400" r="520" fill="none" stroke="#8B60CC" stroke-width="0.6" opacity="0.07"/>
+				  <!-- diagonal lines -->
+				  <line x1="0" y1="780" x2="480" y2="0" stroke="#8B60CC" stroke-width="0.7" opacity="0.11"/>
+				  <line x1="720" y1="0" x2="1200" y2="680" stroke="#30BBAD" stroke-width="0.7" opacity="0.11"/>
+				  <!-- accent dots -->
+				  <circle cx="370" cy="175" r="3"   fill="#8B60CC" opacity="0.22"/>
+				  <circle cx="840" cy="630" r="3"   fill="#30BBAD" opacity="0.22"/>
+				  <circle cx="960" cy="330" r="2"   fill="#8B60CC" opacity="0.18"/>
+				  <circle cx="145" cy="460" r="2"   fill="#30BBAD" opacity="0.18"/>
+				  <circle cx="610" cy="705" r="2.5" fill="#8B60CC" opacity="0.18"/>
+				  <circle cx="1110" cy="290" r="2"  fill="#30BBAD" opacity="0.18"/>
 				</svg>
 				<div id="beta-landing-inner">
 					<p id="beta-landing-heading">Choose your mat size to get started</p>
