@@ -102,6 +102,10 @@
 			/* ── Global fixes (main.css not loaded on beta) ─────────────── */
 			a { text-decoration: none !important; }
 			/* Without main.css box-sizing reset, padding adds to 100% width → nav overflows */
+			#header,
+			#header .inner {
+				overflow: visible !important;
+			}
 			#header .inner {
 				box-sizing: border-box !important;
 				display: grid !important;
