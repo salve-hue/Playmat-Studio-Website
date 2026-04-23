@@ -1766,18 +1766,42 @@
         }
 
         // Advanced editor: composite non-art objects (text layers, shapes) at print
-        // resolution on top of the direct-drawn art. Art is hidden for this pass and
-        // the canvas background is cleared so only non-transparent pixels (text etc.)
-        // land on mCtx without obscuring the art underneath.
+        // resolution on top of the direct-drawn art. Art and the custom overlay are
+        // hidden for this pass — the overlay is drawn explicitly below (same direct
+        // path as art) because fabric.Image objects are unreliable through the
+        // setZoom render path at large print scales.
+        const overlayObj = isAdv ? activeCanvas.getObjects().find(o => o.name === 'overlay') : null;
         if (isAdv) {
             if (art) art.visible = false;
+            if (overlayObj) overlayObj.visible = false;
             const savedBg = activeCanvas.backgroundColor;
             activeCanvas.backgroundColor = '';
             activeCanvas.setDimensions({width:printW,height:printH}); activeCanvas.setZoom(scale); activeCanvas.renderAll();
             mCtx.drawImage(activeCanvas.getElement(), 0, 0);
             activeCanvas.backgroundColor = savedBg;
             activeCanvas.setDimensions({width:origW,height:origH}); activeCanvas.setZoom(origZoom);
-            if (art) { art.visible = true; activeCanvas.renderAll(); }
+            if (art) art.visible = true;
+            if (overlayObj) overlayObj.visible = true;
+            activeCanvas.renderAll();
+        }
+
+        // Draw custom overlay directly at print resolution — same approach as art.
+        if (isAdv && overlayObj) {
+            const el = overlayObj.getElement();
+            if (el) {
+                const ow = overlayObj.getScaledWidth()  * scale;
+                const oh = overlayObj.getScaledHeight() * scale;
+                const ox = overlayObj.left * scale;
+                const oy = overlayObj.top  * scale;
+                mCtx.save();
+                mCtx.globalAlpha = typeof overlayObj.opacity === 'number' ? overlayObj.opacity : 1;
+                mCtx.translate(ox, oy);
+                mCtx.rotate((overlayObj.angle || 0) * Math.PI / 180);
+                if (overlayObj.flipX) mCtx.scale(-1, 1);
+                if (overlayObj.flipY) mCtx.scale(1, -1);
+                mCtx.drawImage(el, -ow/2, -oh/2, ow, oh);
+                mCtx.restore();
+            }
         }
 
         // Draw layout overlay — only if the user has actively selected a layout in this session.
