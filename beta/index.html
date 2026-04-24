@@ -14,7 +14,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="robots" content="noindex, nofollow" />
 		<!-- Security headers (C2, M1) -->
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://playmatstudio.com; script-src 'self' https://playmatstudio.com https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://playmatstudio.com https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://playmatstudio.com https://fonts.gstatic.com; img-src 'self' https://playmatstudio.com https: data: blob:; connect-src 'self' https://playmatstudio.com https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://playmatstudio.com; script-src 'self' https://playmatstudio.com https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://playmatstudio.com https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://playmatstudio.com https://fonts.gstatic.com; img-src 'self' https://playmatstudio.com https: data: blob:; connect-src 'self' https://playmatstudio.com https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://contact.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
 		<meta http-equiv="X-Content-Type-Options" content="nosniff" />
 		<meta name="referrer" content="strict-origin-when-cross-origin" />
 		<meta name="description" content="Free browser-based tools to design, enhance, and download print-ready game mat artwork. No installs. No account. No cost." />
@@ -1015,7 +1015,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					                </div>
 					            </div>
 					        </div>
-					        <div class="version-tag">v1.7.1</div>
+					        <div class="version-tag changelog-trigger" style="cursor:pointer; pointer-events:auto;" title="What's New">v2.0.0</div>
 					    </div>
 
 
@@ -1393,7 +1393,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
 					        </div>
 					    </div>
-					    <div class="version-tag" style="color:rgba(255,255,255,0.2); z-index:10001;">v1.7.1</div>
+					    <div class="version-tag changelog-trigger" style="color:rgba(255,255,255,0.2); z-index:10001; cursor:pointer; pointer-events:auto;" title="What's New">v2.0.0</div>
 					    </div><!-- /#adv-backdrop -->
 					</div>
 					</div><!-- /#designer-visibility-wrapper -->
@@ -1699,6 +1699,96 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
     </div>
 </div>
 
+<!-- ── Changelog modal ───────────────────────────────────────────────── -->
+<div id="changelog-modal" role="dialog" aria-modal="true" aria-label="Changelog">
+	<div class="changelog-box">
+		<div class="changelog-header">
+			<div class="changelog-header-left">
+				<h2>What's New</h2>
+				<span class="changelog-beta-badge">Beta</span>
+			</div>
+			<button class="changelog-close" id="changelog-close" aria-label="Close">&times;</button>
+		</div>
+		<div class="changelog-body">
+			<div class="cl-timeline">
+
+				<div class="cl-entry cl-latest cl-major">
+					<div class="cl-vheader">
+						<span class="cl-vnum">v2.0.0</span>
+						<span class="cl-tag cl-tag-major">Major</span>
+						<span class="cl-tag cl-tag-latest">Latest</span>
+						<span class="cl-vdate">2026-04-24</span>
+					</div>
+					<div class="cl-card">
+						<p class="cl-summary">A big update to the editor and site — new built-in tools, a refreshed header, and several important bug fixes including a long-standing issue where custom overlays were missing from exported images.</p>
+						<div class="cl-groups">
+							<div class="cl-group">
+								<p class="cl-label cl-label-added">Added</p>
+								<ul class="cl-list">
+									<li><strong>Image Hosting</strong> — upload any image and get a permanent shareable link instantly, right from the header. No third-party services needed.</li>
+									<li><strong>File Converter</strong> — convert images to JPG, PNG, or WEBP directly in your browser. Supports batch conversion with ZIP download.</li>
+									<li><strong>Direct tool links</strong> — you can now link directly to the Image Hosting or File Converter panels using a URL hash (e.g. <code>#upload</code> or <code>#file-converter</code>).</li>
+									<li><strong>New landing page background</strong> — replaced the repeating grid pattern with a custom non-repeating ring and line composition.</li>
+								</ul>
+							</div>
+							<div class="cl-group">
+								<p class="cl-label cl-label-improved">Improved</p>
+								<ul class="cl-list">
+									<li><strong>Header layout</strong> — the logo now sits on the left, tool buttons in the middle, and navigation on the right. All items are vertically centred regardless of logo size.</li>
+									<li><strong>Logo rendering</strong> — the logo SVG is now inlined so the full artwork displays without clipping. Previously a few pixels on each side were trimmed by the browser.</li>
+									<li><strong>Tool and nav buttons</strong> — the Image Hosting and File Converter buttons match the shape and weight of the main navigation pills. Tool buttons use purple to distinguish them from the teal nav links.</li>
+									<li><strong>Page width</strong> — header and content are now capped at 960 px for better readability on wide monitors.</li>
+									<li><strong>UI text casing</strong> — button labels and headings throughout the tool now use Title Case instead of ALL CAPS.</li>
+								</ul>
+							</div>
+							<div class="cl-group">
+								<p class="cl-label cl-label-fixed">Fixed</p>
+								<ul class="cl-list">
+									<li><strong>Custom overlay missing from exports</strong> — zone art or overlay images added in the Advanced Editor now correctly appear in downloaded files. This was a long-standing bug where the overlay layer was dropped during the export process.</li>
+									<li><strong>Contact form blocked by security policy</strong> — the Content Security Policy was missing the contact endpoint, which silently prevented form submissions from going through.</li>
+									<li><strong>File Converter freezing on bad files</strong> — if a corrupted or unreadable image was loaded, the converter would hang indefinitely showing "Converting…". It now fails gracefully with an error message.</li>
+									<li><strong>Direct links unreliable on slow loads</strong> — hash-based deep links (e.g. <code>#upload</code>) now wait for the page to be ready before opening, rather than relying on an arbitrary 300 ms timeout.</li>
+									<li><strong>Image Hosting: no feedback after upload</strong> — after a successful upload the form now shows a confirmation message, clears the selected file, and resets so you can upload another image without reloading.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="cl-entry">
+					<div class="cl-vheader">
+						<span class="cl-vnum">v1.7.1</span>
+						<span class="cl-tag cl-tag-patch">Patch</span>
+						<span class="cl-vdate">2025-11-10</span>
+					</div>
+					<div class="cl-card">
+						<p class="cl-summary">Stability and print-quality improvements.</p>
+						<div class="cl-groups">
+							<div class="cl-group">
+								<p class="cl-label cl-label-improved">Improved</p>
+								<ul class="cl-list">
+									<li>Export now writes correct 300 DPI metadata for print vendors.</li>
+									<li>AI upscale and background-remove workers updated for faster response times.</li>
+									<li>Zoom toolbar repositioned to avoid overlapping the canvas on small screens.</li>
+								</ul>
+							</div>
+							<div class="cl-group">
+								<p class="cl-label cl-label-fixed">Fixed</p>
+								<ul class="cl-list">
+									<li>Large canvas mode no longer clips at the bottom on tall displays.</li>
+									<li>Pinned info bar (bleed/safe-zone guide) now stays anchored below the editor on all screen sizes.</li>
+									<li>Share link expiry note was showing the wrong time unit in some locales.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- ── Lightbox overlay ───────────────────────────────────────────────── -->
 <div id="lb-overlay">
 	<div id="lb-modal">
@@ -1866,12 +1956,22 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 	});
 	document.getElementById('lb-close').addEventListener('click', closeLb);
 	overlay.addEventListener('click', function(e) { if (e.target === overlay) closeLb(); });
-	document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLb(); });
+	document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeLb(); closeChangelog(); } });
+
+	// ── Changelog modal ────────────────────────────────────────────────────
+	var changelogModal = document.getElementById('changelog-modal');
+	function openChangelog() { changelogModal.style.display = 'flex'; }
+	function closeChangelog() { changelogModal.style.display = 'none'; }
+	document.querySelectorAll('.changelog-trigger').forEach(function(el) {
+		el.addEventListener('click', openChangelog);
+	});
+	document.getElementById('changelog-close').addEventListener('click', closeChangelog);
+	changelogModal.addEventListener('click', function(e) { if (e.target === changelogModal) closeChangelog(); });
 
 	// ── Open via URL hash on load ──────────────────────────────────────────
 	(function() {
 		var hash = window.location.hash.replace('#', '');
-		if (hash) { setTimeout(function() { openLb(hash); }, 300); }
+		if (hash) { (function tryOpen() { if (typeof openLb === 'function') { openLb(hash); } else { setTimeout(tryOpen, 50); } })(); }
 	})();
 
 	// ── Contact form inside lightbox ───────────────────────────────────
@@ -1954,6 +2054,9 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 						li.innerHTML = '<span>' + d.url + '</span><div style="display:flex;gap:6px;"><button class="copy-btn" data-url="' + d.url + '">Copy</button><a href="' + d.url + '" target="_blank" rel="noopener">Open</a></div>';
 						results.prepend(li);
 						li.querySelector('.copy-btn').addEventListener('click', function() { navigator.clipboard.writeText(d.url); this.textContent = 'Copied!'; var b = this; setTimeout(function() { b.textContent = 'Copy'; }, 2000); });
+						status.textContent = 'Upload complete!'; status.className = 'tool-status'; status.style.display = 'block';
+						selectedFile = null; fileIn.value = ''; preview.style.display = 'none'; actRow.style.display = 'none';
+						drop.innerHTML = '<span>Drag &amp; drop an image here, or <u>browse</u></span>';
 					} else { throw new Error(d.error || 'Upload failed'); }
 				})
 				.catch(function(err) {
@@ -2000,7 +2103,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 		fileIn.addEventListener('change', function() { setFiles(fileIn.files); });
 
 		function convertFile(file, fmt, q) {
-			return new Promise(function(resolve) {
+			return new Promise(function(resolve, reject) {
 				var img = new Image();
 				var url = URL.createObjectURL(file);
 				img.onload = function() {
@@ -2010,6 +2113,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					URL.revokeObjectURL(url);
 					c.toBlob(function(blob) { resolve(blob); }, fmt, q / 100);
 				};
+				img.onerror = function() { URL.revokeObjectURL(url); reject(new Error('Failed to load: ' + file.name)); };
 				img.src = url;
 			});
 		}
