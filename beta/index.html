@@ -401,6 +401,7 @@
 			#header-tools {
 				grid-column: 1;
 				justify-self: start;
+				align-self: center;
 				display: flex;
 				gap: 8px;
 				align-items: center;
@@ -409,19 +410,20 @@
 				font-family: 'Plus Jakarta Sans', sans-serif;
 				font-size: var(--fs-md);
 				font-weight: 600;
-				color: rgba(48,187,173,0.75);
+				color: rgba(139,96,204,0.85);
 				text-decoration: none;
 				padding: 5px 14px;
 				border-radius: 20px;
-				border: 1px solid rgba(48,187,173,0.28);
+				border: 1px solid rgba(139,96,204,0.35);
 				transition: all 0.15s;
 				letter-spacing: 0.2px;
+				white-space: nowrap;
 			}
 			#header-tools a:hover,
 			#header-tools a.lb-nav-active {
-				background: rgba(48,187,173,0.1);
-				border-color: rgba(48,187,173,0.55);
-				color: #30BBAD;
+				background: rgba(139,96,204,0.14);
+				border-color: rgba(139,96,204,0.65);
+				color: #a87de0;
 			}
 
 			/* ── Tool lightbox panels ─────────────────────────────────────── */
@@ -514,8 +516,8 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					<!-- Tool links (left) -->
 					<div id="header-tools">
-						<a href="#" data-lb="image-hosting">&#128247; Image Hosting</a>
-						<a href="#" data-lb="file-converter">&#128257; File Converter</a>
+						<a href="#" data-lb="image-hosting">Image Hosting</a>
+						<a href="#" data-lb="file-converter">File Converter</a>
 					</div>
 
 					<!-- Nav -->
@@ -1768,7 +1770,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 </div>
 
 <div id="lb-panel-image-hosting" hidden>
-	<h2>&#128247; Image Hosting</h2>
+	<h2>Image Hosting</h2>
 	<p class="lb-subtitle">Upload an image and get a permanent shareable link instantly.</p>
 	<div id="ih-drop" class="tool-drop-zone">
 		<svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
@@ -1784,7 +1786,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 </div>
 
 <div id="lb-panel-file-converter" hidden>
-	<h2>&#128257; File Converter</h2>
+	<h2>File Converter</h2>
 	<p class="lb-subtitle">Convert images to JPG, PNG, or WEBP — in your browser, no upload needed.</p>
 	<div id="fc-drop" class="tool-drop-zone">
 		<svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
