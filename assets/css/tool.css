@@ -416,6 +416,7 @@
 
     /* --- CANVAS INFO BAR --- */
     .canvas-info-bar { text-align: center; padding: 8px 20px; font-size: 12px; font-family: 'Plus Jakarta Sans', monospace; color: var(--brand-text-sec); background: rgba(0,0,0,0.25); border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.8; letter-spacing: 0.3px; }
+    #playmat-tool-root.size-mode-large #adv-info-bar { position: sticky; bottom: 0; z-index: 20; background: #0b0912; border-top: 1px solid rgba(255,255,255,0.08); }
     .canvas-info-bar span { margin: 0 10px; white-space: nowrap; }
     .canvas-info-bar .info-red    { color: #ff4757; font-weight: 700; }
     .canvas-info-bar .info-yellow { color: #ffd32a; font-weight: 700; }
