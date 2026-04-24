@@ -1,11 +1,11 @@
-name: Sync beta to main
+name: Sync tool to main
 
 on:
   push:
     branches:
       - 'claude/setup-standalone-demo-site-gfFAb'
     paths:
-      - 'beta/**'
+      - 'beta/index.html'
       - 'assets/js/tool.js'
       - 'assets/css/tool.css'
 
@@ -26,16 +26,16 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          cp beta/index.html /tmp/beta-index.html
+          cp beta/index.html /tmp/tool-index.html
           cp assets/js/tool.js /tmp/tool.js
           cp assets/css/tool.css /tmp/tool.css
           git fetch origin main
           git checkout main
-          mkdir -p beta assets/js assets/css
-          cp /tmp/beta-index.html beta/index.html
+          mkdir -p assets/js assets/css
+          cp /tmp/tool-index.html index.html
           cp /tmp/tool.js assets/js/tool.js
           cp /tmp/tool.css assets/css/tool.css
-          git add beta/index.html assets/js/tool.js assets/css/tool.css
+          git add index.html assets/js/tool.js assets/css/tool.css
           git diff --staged --quiet || git commit -m "sync: tool files from feature branch"
           git push origin main
 

@@ -6,19 +6,20 @@
 -->
 <html lang="en">
 	<head>
-		<title>Playmat Studio &mdash; Your Playmat Starts Here.</title>
+		<title>Playmat Studio &mdash; Tool Demo</title>
 		<meta charset="utf-8" />
 		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="0" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="noindex, nofollow" />
 		<!-- Security headers (C2, M1) -->
-		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://contact.playmatstudio.com https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://playmatstudio.com; script-src 'self' https://playmatstudio.com https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://playmatstudio.com https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://playmatstudio.com https://fonts.gstatic.com; img-src 'self' https://playmatstudio.com https: data: blob:; connect-src 'self' https://playmatstudio.com https://playmat-upscaler.salve.workers.dev https://playmat-removebg.salve.workers.dev https://files.playmatstudio.com https://contact.playmatstudio.com https://wsrv.nl https://corsproxy.io; worker-src blob:; object-src 'none'; base-uri 'self';" />
 		<meta http-equiv="X-Content-Type-Options" content="nosniff" />
 		<meta name="referrer" content="strict-origin-when-cross-origin" />
 		<meta name="description" content="Free browser-based tools to design, enhance, and download print-ready game mat artwork. No installs. No account. No cost." />
 		<!-- Favicons -->
-		<link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href="https://playmatstudio.com/images/favicon.svg" />
 		<meta name="theme-color" content="#0b0912" />
 
 		<!-- Open Graph / Twitter Card -->
@@ -34,27 +35,480 @@
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link rel="preload" href="assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
+		<link rel="preload" href="https://playmatstudio.com/assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
-		<link rel="stylesheet" href="assets/css/main.css?v=9" />
-		<link rel="stylesheet" href="assets/css/custom.css?v=16" />
-		<link rel="stylesheet" href="assets/css/tool.css?v=10" />
+		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/custom.css?v=16" />
+		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/tool.css?v=10" />
 		<style>
-			/* Tool is now a direct child of section#tools (outside .inner),
-			   so width:100% naturally fills the full viewport width */
+			/* ── 3-tier font size system ─────────────────────────────────── */
+			:root {
+				--fs-lg: 22px;   /* headings: landing, lightbox h2, modal h3 */
+				--fs-md: 14px;   /* body: nav, descriptions, inputs, buttons  */
+				--fs-sm: 11px;   /* labels: field labels, tooltips, micro UI  */
+			}
+			/* Normalize tool overlay modal headings */
+			.overlay-box h3 { font-size: var(--fs-lg) !important; text-transform: none !important; }
+			/* Share / print result modal headings */
+			#share-result-modal h3,
+			#get-printed-modal h3 { font-size: var(--fs-lg) !important; }
+			#share-result-modal p,
+			#get-printed-modal p  { font-size: var(--fs-md) !important; }
+
+			html, body { height: 100%; overflow-x: hidden; }
+			#wrapper { min-height: 100vh; display: flex; flex-direction: column; padding-top: 133px !important; }
+			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
+			section#tools .inner { max-width: none !important; padding: 0 !important; }
 			#designer-visibility-wrapper {
 				width: 100% !important;
 				max-width: 100% !important;
 				margin: 0 !important;
 				box-sizing: border-box !important;
+				display: block !important;
 			}
+
+			/* ── Beta standalone: hide chrome not needed in two-step flow ── */
+			.tool-tab-bar,
+			#tab-panel-batch,
+			#tab-panel-converter,
+			#tab-panel-host { display: none !important; }
+			#landing-ui > p { display: none !important; }
+			.designer-container-wrap { margin-top: 0 !important; }
+			#adv-backdrop.tab-mode #playmat-tool-root {
+				height: calc(100vh - 155px) !important;
+				border-radius: 0 !important;
+			}
+			/* Large mode must escape the height cap above */
+			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large {
+				height: auto !important;
+				max-height: none !important;
+				overflow: visible !important;
+			}
+			/* Suppress fullscreen toggle — users restart instead */
+			#fs-toggle-btn { display: none !important; }
+
+			/* ── Title case: override text-transform:uppercase from tool.css ── */
+			.action-btn,
+			.acc-btn,
+			.panel-title,
+			.ps-panel-label,
+			.canvas-sz-label,
+			.canvas-sz-btn { text-transform: none !important; }
+			/* Labels that carry inline text-transform:uppercase */
+			#sidebar label, #simple-tools label,
+			#simple-header > span,
+			#host-result div[style*="text-transform"],
+			#host-history span[style*="text-transform"] { text-transform: none !important; }
+
+			/* ── Global fixes (main.css not loaded on beta) ─────────────── */
+			a { text-decoration: none !important; }
+			/* ── Header layout: equal-flex sides force logo to true centre ─── */
+			#header {
+				overflow: visible !important;
+			}
+			#header .inner {
+				box-sizing: border-box !important;
+				display: flex !important;
+				flex-direction: row !important;
+				align-items: center !important;
+				height: auto !important;
+				overflow: visible !important;
+				max-width: 960px !important;
+				margin-left: auto !important;
+				margin-right: auto !important;
+			}
+			/* Logo on the far left */
+			#header .inner .logo {
+				flex: 0 0 auto !important;
+				order: 1 !important;
+				position: static !important;
+				transform: none !important;
+				margin: 0 !important;
+			}
+			#header .inner .logo .symbol svg {
+				height: 113px;
+				width: auto;
+				display: block;
+			}
+			/* Tool buttons just left of nav, pushed right by margin-left: auto */
+			#header-tools {
+				flex: 0 0 auto !important;
+				order: 2 !important;
+				display: flex !important;
+				align-items: center !important;
+				gap: 0.9em !important;
+				margin-left: auto !important;
+			}
+			/* Nav buttons immediately right of tool buttons */
+			#header .inner nav {
+				flex: 0 0 auto !important;
+				order: 3 !important;
+				display: flex !important;
+				justify-content: flex-end !important;
+			}
+
+			/* Gap between tool buttons and nav */
+			#header .inner nav { margin-left: 1.2em !important; }
+
+			/* ── Beta nav ────────────────────────────────────────────────── */
+			#header nav ul li.ps-nav-link a {
+				font-size: var(--fs-md) !important;
+				border-bottom: none !important;
+			}
+			#header nav ul li.ps-nav-link a:hover { border-bottom: none !important; }
+			#header nav ul li.ps-nav-link a.lb-nav-active {
+				background-color: var(--ps-teal-dark, #26a99d) !important;
+				border-bottom: none !important;
+			}
+
+			/* ── Beta landing overlay ───────────────────────────────────── */
+			#beta-landing {
+				position: fixed;
+				inset: 0;
+				background: #0b0912;
+				z-index: 500;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 40px 24px;
+				overflow: hidden;
+				transition: opacity 0.5s ease;
+			}
+			#beta-landing.exiting {
+				opacity: 0;
+				pointer-events: none;
+			}
+			#beta-landing-inner {
+				position: relative;
+				z-index: 1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: 100%;
+				max-width: 700px;
+			}
+			#beta-landing .beta-logo { display: block; margin-bottom: 20px; }
+			#beta-landing .beta-logo img { height: 44px; width: auto; }
+			#beta-landing-heading {
+				font-size: var(--fs-lg);
+				font-weight: 600;
+				color: rgba(255,255,255,0.7);
+				margin: 32px 0 28px;
+				letter-spacing: -0.5px;
+				text-align: center;
+				font-family: 'Plus Jakarta Sans', sans-serif;
+			}
+
+			#beta-landing-tagline {
+				font-size: var(--fs-lg);
+				font-weight: 500;
+				color: var(--brand-hover);
+				letter-spacing: 2px;
+				text-transform: uppercase;
+				text-align: center;
+				margin: 18px 0 0;
+				font-family: 'Plus Jakarta Sans', sans-serif;
+				opacity: 0.7;
+			}
+			#beta-landing-footer {
+				position: absolute;
+				z-index: 1;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				text-align: center;
+				padding: 14px 24px;
+				font-size: var(--fs-sm);
+				font-family: 'Plus Jakarta Sans', sans-serif;
+				color: rgba(255,255,255,0.2);
+				letter-spacing: 0.5px;
+			}
+
+			/* ── Size groups: stacked vertically, full width ────────────── */
+			.size-selector-wrap {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				width: 100%;
+				margin-bottom: 0;
+			}
+			.size-group {
+				flex: 0 0 auto;
+				width: 100%;
+				box-sizing: border-box;
+				padding: 12px 16px;
+				border-radius: 8px;
+			}
+			.size-group-label {
+				font-size: var(--fs-md);
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 2px;
+				display: block;
+				margin-bottom: 10px;
+				text-align: center;
+			}
+			.size-group--playmat {
+				background: rgba(48,187,173,0.07);
+				border: 1px solid rgba(48,187,173,0.22);
+			}
+			.size-group--playmat .size-group-label { color: #30BBAD; }
+			.size-group--deskmat {
+				background: rgba(196,149,42,0.07);
+				border: 1px solid rgba(196,149,42,0.22);
+			}
+			.size-group--deskmat .size-group-label { color: #C4952A; }
+			.size-group .mat-size-btn-group {
+				justify-content: center;
+				flex-wrap: wrap;
+				margin: 0;
+			}
+			/* Playmat + Deskmat buttons: exactly 3 per row */
+			.size-group--playmat .mat-size-btn,
+			.size-group--deskmat .mat-size-btn { flex: 0 0 calc(33.333% - 8px); }
+			/* Deskmat amber active/hover */
+			.size-group--deskmat .mat-size-btn.active {
+				background: rgba(196,149,42,0.12) !important;
+				border-color: #C4952A !important;
+			}
+			.size-group--deskmat .mat-size-btn.active .msb-name { color: #C4952A !important; }
+			.size-group--deskmat .mat-size-btn.active .msb-icon rect {
+				fill: rgba(196,149,42,0.12);
+				stroke: #C4952A;
+			}
+			.size-group--deskmat .mat-size-btn:hover {
+				background: rgba(196,149,42,0.08) !important;
+				border-color: rgba(196,149,42,0.6) !important;
+			}
+			.size-group--deskmat .mat-size-btn:hover .msb-name { color: #C4952A !important; }
+			.size-group--deskmat .mat-size-btn:hover .msb-icon rect { stroke: rgba(196,149,42,0.7); }
+
+			/* ── Upload bar: step 2, fades in after size selected ───────── */
+			#landing-upload-bar {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				justify-content: center;
+				margin-top: 28px;
+				width: 100%;
+				max-width: 560px;
+				opacity: 0;
+				transform: translateY(10px);
+				transition: opacity 0.4s ease, transform 0.4s ease;
+				pointer-events: none;
+			}
+			#landing-upload-bar.visible {
+				opacity: 1;
+				transform: translateY(0);
+				pointer-events: auto;
+			}
+			@keyframes uploadBtnGlow {
+				0%   { box-shadow: 0 0 0 0 rgba(48,187,173,0.55); }
+				60%  { box-shadow: 0 0 0 8px rgba(48,187,173,0); }
+				100% { box-shadow: 0 0 0 0 rgba(48,187,173,0); }
+			}
+			#landing-upload-bar.visible .action-btn {
+				animation: uploadBtnGlow 1.1s ease-out 0.45s 2;
+			}
+			#landing-upload-bar .action-btn { flex: 1; margin: 0; }
+
+			/* ── Editor layout (behind the overlay) ─────────────────────── */
+			#landing-ui { display: flex; flex-direction: column; align-items: center; }
+			#tab-panel-adv-editor { width: 100%; }
+
+			/* ── Axis lock button active state ──────────────────────────── */
+			.axis-lock-btn.active {
+				background: var(--brand-hover) !important;
+				border-color: var(--brand-hover) !important;
+				color: #0b0912 !important;
+				font-weight: 800 !important;
+			}
+			/* ── Info bar: static footer of the tool, never moves with canvas ── */
+			#adv-info-bar {
+				flex-shrink: 0 !important;
+				width: 100% !important;
+				box-sizing: border-box !important;
+			}
+			/* Strip the dark box tool.css draws around #adv-canvas-actions */
+			#adv-canvas-actions {
+				background: none !important;
+				border-top: none !important;
+				padding: 0 !important;
+			}
+
+			/* ── Zoom toolbar: flow above canvas, centered, instead of overlapping ── */
+			#zoom-toolbar {
+				position: relative !important;
+				top: auto !important;
+				right: auto !important;
+				align-self: center;
+				margin-bottom: 8px;
+			}
+			/* ── Size button tooltip ─────────────────────────────────────── */
+			#mat-tooltip {
+				position: fixed; z-index: 600; pointer-events: none;
+				background: #1a1528; border: 1px solid rgba(104,48,187,0.45);
+				border-radius: 8px; padding: 10px 14px; max-width: 220px;
+				font-family: 'Plus Jakarta Sans', sans-serif; font-size: var(--fs-sm);
+				line-height: 1.5; color: rgba(255,255,255,0.82);
+				box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+				opacity: 0; transition: opacity 0.2s ease;
+			}
+			#mat-tooltip.visible { opacity: 1; }
+
+			/* ── Lightbox ────────────────────────────────────────────────── */
+			#lb-overlay {
+				position: fixed; inset: 0; z-index: 800;
+				background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+				display: flex; align-items: center; justify-content: center;
+				padding: 24px; opacity: 0; pointer-events: none;
+				transition: opacity 0.25s ease;
+			}
+			#lb-overlay.open { opacity: 1; pointer-events: auto; }
+			#lb-modal {
+				background: #13101f; border: 1px solid rgba(104,48,187,0.35);
+				border-top: 3px solid var(--brand-hover);
+				border-radius: 12px; padding: 40px 40px 32px;
+				max-width: 680px; width: 100%; max-height: 82vh;
+				overflow-y: auto; position: relative;
+				box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+				transform: translateY(10px); transition: transform 0.25s ease;
+			}
+			#lb-overlay.open #lb-modal { transform: translateY(0); }
+			#lb-close {
+				position: absolute; top: 14px; right: 18px;
+				background: none; border: none; color: rgba(255,255,255,0.4);
+				font-size: var(--fs-lg); line-height: 1; cursor: pointer; padding: 4px 8px;
+				transition: color 0.15s;
+			}
+			#lb-close:hover { color: #fff; }
+			/* Lightbox typography */
+			#lb-modal h2 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: var(--fs-lg); font-weight: 700; color: #f0eeff; margin: 0 0 6px; }
+			#lb-modal .lb-subtitle { font-size: var(--fs-md); color: var(--brand-text-sec); margin: 0 0 28px; }
+			#lb-modal p { font-size: var(--fs-md); line-height: 1.7; color: rgba(255,255,255,0.75); margin: 0 0 14px; }
+			/* How It Works */
+			.lb-steps { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 4px; }
+			.lb-step { flex: 1 1 160px; background: rgba(104,48,187,0.08); border: 1px solid rgba(104,48,187,0.2); border-radius: 8px; padding: 20px 16px; text-align: center; }
+			.lb-step-icon { margin-bottom: 14px; display: flex; justify-content: center; color: var(--brand-hover); }
+			.lb-step h3 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: var(--fs-md); font-weight: 700; color: #f0eeff; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-step p { font-size: var(--fs-md); margin: 0; }
+			/* Features */
+			.lb-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; }
+			.lb-feature { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; }
+			.lb-feature h3 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: var(--fs-md); font-weight: 700; color: var(--brand-hover); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-feature p { font-size: var(--fs-md); margin: 0; }
+			/* Contact form */
+			.lb-form-row { display: flex; gap: 14px; margin-bottom: 14px; }
+			.lb-field { display: flex; flex-direction: column; flex: 1; gap: 6px; }
+			.lb-field label { font-size: var(--fs-sm); font-weight: 600; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
+			.lb-field input, .lb-field textarea {
+				background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+				border-radius: 6px; padding: 10px 12px; color: #f0eeff;
+				font-family: 'Plus Jakarta Sans',sans-serif; font-size: var(--fs-md);
+				transition: border-color 0.15s; outline: none; width: 100%; box-sizing: border-box;
+			}
+			.lb-field input:focus, .lb-field textarea:focus { border-color: var(--brand-hover); }
+			.lb-field textarea { min-height: 110px; resize: vertical; }
+			.lb-submit { margin-top: 6px; }
+			.lb-submit button {
+				background: var(--brand-hover); border: none; border-radius: 6px;
+				padding: 12px 28px; color: #0b0912; font-family: 'Plus Jakarta Sans',sans-serif;
+				font-size: var(--fs-md); font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+				cursor: pointer; transition: opacity 0.15s;
+			}
+			.lb-submit button:hover { opacity: 0.85; }
+			.lb-submit button:disabled { opacity: 0.5; cursor: default; }
+			#lb-contact-status { display:none; padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: var(--fs-md); font-weight: 600; }
+
+			/* ── Header tool buttons (left side) ─────────────────────────── */
+			#header-tools {
+				display: flex !important;
+				gap: 0.9em !important;
+				align-items: center !important;
+			}
+			#header-tools a {
+				background-color: #8B60CC !important;
+				color: #ffffff !important;
+				font-family: 'Plus Jakarta Sans', sans-serif !important;
+				font-weight: 600 !important;
+				font-size: 14px !important;
+				padding: 0.45em 0.9em !important;
+				display: flex !important;
+				align-items: center !important;
+				border-radius: 5px !important;
+				border-bottom: none !important;
+				transition: background-color 0.2s !important;
+				white-space: nowrap !important;
+				text-decoration: none !important;
+			}
+			#header-tools a:hover,
+			#header-tools a.lb-nav-active {
+				background-color: #6e45aa !important;
+				color: #ffffff !important;
+				border-bottom: none !important;
+			}
+
+			/* ── Tool lightbox panels ─────────────────────────────────────── */
+			.tool-drop-zone {
+				border: 2px dashed rgba(48,187,173,0.35);
+				border-radius: 10px;
+				padding: 36px 20px;
+				text-align: center;
+				cursor: pointer;
+				transition: all 0.15s;
+				margin-bottom: 18px;
+				color: rgba(255,255,255,0.45);
+				font-size: var(--fs-md);
+			}
+			.tool-drop-zone.drag-over,
+			.tool-drop-zone:hover {
+				border-color: rgba(48,187,173,0.7);
+				background: rgba(48,187,173,0.06);
+				color: rgba(255,255,255,0.7);
+			}
+			.tool-drop-zone svg { display: block; margin: 0 auto 10px; opacity: 0.5; }
+			.tool-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+			.tool-select {
+				background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+				border-radius: 6px; padding: 8px 12px; color: #fff;
+				font-family: 'Plus Jakarta Sans', sans-serif; font-size: var(--fs-md);
+				flex: 1; min-width: 120px;
+			}
+			.tool-btn {
+				background: #30BBAD; border: none; border-radius: 6px;
+				padding: 9px 20px; color: #0b1a19; font-family: 'Plus Jakarta Sans', sans-serif;
+				font-size: var(--fs-md); font-weight: 700; cursor: pointer; transition: opacity 0.15s;
+				white-space: nowrap;
+			}
+			.tool-btn:hover { opacity: 0.85; }
+			.tool-btn:disabled { opacity: 0.4; cursor: default; }
+			.tool-result-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+			.tool-result-list li {
+				display: flex; align-items: center; justify-content: space-between; gap: 10px;
+				background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+				border-radius: 6px; padding: 10px 14px; font-size: var(--fs-md);
+			}
+			.tool-result-list li span { color: rgba(255,255,255,0.7); word-break: break-all; }
+			.tool-result-list a {
+				color: #30BBAD; font-weight: 600; text-decoration: none;
+				white-space: nowrap; font-size: var(--fs-md);
+			}
+			.tool-result-list a:hover { text-decoration: underline; }
+			.tool-status { font-size: var(--fs-md); padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; display: none; }
+			.tool-status.ok  { background: rgba(131,187,48,.12); border: 1px solid rgba(131,187,48,.35); color: #83BB30; }
+			.tool-status.err { background: rgba(187,48,62,.12);  border: 1px solid rgba(187,48,62,.35);  color: #e05060; }
+			.tool-preview-img { max-width: 100%; max-height: 180px; border-radius: 6px; display: block; margin: 0 auto 14px; }
+			.copy-btn {
+				background: none; border: 1px solid rgba(48,187,173,0.4); border-radius: 4px;
+				color: #30BBAD; font-size: 11px; font-weight: 600; padding: 3px 8px;
+				cursor: pointer; transition: all 0.15s; white-space: nowrap;
+			}
+			.copy-btn:hover { background: rgba(48,187,173,0.1); }
 		</style>
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-		<!-- Tool dependencies -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
-		        integrity="sha384-sLpuECXYCB5TUyTbC06pftm/rgurDambREZmV4eRHwEqJzCQtU6lxI2Ve00z4XW5" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
-		        integrity="sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG" crossorigin="anonymous"></script>
+		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
+		     data-cfasync="false" opts out of Cloudflare Rocket Loader -->
+		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 	</head>
 	<body class="is-preload">
 
@@ -66,187 +520,45 @@
 				<div class="inner">
 
 					<!-- Logo -->
-					<a href="index.html" class="logo">
-						<span class="symbol"><img src="images/Playmat Studio Logo v3.svg" alt="Playmat Studio logo" /></span>
+					<a href="/" class="logo">
+						<span class="symbol" style="display:block;overflow:visible;"><svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="476 825 2148 1485" width="2148" height="1485" overflow="visible">
+	<style>
+		.s0 { fill: #83bb30 } 
+		.s1 { fill: #30bbad } 
+		.s2 { fill: #6830bb } 
+		.s3 { paint-order:stroke fill markers;stroke: #6830bb;stroke-width: 10;stroke-linejoin: round;;fill: #ffffff } 
+	</style>
+	<path fill-rule="evenodd" class="s0" d="m1087.43 840h1253.83c63.78 0 115.48 51.7 115.48 115.48v659.92c0 63.78-51.7 115.48-115.48 115.48h-1253.83c-63.78 0-115.49-51.7-115.49-115.48v-659.92c0-63.78 51.71-115.48 115.49-115.48z"/>
+	<path fill-rule="evenodd" class="s1" d="m658.48 1268.94h1253.84c63.78 0 115.48 51.71 115.48 115.49v659.91c0 63.78-51.7 115.48-115.48 115.48h-1253.84c-63.78 0-115.48-51.7-115.48-115.48v-659.91c0-63.78 51.7-115.49 115.48-115.49z"/>
+	<path fill-rule="evenodd" class="s2" d="m872.96 1054.47h1253.83c63.78 0 115.48 51.71 115.48 115.49v659.91c0 63.78-51.7 115.48-115.48 115.48h-1253.83c-63.78 0-115.49-51.7-115.49-115.48v-659.91c0-63.78 51.71-115.49 115.49-115.49z"/>
+	<path id="PLAYMAT STUDIO" class="s3" aria-label="PLAYMAT
+STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28 16-55 32.3-26.4 16.1-53.2 32.9-27 16.3-56.1 31.9-8.3 4.6-11.4 10.9-3.1 6.4-4.4 14.5l-14.3 98.8-84.1-14.8 21-70-19.9 7.7-3-76.4q15.1-7.9 24.3-13.1 9.1-5.8 13.8-9.3 5.1-4 6.8-6.4 1.7-3 2.8-5.8 11.1-41.9 22.2-78.1 11.1-36.7 18-72.6-9.1 5.8-16.2 10.7-6.7 4.3-13.8 9.3zm126 22.2l-31.6 127.7 3.8 3.5q30.2-18.9 60.1-36.8 29.7-18.3 60.6-36.3 11.1-6.7 14.5-14.7 3.3-7.9-0.9-19.8zm264.8-113.5l77.4 16q-10 39.6-20.8 74.6-10.9 34.6-21 67.4-9.7 32.2-17.7 64.7-8.1 32.5-12.6 66.9l59.9-64.6q11.2 18 20.6 35.3 10 17.3 20.7 34.9-27.4 13.7-51.2 30-23.3 15.6-45.7 36.4-5.5 5.1-8.7 7.8-3.4 2.2-6.6 2.2-2.6-0.1-5.7-2.2-3.1-2.6-8.2-7.5l-55.3-47.2q18.4-78.5 37-156.5 18.6-78 37.9-158.2zm363.3 107.2l17.5 59.1q-9.2 2.7-19.8 2.9-10.1 0.2-21.2 3.2-7.4 45.5-15.2 91.1-7.4 45.5-15 92.1l-94.9-21.4q11.9-37.3 24.3-72.6 12.2-35.9 21.1-72.7-0.5 0.1-4.5 1.3-3.7 0.7-10.2 2.9-6.1 1.6-14.2 4-7.7 1.9-15.7 4.3-4.6 13.5-10.9 31.9-5.7 18.4-11.6 36.3-5.9 17.9-10.7 32.9-4.3 14.4-5.3 20.9-18.1-6.3-38.1-13.9-19.5-7.6-36.9-12.5 2.4-7.2 6.1-16.3 4.3-9.2 8.5-18.3 4.1-9.7 7.8-18.8 3.6-9.6 5.6-16.7-4.7 0.8-8.8 1.5-4.3 0.2-9 0.5-5.5-15.9-10.5-31.9-4.5-16.5-10.4-34.5 1-0.2 4.7-0.8 3.5-1.1 8.6-2.5 7.5-2.4 17.8-4.7 10.2-2.3 20.5-4.6 9-17.9 21.3-41.7 12.2-24.2 23.9-48.4 12.2-24.2 22.7-45.5 11-21.9 17.1-35.6 2.6-6.3 13.1-13.4 10.5-7 22.6-13.4 12.1-6.8 23.5-12 11.7-5.7 17-9.2 6.8-3.9 11.5-4.2 4.7-0.3 11.1 2.8 15.3 7.9 30.6 15.8 15.6 7.3 31.9 14.9l-40.7 148.2zm-54.8-86.2l-37.5 19.7q-16.5 27-25.8 52.4-9.4 24.8-10.9 37.1l29.9-5.2q6.7-1.1 10.4-4.4 3.6-3.8 5.8-9.5 5.8-21 13.8-45 8-24 14.3-45.1zm108.5-84.8q23.6 0.7 44.8-2.5 21.2-3.7 42.4-4.7-10.1 48-20.4 94.6-9.9 46.5-20.1 93.5 8.1 3.9 12 1.6 3.8-2.2 7-8.6 32.4-59.9 63.1-117.9 31.2-58 64.1-115.4 16.2 6.7 37.8 14.5 21.5 7.3 37.8 15-32.9 54.2-62.1 105.6-29.3 50.9-55.6 100.8-25.7 49.7-48.2 100-22 49.6-40.6 100.8-18.3-6.9-36.6-14.2-17.9-7.4-37.7-14 12.4-26.3 24.3-52.1 12.4-25.9 24.3-51.6-12.8-9.4-27.8-12.6-14.9-3.1-29.4-9.6 3.1-27.4 6.7-54.8 4.2-27.6 7.8-55.1 3.5-28 5.4-56.2 1.9-28.2 1-57.1zm586.1-71.5q-15.4 56.9-27.1 113.7-11.3 56.2-15.3 114.3-2.1 27.2-1.7 53.4 1 26.2 0.4 53.1l-86.7-11.2q6.4-42.2 12.3-83.7 5.8-42.1 11.5-87.9-24.2 43.7-43.9 85.6-19.7 41.9-37.4 86-20.4-0.6-40.3-1.9-20-1.3-39.8-2l-29.7-121.7q-1.6 0.2-3.2 0-13.9 104-15.5 211.7-23.3-2.2-46-4.1-22.2-1.9-45.4-3.6 18.2-103.8 36.8-205.5 18.6-102.2 37.3-206 18.3 1 36.6 2 18.2 0.5 36 1.7 3.2 32.6 6.6 60.9 3.9 27.8 8.1 54.4 4.8 26.6 11.1 52.9 6.3 26.2 15.8 55.6 40-53.3 70.4-109.6 30.4-56.9 59.7-113.6 21 10 43.2 9.3 22.3-0.7 46.2-3.8zm250.6 87.4l17.4 59.1q-9.1 2.6-19.7 2.9-10.1 0.2-21.3 3.2-7.3 45.5-15.1 91.1-7.4 45.5-15 92.1l-95-21.4q12-37.4 24.4-72.7 12.2-35.8 21.1-72.6-0.5 0.1-4.6 1.3-3.6 0.6-10.1 2.8-6.1 1.6-14.2 4.1-7.7 1.8-15.8 4.3-4.5 13.4-10.8 31.9-5.8 18.4-11.6 36.2-5.9 17.9-10.7 33-4.3 14.4-5.3 20.9-18.2-6.3-38.2-13.9-19.4-7.6-36.8-12.5 2.4-7.3 6.1-16.4 4.2-9.1 8.5-18.3 4.1-9.6 7.8-18.7 3.6-9.6 5.5-16.8-4.6 0.8-8.7 1.6-4.3 0.2-9 0.5-5.5-15.9-10.5-31.9-4.6-16.6-10.4-34.5 1-0.2 4.6-0.8 3.6-1.2 8.6-2.6 7.6-2.3 17.9-4.7 10.2-2.3 20.4-4.6 9.1-17.9 21.4-41.6 12.2-24.2 23.8-48.4 12.2-24.2 22.8-45.5 11-22 17.1-35.7 2.6-6.2 13.1-13.3 10.4-7.1 22.6-13.4 12.1-6.9 23.5-12 11.7-5.7 17-9.3 6.7-3.8 11.5-4.1 4.7-0.3 11.1 2.8 15.3 7.9 30.5 15.7 15.7 7.3 32 15l-40.7 148.2zm-54.8-86.3l-37.5 19.7q-16.5 27.1-25.8 52.4-9.4 24.8-11 37.2l30-5.2q6.7-1.2 10.4-4.5 3.6-3.7 5.8-9.4 5.8-21 13.8-45 8-24.1 14.3-45.2zm367-233.4q6.3 14.6 12.6 28.8 6.2 13.7 13 27.8-17.6 6.2-33.7 11.6-16 5.5-32 11.4-20 7.7-40.4 15.5-20.1 7.1-39.7 16.4-7.1 2.2-11.1 6.6-3.5 4.3-6.1 10.6-12.4 37.9-24.2 85.3-11.9 46.8-21.2 96.3-9.3 49-15.2 96.9-5.8 47.9-6.8 87 0.6 9.4 0.1 18.9 0 9 0.3 19.5-25.3-7.2-49.4-14.1-23.7-7.4-49.7-16 8.8-36.9 20.4-82.6 11.6-45.7 23.3-93.5 12.2-48 23.7-94.2 11.4-46.2 20.7-83.6-13.5 7.6-25.6 14.4-12.2 6.4-24.3 13.2-10.2-15.1-19.4-30.8-8.8-16.4-17.7-30.6 8-6.2 29-16.7 21-10.5 48.8-22.2 28.3-11.7 60.8-23.7 32.9-12.6 63.5-23.2 31.1-10.7 57.4-18.4 26.9-7.9 42.9-10.6zm-1575.1 1192l-14.1-49.1q12.2-21.6 26.1-45.1 14.4-23.6 29.5-46.7 15.5-23.3 32.4-45.2 16.8-22.4 34.5-42.3 10.7 6 22.7 13.4 12.4 6.8 24.9 14.1 12.5 7.3 24.4 14.2 12.4 6.8 22.4 12.4-13.6 19.2-29.4 41.5-15.8 21.7-27.5 45.8-7.4-6.1-15.3-11.5-7.5-6.1-16-12-11.4 16.7-22.2 33.9-10.9 16.6-23.2 34.6 7.4 5.5 19.2 14.5 12.2 9 24.7 19.4 13.1 10.4 24.6 21 11.3 10.1 18.1 17.9l-10.1 51.2q-7.7 10.3-18.5 24.3-11 13.5-22.6 28.7-11.2 15.1-21.9 29.6-10.3 13.9-17.5 24.7-3 3.7-5 7.7-1.9 4-4.8 8.7-19-13.5-36.2-26.3-17.2-12.8-34.8-25 4-4.4 9.8-10.7 5.8-6.3 16.2-17 10.8-10.9 27.6-27.5 17.2-17.2 43.1-42.2-6.1-10-16.1-18.3-9.6-8.8-20.9-15.8-10.9-7.1-23.1-12.8-11.7-5.9-21-10.1zm458-365.6q6.3 14.7 12.6 28.8 6.2 13.7 12.9 27.8-17.5 6.2-33.6 11.6-16.1 5.5-32.1 11.4-19.9 7.7-40.4 15.5-20 7.1-39.6 16.4-7.1 2.2-11.1 6.6-3.5 4.3-6.1 10.6-12.4 37.9-24.2 85.3-11.9 46.8-21.2 96.3-9.4 49-15.2 96.9-5.9 47.9-6.9 87 0.6 9.4 0.2 18.9 0 9 0.3 19.5-25.3-7.2-49.4-14.1-23.7-7.4-49.8-16 8.9-36.9 20.5-82.6 11.5-45.7 23.2-93.5 12.3-48 23.7-94.2 11.5-46.2 20.8-83.6-13.5 7.6-25.6 14.4-12.2 6.4-24.3 13.2-10.2-15-19.4-30.8-8.8-16.4-17.7-30.6 8-6.1 29-16.7 21-10.5 48.8-22.1 28.2-11.8 60.7-23.8 33-12.6 63.6-23.2 31.1-10.7 57.4-18.4 26.9-7.8 42.9-10.6zm-70.6 383.9l19.7 2.9q17.5-45.6 32.7-82.5 15.2-37.4 28.1-69.7 10.3-28.6 22.2-54.9 12.3-26.4 23.2-54.6 17.8 3.8 33.2 6.8 15.5 3.1 31.5 6.2-31.1 88.5-45.6 180.6-13.9 91.9-17.4 179.9-17.9 1-39.1-1.1-20.6-2.2-38.4-0.1l12.1-72.7q-1.3-1.3-3.4-1-9.7 29.1-21.9 59.1-30.4-8.9-61.3-15.1-31.1-6.7-62.1-16.5 6-23.2 12.6-51.7 7.1-28.7 14.4-59.4 7.8-30.9 15.1-62.1 7.2-31.3 13.4-59.2 6.6-28.5 11.5-52 5.3-23.6 8.4-39.4 0.9-7 2.4-13.6 1.9-7.2 3.2-14.8l72 6.4q-5.3 24.1-13.8 59.8-8.2 35.2-17.7 74.2-9.1 38.4-18.8 77-9.2 37.9-16.2 67.5zm144.4 38.6q26.3-88.3 52-174.4 25.6-86 51.6-173.2 9.2 3.6 17.3 7 8.5 3.2 17.1 6.5 17.6-8.9 34.8-17.2 17.1-8.7 35.4-16.7 8.9-3.6 13.3-6 4.4-2.3 7.7-1.3 3.3 0.5 6.7 4.6 3.9 3.6 11.2 11.8 11.5 13.8 23.1 28 12.1 14.3 24.8 28.4 9.2 9.9 6.1 22.1-11.6 48.8-24.5 92.7-12.6 43.2-27.4 88.5-2.9 7.8-6.8 15.4-4 7.5-8 15.1-7.6 13.9-26 30.3-18 15.8-40.6 29.2-22.3 12.8-45.3 21-23.1 7.7-40.7 5-20.9-3.7-41.4-8.1-19.9-4.4-40.4-8.7zm106-71.6q9.9-4.4 19.3-8.2 9.4-4.2 17-9.2 8.1-5.6 14.8-12.6 6.8-7 11.3-17.3 8.1-17.7 17.5-42.5 9.8-25.4 18-51.5 8-26.7 13.4-50.3 5.8-24.2 5.2-39.3-12.2 8.9-24 17.8-11.3 8.3-22.2 16-10.9 7.2-15 20-14.5 44.6-29 88.8-14 43.5-26.3 88.3zm339.3 23.5q-26.7 2.5-51.6 9-24.5 6.4-48.5 15.3-24 8.4-47.4 17.7-22.9 9.3-46.8 18.7-10.2-12.4-16.4-26.6-6.3-14.2-14.2-28.6 22-14.4 45.7-24.8 23.6-11 47.4-23.6-6-4.2-11.5-8-5-4.3-10.6-8.6 26-54.6 41.9-111.6 16.4-57.6 32.8-117.8-6.9 3.3-11.9 5.2-5 1.9-8.8 4.2l-20.5 10.9q-6.2-14.2-11.7-26.9-5-13.3-11.4-28 55.6-26 110.9-50.4 55.2-24.9 115.4-40.1l-4.5 97.1-60.5 7.4-1-20.4q-6.3-2.6-12 1.1-5.4 3-12.6 4.3 3.5 4.6 5.4 9 2.2 3.8 5.5 7 4.6 5 4.3 9.2 0.2 4.2-2.1 9.3-25.8 52.4-42.6 107.5-16.4 54.4-31.4 110.8-0.7 2.2-0.7 4.8-0.2 2.2-1.5 6.6 10.5-3.4 19.7-6.1 9.1-2.6 18.2-5.2 11.6-3.7 14.6-2.1 2.9 1.6 5 13.4 3.2 14.7 6.3 29.4 3.2 14.7 7.1 30.9zm96-373.1l59-30.3q10.7 2.8 24.8 7.2 14.5 3.8 29.2 8.6 14.6 4.3 28.7 8.7 14 3.9 24.7 6.8 8.4 2.2 12.8 6.2 4.9 3.3 5.9 12.1 1.8 13.4 5.1 25.9 3.9 12.5 7.8 25.5 2.4 7.5 1.6 15-0.4 6.9-2.7 14.7-18.1 51.1-35.1 101.9-17 50.9-33.3 102.7-2.6 9.4-9 15.8-6.4 5.9-13.1 12.8-17.3 16.7-35.4 19.9-17.5 3-38.5-7-16.9-8.1-35.6-14.3-18.2-6.3-36.3-12.1l-34.5-74.1q2.8-8.3 4.9-17.6 2.5-9.4 5.6-18.9 7.3-25 15.7-52.8 8.3-27.8 16.8-55 8.9-27.9 16.5-54 8.1-26.1 14.4-47.7zm8.9 202.1l11.8 39.6q11.3 6.4 22.8 11.3 12 4.7 24.8 7.8l53.7-156.3q4-10.2-1-20.3-5-10.2-15.9-14.6l-47.4-17.6q-0.4 0.6-0.9 0.7-0.1-0.5-0.5 0.1-6.6 16.9-12.8 35.9-5.7 18.9-11.8 38.4-5.6 19.4-11.2 38.8-5.7 18.9-11.6 36.2z"/>
+</svg></span>
 					</a>
+
+					<!-- Tool links (left) -->
+					<div id="header-tools">
+						<a href="#" data-lb="upload">Image Hosting</a>
+						<a href="#" data-lb="file-converter">File Converter</a>
+					</div>
 
 					<!-- Nav -->
 					<nav>
 						<ul>
-							<li class="ps-nav-link"><a href="#how-it-works">How It Works</a></li>
-							<li class="ps-nav-link"><a href="#features">Features</a></li>
-							<li class="ps-nav-link"><a href="#about">About</a></li>
-							<li class="ps-nav-link"><a href="#contact">Contact</a></li>
-							<li><a href="#tools" class="button primary ps-nav-cta">Jump to the Tool &darr;</a></li>
-							<li class="ps-nav-hamburger"><a href="#menu">Menu</a></li>
+							<li class="ps-nav-link"><a href="#" data-lb="how-it-works">How It Works</a></li>
+							<li class="ps-nav-link"><a href="#" data-lb="features">Features</a></li>
+							<li class="ps-nav-link"><a href="#" data-lb="about">About</a></li>
+							<li class="ps-nav-link"><a href="#" data-lb="contact">Contact</a></li>
 						</ul>
 					</nav>
 
 				</div>
 			</header>
 
-			<!-- Menu (off-canvas) -->
-			<nav id="menu">
-				<h2>Menu</h2>
-				<ul>
-					<li><a href="index.html">Home</a></li>
-					<li><a href="#how-it-works">How It Works</a></li>
-					<li><a href="#features">Features</a></li>
-					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
-					<li><a href="#tools">Jump to the Tool &darr;</a></li>
-				</ul>
-			</nav>
-
-			<!-- Main — hero only -->
-			<div id="main">
-				<div class="inner">
-
-					<!-- Hero -->
-					<header>
-						<h1>Your Playmat Starts Here.</h1>
-						<p>Free browser-based tools to prepare your artwork for professional printing.<br />
-						No installs. No account. No cost. Everything runs in your browser.</p>
-						<ul class="actions">
-							<li><a href="#tools" class="button primary">Jump to the Tool &nbsp;&darr;</a></li>
-						</ul>
-					</header>
-
-				</div>
-			</div>
-
-			<!-- How It Works -->
-			<section id="how-it-works" class="ps-steps">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>How It Works</h2>
-						<p>Three steps from your artwork to a print-ready file.</p>
-					</header>
-					<div class="ps-steps-grid">
-
-						<div class="ps-step">
-							<span class="icon solid fa-upload ps-step-icon"></span>
-							<h3>Upload Your Art</h3>
-							<p>Drop any image &mdash; JPG, PNG, WEBP, or paste from a URL. The tool auto-fits it to your chosen mat size with full bleed.</p>
-						</div>
-
-						<div class="ps-step">
-							<span class="icon solid fa-sliders-h ps-step-icon"></span>
-							<h3>Customize</h3>
-							<p>Add game zone overlays, enhance colors, upscale with AI, adjust zoom and position &mdash; or keep it simple with Quick Upload.</p>
-						</div>
-
-						<div class="ps-step">
-							<span class="icon solid fa-download ps-step-icon"></span>
-							<h3>Download &amp; Print</h3>
-							<p>Export a 300&nbsp;DPI JPG with proper DPI metadata &mdash; exactly what print-on-demand vendors need to produce a sharp, professional mat.</p>
-						</div>
-
-					</div>
-				</div>
-			</section>
-
-			<!-- Feature Tiles -->
-			<section id="features" class="ps-features">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>Features</h2>
-						<p>Everything you need, from upload to print-ready file.</p>
-					</header>
-					<section class="tiles">
-
-						<!-- 1: Quick Upload -->
-						<article class="style1">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg> Quick Upload</h2>
-								<div class="content">
-									<p>Drop your art and get a print-ready 300&nbsp;DPI JPG in seconds.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 2: Advanced Editor -->
-						<article class="style2">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm2.92 1.83H5v-.74l9.06-9.06.74.74-9.88 9.06z"/><path d="M20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> Advanced Editor</h2>
-								<div class="content">
-									<p>Full canvas editor with AI upscaling, overlays, recolor, and transform tools.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 3: Batch Enhance -->
-						<article class="style3">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l1.45 4.05L17.5 8.5l-4.05 1.45L12 14l-1.45-4.05L6.5 8.5l4.05-1.45z"/><path d="M5.5 13l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/><path d="M18.5 12l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg> Batch Enhance</h2>
-								<div class="content">
-									<p>Auto color-correct multiple images and download them individually or as a ZIP.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 4: Format Converter -->
-						<article class="style4">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg> Format Converter</h2>
-								<div class="content">
-									<p>Convert any image to JPG, PNG, or WEBP &mdash; single file or batch ZIP download.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 5: Game Overlays -->
-						<article class="style5">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="8" y="1" width="13" height="17" rx="2" fill-opacity="0.3"/><rect x="5" y="4" width="13" height="17" rx="2" fill-opacity="0.6"/><rect x="2" y="7" width="13" height="17" rx="2"/></svg> Game Overlays</h2>
-								<div class="content">
-									<p>Apply pre-made zone layouts for MTG, Pok&eacute;mon, and more at full print resolution.</p>
-								</div>
-							</a>
-						</article>
-
-						<!-- 6: 300 DPI Output -->
-						<article class="style6">
-							<span class="image">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect width='100%25' height='100%25' fill='%230b0912'/%3E%3C/svg%3E" alt="" />
-							</span>
-							<a href="#tools">
-								<h2><svg class="ti" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 2a8 8 0 110 16A8 8 0 0112 4z"/><circle cx="12" cy="12" r="3"/><rect x="11" y="2" width="2" height="2"/><rect x="11" y="20" width="2" height="2"/><rect x="2" y="11" width="2" height="2"/><rect x="20" y="11" width="2" height="2"/></svg> 300&nbsp;DPI Output</h2>
-								<div class="content">
-									<p>Every export writes proper 300&nbsp;DPI metadata &mdash; exactly what print vendors require.</p>
-								</div>
-							</a>
-						</article>
-
-					</section>
-				</div>
-			</section>
-
 			<!-- Tools — native embed -->
 			<a id="upload" style="display:block; visibility:hidden; position:relative; top:-80px;"></a>
 			<section id="tools" class="ps-tools">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>The Tools</h2>
-						<p>Everything in one place &mdash; no new tab needed.</p>
-					</header>
-
-					<!-- ═══ TOOL HTML (native embed) ══════════════════════════════ -->
+				<!-- ═══ TOOL HTML (native embed) ══════════════════════════════ -->
 
 					<div id="fs-backdrop"></div>
 					<div id="brush-cursor"></div>
@@ -257,8 +569,8 @@
 					        <h3 id="app-alert-title" style="margin-top:0; font-size:20px; text-transform:uppercase;">Notice</h3>
 					        <p id="app-alert-text" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px; white-space: pre-wrap;"></p>
 					        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-					            <button class="action-btn" id="app-alert-btn" style="width:auto; padding:12px 30px;">OKAY</button>
-					            <button class="action-btn" id="app-alert-retry-btn" style="width:auto; padding:12px 30px; display:none;">RETRY</button>
+					            <button class="action-btn" id="app-alert-btn" style="width:auto; padding:12px 30px;">Okay</button>
+					            <button class="action-btn" id="app-alert-retry-btn" style="width:auto; padding:12px 30px; display:none;">Retry</button>
 					        </div>
 					    </div>
 					</div>
@@ -268,8 +580,8 @@
 					        <h3 style="color:var(--danger-red); margin-top:0; font-size:20px; text-transform:uppercase;">Resolution Warning</h3>
 					        <p id="dpi-warning-text" style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;"></p>
 					        <div style="display:flex; gap:10px; justify-content:center;">
-					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="dpi-help-btn">NEED HELP?</button>
-					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 30px; margin:0;" id="dpi-understand-btn">I UNDERSTAND</button>
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="dpi-help-btn">Need Help?</button>
+					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 30px; margin:0;" id="dpi-understand-btn">I Understand</button>
 					        </div>
 					    </div>
 					</div>
@@ -282,8 +594,8 @@
 					            It usually takes <strong>5 to 10 seconds</strong> to process.
 					        </p>
 					        <div style="display:flex; gap:10px; justify-content:center;">
-					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-warn-cancel-btn">CANCEL</button>
-					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-warn-proceed-btn">PROCEED</button>
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-warn-cancel-btn">Cancel</button>
+					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-warn-proceed-btn">Proceed</button>
 					        </div>
 					    </div>
 					</div>
@@ -296,8 +608,8 @@
 					            It usually takes <strong>5 to 10 seconds</strong>.
 					        </p>
 					        <div style="display:flex; gap:10px; justify-content:center;">
-					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-upscale-cancel-btn">CANCEL</button>
-					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-upscale-proceed-btn">PROCEED</button>
+					            <button class="action-btn btn-secondary" style="width:auto; padding:12px 20px; margin:0;" id="ai-upscale-cancel-btn">Cancel</button>
+					            <button class="action-btn" style="background:var(--brand-hover); width:auto; padding:12px 30px; margin:0;" id="ai-upscale-proceed-btn">Proceed</button>
 					        </div>
 					    </div>
 					</div>
@@ -309,7 +621,7 @@
 					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
 					            Your image has been successfully upscaled and optimized for high-quality printing!
 					        </p>
-					        <button class="action-btn" style="background:var(--success-green); width:auto; padding:12px 30px; margin:0 auto;" id="ai-success-btn">AWESOME</button>
+					        <button class="action-btn" style="background:var(--success-green); width:auto; padding:12px 30px; margin:0 auto;" id="ai-success-btn">Awesome</button>
 					    </div>
 					</div>
 
@@ -319,7 +631,7 @@
 					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">🔗 Import from Web</h3>
 					        <p style="color:var(--brand-text-sec); font-size:14px; margin-bottom:20px;">Paste a direct link to an image (ending in .jpg, .png, .webp) to load it onto the canvas.</p>
 					        <input type="text" id="paste-url-input" class="ui-select" placeholder="https://example.com/image.jpg" style="margin-bottom: 15px;" />
-					        <button class="action-btn" style="background:var(--brand-hover);" id="url-paste-submit">IMPORT IMAGE</button>
+					        <button class="action-btn" style="background:var(--brand-hover);" id="url-paste-submit">Import Image</button>
 					    </div>
 					</div>
 
@@ -340,35 +652,177 @@
 					            Scale your artwork outward so it fills the entire canvas &mdash; including the red bleed area &mdash; to avoid white borders.
 					        </p>
 					        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 24px; margin:0;" id="bleed-back-btn">&larr; GO BACK AND FIX</button>
+					            <button class="action-btn" style="background:var(--danger-red); width:auto; padding:12px 24px; margin:0;" id="bleed-back-btn">&larr; Go Back And Fix</button>
 					            <button class="action-btn" style="background:rgba(255,255,255,0.15); width:auto; padding:12px 20px; margin:0; font-size:12px;" id="bleed-proceed-btn">Proceed anyway (I accept white borders)</button>
 					        </div>
 					    </div>
 					</div>
-			</div><!-- /.inner -->
+			<!-- ── Beta: two-step landing overlay ─────────────────────── -->
+			<div id="beta-landing">
+				<svg id="beta-bg-pattern" aria-hidden="true"
+				     viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"
+				     style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"
+				     xmlns="http://www.w3.org/2000/svg">
+				  <!-- large rings anchored to corners -->
+				  <circle cx="-60" cy="100" r="360" fill="none" stroke="#8B60CC" stroke-width="1.2" opacity="0.18"/>
+				  <circle cx="1260" cy="720" r="400" fill="none" stroke="#30BBAD" stroke-width="1.2" opacity="0.18"/>
+				  <!-- mid-size rings -->
+				  <circle cx="1080" cy="60" r="190" fill="none" stroke="#8B60CC" stroke-width="0.9" opacity="0.13"/>
+				  <circle cx="160" cy="740" r="140" fill="none" stroke="#30BBAD" stroke-width="0.9" opacity="0.13"/>
+				  <!-- inner accent ring -->
+				  <circle cx="600" cy="400" r="520" fill="none" stroke="#8B60CC" stroke-width="0.6" opacity="0.07"/>
+				  <!-- diagonal lines -->
+				  <line x1="0" y1="780" x2="480" y2="0" stroke="#8B60CC" stroke-width="0.7" opacity="0.11"/>
+				  <line x1="720" y1="0" x2="1200" y2="680" stroke="#30BBAD" stroke-width="0.7" opacity="0.11"/>
+				  <!-- accent dots -->
+				  <circle cx="370" cy="175" r="3"   fill="#8B60CC" opacity="0.22"/>
+				  <circle cx="840" cy="630" r="3"   fill="#30BBAD" opacity="0.22"/>
+				  <circle cx="960" cy="330" r="2"   fill="#8B60CC" opacity="0.18"/>
+				  <circle cx="145" cy="460" r="2"   fill="#30BBAD" opacity="0.18"/>
+				  <circle cx="610" cy="705" r="2.5" fill="#8B60CC" opacity="0.18"/>
+				  <circle cx="1110" cy="290" r="2"  fill="#30BBAD" opacity="0.18"/>
+				</svg>
+				<div id="beta-landing-inner">
+					<p id="beta-landing-heading">Choose your mat size to get started</p>
+
+					<div class="size-selector-wrap">
+
+						<div class="size-group size-group--playmat">
+							<span class="size-group-label">Playmats</span>
+							<div class="mat-size-btn-group">
+								<button class="mat-size-btn" data-size="standard" data-tip="The classic TCG size. Fits a full Magic: The Gathering, Pokémon, or Yu-Gi-Oh! play area. The most popular choice for competitive and casual players alike.">
+									<span class="msb-name">Standard</span>
+									<span class="msb-dim">24&Prime; &times; 14&Prime;</span>
+									<svg class="msb-icon" viewBox="0 0 49 29" width="42" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
+								</button>
+								<button class="mat-size-btn" data-size="extended" data-tip="Extra width for two-player setups or games that need more table space. A favourite for Commander/EDH and larger board games.">
+									<span class="msb-name">Extended</span>
+									<span class="msb-dim">28&Prime; &times; 14&Prime;</span>
+									<svg class="msb-icon" viewBox="0 0 57 29" width="49" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
+								</button>
+								<button class="mat-size-btn" data-size="expanded" data-tip="Maximum playmat coverage. Ideal for RPG sessions, large board games, or players who want a full table surface to work with.">
+									<span class="msb-name">Expanded</span>
+									<span class="msb-dim">28&Prime; &times; 16&Prime;</span>
+									<svg class="msb-icon" viewBox="0 0 57 33" width="43" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
+								</button>
+							</div>
+						</div>
+
+						<div class="size-group size-group--deskmat">
+							<span class="size-group-label">Deskmats</span>
+							<div class="mat-size-btn-group">
+								<button class="mat-size-btn" data-size="tiro" data-tip="Compact desk pad. Great for laptop setups, small desks, or anyone who wants a quality surface without a lot of bulk.">
+									<span class="msb-name">Small</span>
+									<span class="msb-dim">10&quot; &times; 8&quot;</span>
+									<svg class="msb-icon" viewBox="0 0 21 18" width="21" height="18" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="19" height="16" rx="3"/></svg>
+								</button>
+								<button class="mat-size-btn" data-size="veteranus" data-tip="Mid-size desk pad. Comfortably fits a standard keyboard and mouse. A solid everyday choice for office and home use.">
+									<span class="msb-name">Medium</span>
+									<span class="msb-dim">12&quot; &times; 10&quot;</span>
+									<svg class="msb-icon" viewBox="0 0 25 21" width="25" height="21" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="23" height="19" rx="3"/></svg>
+								</button>
+								<button class="mat-size-btn" data-size="gladiator" data-tip="Wide gaming desk pad. Covers keyboard, mouse, and surrounding space. Popular with PC gamers who want full peripheral coverage.">
+									<span class="msb-name">Large</span>
+									<span class="msb-dim">18&quot; &times; 12&quot;</span>
+									<svg class="msb-icon" viewBox="0 0 33 25" width="33" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="31" height="23" rx="3"/></svg>
+								</button>
+								<button class="mat-size-btn" data-size="victor" data-tip="Full desk coverage for gaming rigs and workstations. Extends across multiple peripherals and gives a clean, unified look to your setup.">
+									<span class="msb-name">XL</span>
+									<span class="msb-dim">24&Prime; &times; 12&Prime;</span>
+									<svg class="msb-icon" viewBox="0 0 49 25" width="49" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="23" rx="3"/></svg>
+								</button>
+								<button class="mat-size-btn" data-size="secundus" data-tip="Extended desk mat for wide monitor setups and multi-peripheral arrangements. Ideal for content creators and power users.">
+									<span class="msb-name">XL+</span>
+									<span class="msb-dim">28&Prime; &times; 12&Prime;</span>
+									<svg class="msb-icon" viewBox="0 0 57 25" width="57" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="23" rx="3"/></svg>
+								</button>
+								<button class="mat-size-btn" data-size="primus" data-tip="Maximum desk coverage. Built for ultra-wide displays, dual monitor setups, and full workstation builds where nothing is left uncovered.">
+									<span class="msb-name">XL++</span>
+									<span class="msb-dim">32&Prime; &times; 12&Prime;</span>
+									<svg class="msb-icon" viewBox="0 0 65 25" width="65" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="63" height="23" rx="3"/></svg>
+								</button>
+							</div>
+						</div>
+
+					</div><!-- /.size-selector-wrap -->
+
+					<div id="landing-upload-bar">
+						<button class="action-btn" id="landing-upload-btn">&#128193; Upload File</button>
+						<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; Paste URL</button>
+						<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; Solid Color</button>
+					</div>
+					<p id="beta-landing-tagline">Your Playmat Starts Here.</p>
+				</div><!-- /#beta-landing-inner -->
+				<footer id="beta-landing-footer">&#169; 2026 Playmat Studio &nbsp;&middot;&nbsp; <a href="#" id="footer-changelog-link" style="color:inherit; opacity:0.7; text-decoration:none; border-bottom:1px solid currentColor; padding-bottom:1px;">What's New</a></footer>
+			</div><!-- /#beta-landing -->
+			<div id="mat-tooltip"></div>
 
 			<div id="designer-visibility-wrapper" style="display:none;"><div class="designer-container-wrap">
 
 					    <div id="landing-ui">
 					        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">Select your mat size, then choose an editor or tool below.</p>
 
-					        <span class="landing-label">MAT SIZE</span>
-					        <div class="mat-size-btn-group">
-					            <button class="mat-size-btn active" data-size="standard">
-					                <span class="msb-name">Standard</span>
-					                <span class="msb-dim">24&Prime; &times; 14&Prime;</span>
-					                <svg class="msb-icon" viewBox="0 0 49 29" width="49" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
-					            </button>
-					            <button class="mat-size-btn" data-size="extended">
-					                <span class="msb-name">Extended</span>
-					                <span class="msb-dim">28&Prime; &times; 14&Prime;</span>
-					                <svg class="msb-icon" viewBox="0 0 57 29" width="57" height="29" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
-					            </button>
-					            <button class="mat-size-btn" data-size="expanded">
-					                <span class="msb-name">Expanded</span>
-					                <span class="msb-dim">28&Prime; &times; 16&Prime;</span>
-					                <svg class="msb-icon" viewBox="0 0 57 33" width="57" height="33" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
-					            </button>
+					        <div class="size-selector-wrap">
+
+					            <!-- Playmats -->
+					            <div class="size-group size-group--playmat">
+					                <span class="size-group-label">Playmats</span>
+					                <div class="mat-size-btn-group">
+					                    <button class="mat-size-btn" data-size="standard">
+					                        <span class="msb-name">Standard</span>
+					                        <span class="msb-dim">24&Prime; &times; 14&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 49 29" width="42" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="27" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="extended">
+					                        <span class="msb-name">Extended</span>
+					                        <span class="msb-dim">28&Prime; &times; 14&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 57 29" width="49" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="27" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="expanded">
+					                        <span class="msb-name">Expanded</span>
+					                        <span class="msb-dim">28&Prime; &times; 16&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 57 33" width="43" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="31" rx="3"/></svg>
+					                    </button>
+					                </div>
+					            </div>
+
+					            <!-- Deskmats -->
+					            <div class="size-group size-group--deskmat">
+					                <span class="size-group-label">Deskmats</span>
+					                <div class="mat-size-btn-group">
+					                    <button class="mat-size-btn" data-size="tiro">
+					                        <span class="msb-name">Small</span>
+					                        <span class="msb-dim">10&quot; &times; 8&quot;</span>
+					                        <svg class="msb-icon" viewBox="0 0 21 18" width="21" height="18" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="19" height="16" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="veteranus">
+					                        <span class="msb-name">Medium</span>
+					                        <span class="msb-dim">12&quot; &times; 10&quot;</span>
+					                        <svg class="msb-icon" viewBox="0 0 25 21" width="25" height="21" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="23" height="19" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="gladiator">
+					                        <span class="msb-name">Large</span>
+					                        <span class="msb-dim">18&quot; &times; 12&quot;</span>
+					                        <svg class="msb-icon" viewBox="0 0 33 25" width="33" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="31" height="23" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="victor">
+					                        <span class="msb-name">XL</span>
+					                        <span class="msb-dim">24&Prime; &times; 12&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 49 25" width="49" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="47" height="23" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="secundus">
+					                        <span class="msb-name">XL+</span>
+					                        <span class="msb-dim">28&Prime; &times; 12&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 57 25" width="57" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="55" height="23" rx="3"/></svg>
+					                    </button>
+					                    <button class="mat-size-btn" data-size="primus">
+					                        <span class="msb-name">XL++</span>
+					                        <span class="msb-dim">32&Prime; &times; 12&Prime;</span>
+					                        <svg class="msb-icon" viewBox="0 0 65 25" width="65" height="25" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="63" height="23" rx="3"/></svg>
+					                    </button>
+					                </div>
+					            </div>
+
 					        </div>
 
 					        <div class="tool-tab-bar">
@@ -394,8 +848,8 @@
 					            <div id="batch-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
 					            <div id="batch-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
 					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
-					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="batch-clear-btn">&#x2715; CLEAR</button>
+					                    <button id="batch-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; Download All</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="batch-clear-btn">&#x2715; Clear</button>
 					                </div>
 					            </div>
 					        </div>
@@ -403,7 +857,7 @@
 					        <!-- Format Converter -->
 					        <div id="tab-panel-converter" class="tool-tab-panel">
 					            <div class="ps-tool-controls">
-					                <span class="ps-panel-label">&#x1F504; CONVERT TO:</span>
+					                <span class="ps-panel-label">&#x1F504; Convert To:</span>
 					                <select id="converter-format-sel" class="ui-select" style="width:auto; min-width:180px; padding:8px 12px; font-size:13px;">
 					                    <option value="jpeg">JPG &mdash; 99% quality</option>
 					                    <option value="png">PNG &mdash; lossless</option>
@@ -421,8 +875,8 @@
 					            <div id="converter-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:20px;"></div>
 					            <div id="converter-controls" style="display:none; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
 					                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; DOWNLOAD ALL</button>
-					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="converter-clear-btn">&#x2715; CLEAR</button>
+					                    <button id="converter-download-btn" class="action-btn" style="width:auto; padding:14px 32px; font-size:15px;">&#x2B07; Download All</button>
+					                    <button class="action-btn btn-secondary" style="width:auto; padding:14px 20px; margin:0;" id="converter-clear-btn">&#x2715; Clear</button>
 					                </div>
 					            </div>
 					        </div>
@@ -450,10 +904,10 @@
 				                        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Plus Jakarta Sans',sans-serif; margin-bottom:6px;">Hosted URL</div>
 				                        <div style="display:flex; gap:8px; align-items:center;">
 				                            <input id="host-url-input" type="text" readonly style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:8px 10px; font-size:12px; color:#f0eeff; font-family:monospace; outline:none;">
-				                            <button class="action-btn" style="width:auto; padding:8px 16px; margin:0; font-size:12px; flex-shrink:0;" id="host-copy-btn">COPY</button>
+				                            <button class="action-btn" style="width:auto; padding:8px 16px; margin:0; font-size:12px; flex-shrink:0;" id="host-copy-btn">Copy</button>
 				                        </div>
 				                        <div id="host-expiry" style="font-size:12px; color:#9888c0; margin-top:8px; font-family:'Plus Jakarta Sans',sans-serif;"></div>
-				                        <button class="action-btn btn-secondary" style="width:auto; padding:6px 14px; margin-top:12px; font-size:12px;" id="host-upload-another-btn">&#x2B06; UPLOAD ANOTHER</button>
+				                        <button class="action-btn btn-secondary" style="width:auto; padding:6px 14px; margin-top:12px; font-size:12px;" id="host-upload-another-btn">&#x2B06; Upload Another</button>
 				                    </div>
 				                </div>
 				            </div>
@@ -462,7 +916,7 @@
 				            <div id="host-history" style="display:none;">
 				                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
 				                    <span style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#9888c0; font-family:'Plus Jakarta Sans',sans-serif;">Recent Uploads</span>
-				                    <button class="action-btn btn-secondary" style="width:auto; padding:4px 10px; margin:0; font-size:11px;" id="host-clear-history-btn">CLEAR ALL</button>
+				                    <button class="action-btn btn-secondary" style="width:auto; padding:4px 10px; margin:0; font-size:11px;" id="host-clear-history-btn">Clear All</button>
 				                </div>
 				                <div id="host-history-list"></div>
 				            </div>
@@ -476,8 +930,8 @@
 					        <div id="simple-modal">
 					            <div id="simple-header">
 					                <span style="font-weight:600; font-size:22px; color:var(--brand-hover); text-transform:uppercase; letter-spacing:1px; font-family:'Plus Jakarta Sans', sans-serif;">Playmat Studio <span style="font-size:16px; color:#ffffff; font-weight:600; font-family:'Plus Jakarta Sans', sans-serif; letter-spacing:1px; text-transform:uppercase;">| Quick Upload</span></span>
-					                <button class="action-btn btn-secondary" style="width:auto; padding: 6px 12px; margin:0; font-size:12px;" id="s-restart-btn">RESTART</button>
-					                <button id="s-fs-toggle-btn" class="action-btn" style="width:auto; padding:6px 12px; margin:0; font-size:12px; background:var(--brand-hover);">&#x26F6; FULL SCREEN</button>
+					                <button class="action-btn btn-secondary" style="width:auto; padding: 6px 12px; margin:0; font-size:12px;" id="s-restart-btn">Restart</button>
+					                <button id="s-fs-toggle-btn" class="action-btn" style="width:auto; padding:6px 12px; margin:0; font-size:12px; background:var(--brand-hover);">&#x26F6; Full Screen</button>
 					            </div>
 
 					            <div id="simple-canvas-wrap">
@@ -500,21 +954,21 @@
 					                    <div>
 					                        <label style="color: var(--brand-hover); font-size:11px; font-weight:bold; text-transform:uppercase; display:block; margin-bottom:10px;">Artwork &amp; Filters</label>
 					                        <div style="display:flex; width:100%; gap:8px; margin-bottom:15px;">
-					                            <button class="action-btn" style="flex:2;" id="s-upload-file-btn">📁 UPLOAD FILE</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" id="s-paste-url-btn">🔗 PASTE URL</button>
+					                            <button class="action-btn" style="flex:2;" id="s-upload-file-btn">📁 Upload File</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px;" id="s-paste-url-btn">🔗 Paste URL</button>
 					                        </div>
 
 					                        <div style="display:flex; width:100%; gap:10px; align-items:center; margin-bottom:15px;">
 					                            <input type="range" id="s-zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="flex:2;">
-					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-rotate-btn">↻ ROTATE</button>
-					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-fit-btn">[ ] FIT</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-rotate-btn">↻ Rotate</button>
+					                            <button class="action-btn btn-secondary" style="flex:1; font-size:11px; padding: 10px;" id="s-fit-btn">[ ] Fit</button>
 					                        </div>
 
 					                        <div style="display:flex; width:100%; gap:8px;">
-					                            <button id="s-btn-enhance" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">🪄 ENHANCE</button>
-					                            <button id="s-btn-grayscale" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">◑ GRAYSCALE</button>
+					                            <button id="s-btn-enhance" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">🪄 Enhance</button>
+					                            <button id="s-btn-grayscale" class="action-btn btn-secondary" style="flex:1; font-size:11px; padding:10px;">◑ Grayscale</button>
 					                        </div>
-					                        <button class="action-btn btn-secondary" style="width:100%; margin-top:8px; font-size:10px; padding:6px 8px;" id="s-guides-btn">SHOW/HIDE PRINT GUIDES</button>
+					                        <button class="action-btn btn-secondary" style="width:100%; margin-top:8px; font-size:10px; padding:6px 8px;" id="s-guides-btn">Show/Hide Print Guides</button>
 					                    </div>
 
 					                    <div>
@@ -550,9 +1004,9 @@
 					                        Scale your artwork to fill the entire canvas including the red bleed area.
 					                    </div>
 					                    <div class="action-row-3">
-					                        <button id="simple-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; GET PRINTED</button>
-					                        <button id="simple-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; DOWNLOAD</button>
-					                        <button id="simple-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; SHARE</button>
+					                        <button id="simple-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
+					                        <button id="simple-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; Download</button>
+					                        <button id="simple-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; Share</button>
 					                    </div>
 					                </div>
 
@@ -561,7 +1015,7 @@
 					                </div>
 					            </div>
 					        </div>
-					        <div class="version-tag">v1.7.1</div>
+					        <div class="version-tag changelog-trigger" style="cursor:pointer; pointer-events:auto;" title="What's New">v2.0.0</div>
 					    </div>
 
 
@@ -569,47 +1023,54 @@
 					    <div id="playmat-tool-root">
 					        <div id="editor-top-bar">
 					            <div class="etb-group">
-					                <button class="action-btn" id="adv-upload-file-btn">📁 UPLOAD FILE</button>
+					                <button class="action-btn" id="adv-upload-file-btn">📁 Upload File</button>
 					                <input type="file" id="adv-file-in" accept="image/*" style="display:none;">
-					                <button class="action-btn btn-secondary" id="adv-paste-url-btn">🔗 PASTE URL</button>
+					                <button class="action-btn btn-secondary" id="adv-paste-url-btn">🔗 Paste URL</button>
 					            </div>
 					            <div class="etb-group">
 					                <div id="canvas-size-btns">
-					                    <span class="canvas-sz-label">CANVAS:</span>
-					                    <button class="action-btn btn-secondary canvas-sz-btn canvas-sz-active" data-sz="auto">AUTO</button>
+					                    <span class="canvas-sz-label">Canvas:</span>
+					                    <button class="action-btn btn-secondary canvas-sz-btn canvas-sz-active" data-sz="auto">Auto</button>
 					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="s">S</button>
 					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="m">M</button>
 					                    <button class="action-btn btn-secondary canvas-sz-btn" data-sz="l">L</button>
 					                </div>
-					                <button class="action-btn btn-secondary" id="adv-restart-btn">↺ RESTART</button>
-					                <button id="fs-toggle-btn" class="action-btn" style="background: var(--brand-hover);">⛶ FULL SCREEN</button>
+					                <button class="action-btn btn-secondary" id="adv-restart-btn">↺ Restart</button>
+					                <button id="fs-toggle-btn" class="action-btn" style="background: var(--brand-hover);">⛶ Full Screen</button>
 					            </div>
 					        </div>
 					        <div id="editor-main">
 					        <div id="sidebar">
 
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-size">ARTWORK <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
 					            <div id="acc-size" class="acc-content" style="display:block;">
 
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
 					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="width:100%;">
-					                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn">RESET ART SCALE &amp; CENTER</button>
+					                    <button class="action-btn btn-secondary" style="margin-top:15px;" id="adv-reset-scale-btn">Reset Art Scale &amp; Center</button>
+					                    <div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px;">
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Axis Lock <span class="info-tooltip" data-tip="Lock X: artwork can only move left/right (vertical position frozen). Lock Y: artwork can only move up/down (horizontal position frozen). Click the active button again to unlock.">?</span></label>
+					                        <div style="display:flex; gap:8px;">
+					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="x" style="flex:1; margin:0;" onclick="window.setAxisLock('x')">Lock X</button>
+					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="y" style="flex:1; margin:0;" onclick="window.setAxisLock('y')">Lock Y</button>
+					                        </div>
+					                    </div>
 					                </div>
 
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
 					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Rotate &amp; Flip</label>
 					                    <div style="display:flex; gap:8px; margin-bottom: 10px;">
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-rotate-btn">ROTATE 90°</button>
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipx-btn">FLIP H</button>
-					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipy-btn">FLIP V</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-rotate-btn">Rotate 90°</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipx-btn">Flip H</button>
+					                        <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="adv-flipy-btn">Flip V</button>
 					                    </div>
 					                    <div style="display:flex; gap:10px; align-items:center; margin-bottom: 10px;">
 					                        <input type="range" id="transform-rotation" min="-180" max="180" value="0" style="flex:1;">
 					                        <span id="rotation-val" style="font-size: 13px; width: 35px; text-align: right; color:var(--brand-text-pri);">0°</span>
 					                    </div>
-					                    <button class="action-btn btn-secondary" style="margin:0;" id="adv-reset-rotation-btn">RESET ROTATION</button>
+					                    <button class="action-btn btn-secondary" style="margin:0;" id="adv-reset-rotation-btn">Reset Rotation</button>
 					                </div>
 
 					                <div style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
@@ -623,7 +1084,7 @@
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
 					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">Image Quality <span class="info-tooltip" data-tip="AI upscaling improves low-resolution artwork before printing. Works best on images that look blurry or pixelated. Results may vary depending on the source image.">?</span></label>
 					                    <button id="ai-upscale-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); line-height: 1.2; width: 100%;">
-					                        ✨ ENHANCE QUALITY <span class="beta-badge">BETA</span>
+					                        ✨ Enhance Quality <span class="beta-badge">BETA</span>
 					                    </button>
 					                </div>
 
@@ -631,7 +1092,7 @@
 					            </div>
 
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-layouts">GAME LAYOUT <span style="font-size:10px; font-weight:normal;">(OPTIONAL)</span> <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-layouts">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
 					            <div id="acc-layouts" class="acc-content" style="display:block;">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -690,26 +1151,26 @@
 					                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
 
 					                    <div class="inner-panel">
-					                        <span class="panel-title">FRAME BREAKING</span>
+					                        <span class="panel-title">Frame Breaking</span>
 					                        <button id="ai-fb-btn" class="action-btn" style="background:var(--brand-hover); margin-bottom:10px; line-height:1.2;">
-					                            ✨ AUTO FRAME BREAK<br><span style="font-size: 10px; font-weight: normal;">(experimental)</span>
+					                            ✨ Auto Frame Break<br><span style="font-size: 10px; font-weight: normal;">(experimental)</span>
 					                        </button>
-					                        <button id="ai-fb-clear-btn" class="action-btn btn-secondary hidden-field" style="margin-bottom:15px; border: 1px solid var(--danger-red); color: var(--danger-red);">🗑️ REMOVE AI POP-OUT</button>
+					                        <button id="ai-fb-clear-btn" class="action-btn btn-secondary hidden-field" style="margin-bottom:15px; border: 1px solid var(--danger-red); color: var(--danger-red);">🗑️ Remove AI Pop-Out</button>
 
-					                        <button id="mask-toggle-btn" class="action-btn btn-secondary btn-eraser">ENABLE MANUAL ERASER</button>
+					                        <button id="mask-toggle-btn" class="action-btn btn-secondary btn-eraser">Enable Manual Eraser</button>
 					                        <div id="mask-controls" class="hidden-field">
 					                            <label style="font-size:11px; margin-top:10px; display:block; color:var(--brand-text-sec);">Eraser Size</label>
 					                            <input type="range" id="brush-size" min="10" max="150" value="40">
 					                            <div style="display: flex; gap: 8px; margin-top: 10px;">
-					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-undo-btn">UNDO</button>
-					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-reset-btn">RESET</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-undo-btn">Undo</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="mask-reset-btn">Reset</button>
 					                            </div>
 					                        </div>
 					                    </div>
 
 					                    <div class="inner-panel">
-					                        <span class="panel-title">ZONE RECOLORING</span>
-					                        <button id="recolor-toggle-btn" class="action-btn btn-secondary btn-recolor">ENABLE RECOLOR BRUSH</button>
+					                        <span class="panel-title">Zone Recoloring</span>
+					                        <button id="recolor-toggle-btn" class="action-btn btn-secondary btn-recolor">Enable Recolor Brush</button>
 					                        <div id="recolor-controls" class="hidden-field">
 					                            <div style="display:flex; gap:10px; margin-bottom:10px; margin-top:10px;">
 					                                <div style="flex:1;">
@@ -722,8 +1183,8 @@
 					                                </div>
 					                            </div>
 					                            <div style="display: flex; gap: 8px;">
-					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-undo-btn">UNDO</button>
-					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-reset-btn">RESET</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-undo-btn">Undo</button>
+					                                <button class="action-btn btn-secondary" style="flex:1; margin:0;" id="recolor-reset-btn">Reset</button>
 					                            </div>
 					                        </div>
 					                    </div>
@@ -732,24 +1193,24 @@
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
 					                    <label style="font-size: 11px; color: var(--brand-text-sec); display: block; margin-bottom: 6px; font-weight: bold; text-transform: uppercase;">Custom Overlay</label>
 					                    <p style="font-size:11px; color:#f0eeff !important; line-height:1.4; margin:0 0 10px;">Upload a PNG/image to layer over your artwork — drag &amp; resize freely on the canvas.</p>
-					                    <button class="action-btn btn-secondary" id="adv-overlay-upload-btn" style="width:100%;">📐 UPLOAD OVERLAY</button>
+					                    <button class="action-btn btn-secondary" id="adv-overlay-upload-btn" style="width:100%;">📐 Upload Overlay</button>
 					                    <input type="file" id="adv-overlay-file-in" accept="image/*" style="display:none;">
 					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; font-size:11px; padding:7px;" id="adv-overlay-lock-btn">🔒 Proportions Locked</button>
-					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; border-color:var(--danger-red); color:var(--danger-red);" id="adv-overlay-clear-btn">🗑️ REMOVE OVERLAY</button>
+					                    <button class="action-btn btn-secondary hidden-field" style="width:100%; margin-top:8px; border-color:var(--danger-red); color:var(--danger-red);" id="adv-overlay-clear-btn">🗑️ Remove Overlay</button>
 					                </div>
 					            </div>
 					            </div>
 
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-art">ADJUSTMENTS <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-art">Adjustments <span>▼</span></button>
 					            <div id="acc-art" class="acc-content" style="display:block;">
 
 					                <div class="inner-panel">
-					                    <span class="panel-title">PRINT COLOR CORRECTION</span>
+					                    <span class="panel-title">Print Color Correction</span>
 					                    <p style="font-size:11px; color:#f0eeff !important; line-height:1.4; margin-bottom:15px; margin-top:0; display:none;">
 					                        Images on digital screens look much brighter than physical ink. Use our Auto-Optimize tool to perfectly calibrate your art for printing!
 					                    </p>
-					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px; display:none;">🪄 AUTO-OPTIMIZE FOR PRINT</button>
+					                    <button id="auto-opt-btn-adv" class="action-btn btn-secondary" style="border: 1px solid var(--brand-hover); color: var(--brand-hover); margin-bottom:15px; display:none;">🪄 Auto-Optimize For Print</button>
 
 					                    <div class="slider-row" style="margin-top:0;">
 					                        <div class="adj-item">
@@ -841,16 +1302,16 @@
 					                        </div>
 					                    </div>
 
-					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn">RESET COLORS</button>
+					                    <button class="action-btn btn-secondary" style="margin-top:15px; font-size:11px; padding:8px;" id="adv-reset-colors-btn">Reset Colors</button>
 					                </div>
 
-					                <button class="action-btn btn-secondary" style="margin-top:10px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">SHOW/HIDE PRINT GUIDES</button>
+					                <button class="action-btn btn-secondary" style="margin-top:10px; font-size:10px; padding:6px 8px;" id="adv-guides-btn">Show/Hide Print Guides</button>
 
 					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
 
 					                <div class="inner-panel">
-					                    <span class="panel-title">TEXT</span>
-					                    <button class="action-btn" style="background: var(--brand-hover); margin-bottom:15px;" id="adv-add-text-btn">+ ADD TEXT</button>
+					                    <span class="panel-title">Text</span>
+					                    <button class="action-btn" style="background: var(--brand-hover); margin-bottom:15px;" id="adv-add-text-btn">+ Add Text</button>
 
 					                    <div id="adv-text-tools" class="hidden-field" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:6px; border: 1px solid rgba(255,255,255,0.05); margin-bottom:15px;">
 					                        <select id="adv-font-family" class="ui-select">
@@ -871,12 +1332,26 @@
 					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Fill</label><input type="color" id="adv-text-col" class="color-swatch" value="#ffffff"></div>
 					                            <div style="flex:1;"><label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:5px;">Outline</label><input type="color" id="adv-text-stroke" class="color-swatch" value="#000000"></div>
 					                        </div>
-					                        <button class="action-btn" style="background:var(--danger-red); margin-top:15px;" id="adv-delete-btn">DELETE SELECTED</button>
+					                        <button class="action-btn" style="background:var(--danger-red); margin-top:15px;" id="adv-delete-btn">Delete Selected</button>
 					                    </div>
 					                </div>
 
 					                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
 
+					            </div>
+					            </div>
+
+					            <div class="acc-card">
+					            <button class="acc-btn" data-acc="acc-export">Export <span>▼</span></button>
+					            <div id="acc-export" class="acc-content" style="display:block;">
+					                <div class="action-row-3" style="margin-top:10px;">
+					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
+					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; Download</button>
+					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; Share</button>
+					                </div>
+					                <div style="text-align:center; padding-top:12px;">
+					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
+					                </div>
 					            </div>
 					            </div>
 
@@ -886,10 +1361,10 @@
 
 					        <div id="canvas-column">
 					            <div id="zoom-toolbar">
-					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">VIEW:</span>
+					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">View:</span>
 					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-in-btn">+</button>
 					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-out-btn">-</button>
-					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">RESET</button>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">Reset</button>
 					            </div>
 
 					            <div id="canvas-wrapper">
@@ -903,30 +1378,22 @@
 					                <div id="eraser-interaction" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none;"></div>
 					            </div>
 
-					            <div id="adv-info-bar" class="canvas-info-bar">
-					                <span id="ai-size">Mat size: —</span>
-					                <span id="ai-dpi">Image DPI: —</span>
-					                <span><span class="info-red">Red area:</span> Bleed — your art <strong>must</strong> cover this fully, right to the canvas edge</span>
-					                <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
-					            </div>
 					            <div id="adv-canvas-actions">
 					                <div id="adv-bleed-warning" class="bleed-warning-banner">
 					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
 					                    Scale your artwork to fill the entire canvas including the red bleed area.
 					                </div>
-					                <div class="action-row-3">
-					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; GET PRINTED</button>
-					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; DOWNLOAD</button>
-					                    <button id="sidebar-share-btn" class="action-btn btn-secondary" style="flex:1; margin:0; border-color:var(--brand-hover); color:var(--brand-hover);">&#128279; SHARE</button>
-					                </div>
-					                <div style="text-align:center; padding-top: 12px;">
-					                    <span class="disclaimer-text">All trademarks and copyrights are owned by their respective owners. We make no claim to ownership of their intellectual property.</span>
-					                </div>
 					            </div>
 					        </div>
 					        </div><!-- /#editor-main -->
+					        <div id="adv-info-bar" class="canvas-info-bar">
+					            <span id="ai-size">Mat size: —</span>
+					            <span id="ai-dpi">Image DPI: —</span>
+					            <span><span class="info-red">Red area:</span> Bleed — your art <strong>must</strong> cover this fully, right to the canvas edge</span>
+					            <span><span class="info-yellow">Yellow area:</span> Safe Zone — Keep essential items out of this zone.</span>
+					        </div>
 					    </div>
-					    <div class="version-tag" style="color:rgba(255,255,255,0.2); z-index:10001;">v1.7.1</div>
+					    <div class="version-tag changelog-trigger" style="color:rgba(255,255,255,0.2); z-index:10001; cursor:pointer; pointer-events:auto;" title="What's New">v2.0.0</div>
 					    </div><!-- /#adv-backdrop -->
 					</div>
 					</div><!-- /#designer-visibility-wrapper -->
@@ -935,91 +1402,145 @@
 
 			</section>
 
-			<!-- About -->
-			<section id="about" class="ps-about">
-				<div class="inner">
-					<header class="ps-section-header ps-about-header">
-						<h2>About Playmat Studio</h2>
-					</header>
-					<div class="ps-about-body">
-						<p>Playmat Studio is a free, browser-based image prep tool built for tabletop game players who want to print custom playmats with their own artwork. No installs, no subscriptions, no sign-up &mdash; just open the tool and start designing.</p>
-						<p>Playmat Studio is a community-driven project designed for anyone who wants to create custom playmats with their own artwork. Every feature is informed by real user feedback and requests. There are no ads, no fees, and no account required—just a free tool that improves as more people use and share it. If there’s something you’d like to see added, reach out—community input directly shapes what gets built next.</p>
-					</div>
-				</div>
-			</section>
-
-			<!-- Contact -->
-			<section id="contact" class="ps-contact">
-				<div class="inner">
-					<header class="ps-section-header">
-						<h2>Contact</h2>
-						<p>Questions, feedback, or just want to say hi? We&rsquo;d love to hear from you.</p>
-					</header>
-					<div class="ps-contact-grid">
-						<div class="ps-contact-info">
-							<p>Whether you have a question about the tools, a feature request, or anything else &mdash; send us a message and we&rsquo;ll get back to you as soon as we can.</p>
-						</div>
-						<form id="contact-form" class="ps-contact-form" action="#" method="post" novalidate>
-							<div class="ps-form-row">
-								<div class="ps-field">
-									<label for="contact-name">Name</label>
-									<input type="text" id="contact-name" name="name" placeholder="Your name" required />
-								</div>
-								<div class="ps-field">
-									<label for="contact-email">Email</label>
-									<input type="email" id="contact-email" name="email" placeholder="you@example.com" required />
-								</div>
-							</div>
-							<div class="ps-field">
-								<label for="contact-message">Message</label>
-								<textarea id="contact-message" name="message" placeholder="What's on your mind?" required></textarea>
-							</div>
-							<div id="contact-status" role="status" aria-live="polite" style="display:none; padding:10px 14px; border-radius:6px; margin-bottom:14px; font-size:14px; font-weight:600;"></div>
-							<ul class="actions">
-								<li><button type="submit" id="contact-submit" class="button primary">Send Message</button></li>
-							</ul>
-						</form>
-					</div>
-				</div>
-			</section>
-
-			<!-- Footer -->
-			<footer id="footer">
-				<div class="inner">
-					<section class="ps-footer-col">
-						<h2 class="ps-footer-brand"><a href="index.html" class="logo"><span class="symbol"><img src="images/logo.svg" alt="Playmat Studio logo" /></span><span class="title">Playmat Studio</span></a></h2>
-						<p>Free browser-based tools to design and download print-ready game mat artwork. No installs required.</p>
-					</section>
-					<section class="ps-footer-col">
-						<h2>Links</h2>
-						<ul class="ps-footer-list">
-							<li><a href="#" id="footer-privacy-link">Privacy Policy</a></li>
-							<li><a href="#" id="footer-changelog-link">Changelog</a></li>
-							<li><a href="#how-it-works">How It Works</a></li>
-							<li><a href="#features">Features</a></li>
-							<li><a href="#about">About</a></li>
-							<li><a href="#contact">Contact</a></li>
-						</ul>
-					</section>
-					<ul class="copyright">
-						<li>&copy; Playmat Studio. All rights reserved.</li>
-					</ul>
-				</div>
-			</footer>
-
 		</div>
 
-		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js?v=5"></script>
-		<script src="assets/js/tool.js?v=8"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=17"></script>
+		<script data-cfasync="false">
+		(function() {
+			// ── Ensure tool initializes in the background ────────────────
+			function ensureToolInit() {
+				if (typeof window.initDesignerVisibility === 'function') {
+					var wrapper = document.getElementById('designer-visibility-wrapper');
+					if (wrapper && wrapper.style.display === 'none') {
+						window.initDesignerVisibility();
+						return;
+					}
+				}
+				if (typeof window.switchTab === 'function') {
+					var adv = document.getElementById('adv-backdrop');
+					if (adv && !adv.classList.contains('tab-mode')) {
+						window.switchTab('adv-editor');
+					}
+				}
+			}
+
+			// ── Two-step landing patches (run after tool.js is ready) ────
+			function patchLandingFlow() {
+				if (typeof window.selectMatSize !== 'function' || typeof window.toggleFullScreen !== 'function') {
+					setTimeout(patchLandingFlow, 100);
+					return;
+				}
+
+				// Step 1 → 2: reveal upload bar when a size is chosen
+				var _origSelect = window.selectMatSize;
+				window.selectMatSize = function(sizeKey, btn) {
+					_origSelect(sizeKey, btn);
+					document.getElementById('landing-upload-bar').classList.add('visible');
+				};
+
+				// Step 2 → 3: fade out landing when fullscreen is entered
+				var _origFS = window.toggleFullScreen;
+				window.toggleFullScreen = function() {
+					_origFS.apply(this, arguments);
+					var landing = document.getElementById('beta-landing');
+					if (landing && !landing.classList.contains('exiting')) {
+						landing.classList.add('exiting');
+						setTimeout(function() { landing.style.display = 'none'; }, 520);
+					}
+				};
+			}
+
+			// ── Axis lock button highlight (belt-and-suspenders) ────────
+			// Runs after onclick fires so .active class is already toggled.
+			document.addEventListener('click', function(e) {
+				var btn = e.target && e.target.closest && e.target.closest('.axis-lock-btn');
+				if (!btn) return;
+				setTimeout(function() {
+					document.querySelectorAll('.axis-lock-btn').forEach(function(b) {
+						if (b.classList.contains('active')) {
+							b.style.setProperty('background',   '#30BBAD', 'important');
+							b.style.setProperty('border-color', '#30BBAD', 'important');
+							b.style.setProperty('color',        '#0b0912', 'important');
+							b.style.setProperty('font-weight',  '800',     'important');
+						} else {
+							b.style.removeProperty('background');
+							b.style.removeProperty('border-color');
+							b.style.removeProperty('color');
+							b.style.removeProperty('font-weight');
+						}
+					});
+				}, 0);
+			});
+
+			// ── Upload bar button handlers ───────────────────────────────
+			function initUploadBar() {
+				document.getElementById('landing-upload-btn').addEventListener('click', function() {
+					var adv = document.getElementById('adv-backdrop');
+					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					setTimeout(function() { document.getElementById('adv-file-in').click(); }, 100);
+				});
+				document.getElementById('landing-url-btn').addEventListener('click', function() {
+					var adv = document.getElementById('adv-backdrop');
+					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					setTimeout(function() { window.promptPasteUrl(); }, 100);
+				});
+				document.getElementById('landing-color-btn').addEventListener('click', function() {
+					var adv = document.getElementById('adv-backdrop');
+					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					setTimeout(function() {
+						if (typeof window.toggleFullScreen === 'function') window.toggleFullScreen();
+						setTimeout(function() {
+							var picker = document.getElementById('bg-color-picker');
+							if (picker) picker.click();
+						}, 400);
+					}, 100);
+				});
+			}
+
+			// ── Size button tooltips (2-second hover delay) ──────────────
+			(function() {
+				var tip = document.getElementById('mat-tooltip');
+				var timer = null;
+				document.querySelectorAll('.mat-size-btn[data-tip]').forEach(function(btn) {
+					btn.addEventListener('mouseenter', function(e) {
+						timer = setTimeout(function() {
+							tip.textContent = btn.dataset.tip;
+							var r = btn.getBoundingClientRect();
+							var tx = r.left + r.width / 2;
+							var ty = r.top - 12;
+							tip.style.left = '0px'; tip.style.top = '0px';
+							tip.classList.add('visible');
+							var tw = tip.offsetWidth, th = tip.offsetHeight;
+							tx = Math.min(Math.max(tx - tw / 2, 8), window.innerWidth - tw - 8);
+							ty = ty - th;
+							if (ty < 8) ty = r.bottom + 12;
+							tip.style.left = tx + 'px';
+							tip.style.top  = ty + 'px';
+						}, 2000);
+					});
+					btn.addEventListener('mouseleave', function() {
+						clearTimeout(timer);
+						tip.classList.remove('visible');
+					});
+					btn.addEventListener('click', function() {
+						clearTimeout(timer);
+						tip.classList.remove('visible');
+					});
+				});
+			})();
+
+			window.addEventListener('load', function() {
+				ensureToolInit();
+				setTimeout(ensureToolInit, 1000);
+				patchLandingFlow();
+				initUploadBar();
+			});
+		})();
+		</script>
 
 
-		<!-- Back to Top -->
-		<a id="back-to-top" href="#" aria-label="Back to top">&#8679;</a>
+		<!-- Hidden trigger so tool.js privacy listener has an element to bind -->
+		<a id="footer-privacy-link" href="#" style="display:none;" aria-hidden="true"></a>
 
 		<!-- Privacy Policy Modal -->
 		<div id="privacy-modal">
@@ -1078,448 +1599,6 @@
 			</div>
 		</div>
 
-		<!-- Changelog Modal -->
-		<div id="changelog-modal">
-			<div class="changelog-box">
-				<div class="changelog-header">
-					<div class="changelog-header-left">
-						<h2>Changelog</h2>
-						<span class="changelog-beta-badge">Beta &mdash; Active Development</span>
-					</div>
-					<button class="changelog-close" id="changelog-close-btn" aria-label="Close">&times;</button>
-				</div>
-				<div class="changelog-body">
-					<div class="cl-timeline">
-						<div class="cl-entry cl-latest">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.7.2b</span>
-								<span class="cl-tag cl-tag-latest">Latest</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">March 2026</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Security improvements from the March review, a redesigned Advanced Editor sidebar, and several visual and usability fixes.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-security">Security</p>
-										<ul class="cl-list">
-											<li>Added protections that prevent the site from loading unauthorized scripts or connecting to untrusted sources</li>
-											<li>Image links from outside the site are now checked to make sure they don&rsquo;t point to restricted addresses before being loaded</li>
-											<li>Added extra browser security settings across the whole site to help protect your connection and browsing data</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Advanced Editor sidebar reorganised &mdash; Art Scale and rotation controls now appear before Background Fill and Enhance Quality, matching a more natural editing order</li>
-											<li>Each sidebar section now has its own collapsible card, making it easier to find what you need and scroll through</li>
-											<li>Show/Hide Print Guides moved outside the Color Correction panel (it is a view aid, not a color tool)</li>
-											<li>Fullscreen mode now dims and blurs the background page while the editor is open</li>
-											<li>Editor tab carries a BETA badge; the redundant title bar above the canvas has been removed</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>Hover tooltips on image adjustment preset buttons explain what each preset does before you apply it</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-fixed">Fixed</p>
-										<ul class="cl-list">
-											<li>Scrolling over a filter slider (mouse wheel or touch swipe) no longer accidentally changes its value</li>
-											<li>Sidebar accordion cards no longer collapse to a minimal height when their content is taller than the panel</li>
-											<li>Fullscreen mode no longer overflows the right edge of the viewport on some screen sizes</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.7.1b</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">March 2026</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Behind-the-scenes maintenance and a full security review. No user-facing changes.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Internal documentation updated to reflect the current state of the site</li>
-											<li>Site metadata refreshed following the security review</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-security">Security</p>
-										<ul class="cl-list">
-											<li>A thorough security review of the entire site was completed</li>
-											<li>Issues found were recorded and a fix plan put in place; updates are coming in the next release</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.7.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">February 2026</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Image Hosting tool launched. Get a shareable link for any design in seconds.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>New <strong>Image Hosting</strong> tool &mdash; upload a design and receive a shareable link instantly</li>
-											<li>Hosted files expire automatically after 7 days</li>
-											<li>Supports files up to 50&thinsp;MB across all common image formats</li>
-											<li>Upload history stored locally in your browser, including expiry dates for each link</li>
-											<li>Share link dialog for easily copying and distributing hosted URLs</li>
-											<li>Direct link to recommended print services added to the editor</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Tool navigation updated to accommodate the new fifth tab cleanly at all screen sizes</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.6.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">December 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">AI-powered upscaling and background removal arrive in the Advanced Editor.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li><strong>AI Upscaler</strong> &mdash; enhance the resolution of your artwork using cloud AI processing</li>
-											<li><strong>AI Background Removal</strong> &mdash; automatically isolate the subject of your image as a separate layer</li>
-											<li>Confirmation prompt before any AI feature runs, clearly explaining that your image will be processed by an external service</li>
-											<li>Success notification shown on completion of AI processing</li>
-											<li>AI results are returned as a new layer in the editor, leaving original artwork untouched</li>
-											<li>Recolor brush tool &mdash; paint a custom color directly onto any area of your canvas (adjustable brush size, circle or square tip)</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Advanced Editor toolbar updated to surface the new AI and brush tools clearly</li>
-											<li>Export now correctly merges all active layers into a single print-ready file</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.5.2b</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">November 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Contact form improvements and site-wide security updates.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-fixed">Fixed</p>
-										<ul class="cl-list">
-											<li>Contact form now properly cleans up messages before they&rsquo;re sent</li>
-											<li>Limits on how long each field can be are now checked on our end to prevent misuse</li>
-											<li>Contact form status messages now correctly announced to screen readers</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-security">Security</p>
-										<ul class="cl-list">
-											<li>The contact form now only accepts messages sent from the Playmat Studio website</li>
-											<li>Additional security protections added across the whole site to keep your connection and data safe</li>
-											<li>Improved how the site loads in your browser: the main page always loads fresh, while images and other files load faster and update automatically when changed</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.5.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">October 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Batch Enhance and Format Converter tools added. Process multiple images at once.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li><strong>Batch Enhance</strong> tool &mdash; drag and drop multiple images for automatic color correction in one step</li>
-											<li>Download corrected images individually or all together as a single ZIP archive</li>
-											<li><strong>Format Converter</strong> tool &mdash; convert images between JPG, PNG, and WEBP, individually or in bulk</li>
-											<li>Output format selector with ZIP download option for batch conversions</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Tool section restructured to support four separate panels without visual clutter</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.4.1b</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">September 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Overlay library expanded with Riftbound points support and three new game templates.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>Riftbound points overlay configuration &mdash; choose from multiple zone layout variants for different game formats</li>
-											<li>Riftbound points selector available in both editors</li>
-											<li>New overlay templates: Neuroscape, Star Wars: Unlimited, and Grand Archive</li>
-											<li>Total overlay library now exceeds 48 templates</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-fixed">Fixed</p>
-										<ul class="cl-list">
-											<li>Left/right handedness now correctly mirrors overlays in the Quick Upload editor</li>
-											<li>Changing the selected game now correctly resets the format and handedness dropdowns</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.4.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">August 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Advanced Editor (Beta) launched &mdash; edit your designs with full controls, add text overlays, and save in multiple file formats.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li><strong>Advanced Editor</strong> (Beta) &mdash; a powerful editor with adjustable side panels and a moveable toolbar</li>
-											<li>Collapsible sidebar panels: Artwork, Game Layout, Adjustments, and Text</li>
-											<li>Text overlay tool with 9 font choices, fill color, outline color, size, and free positioning on the canvas</li>
-											<li>Color adjustment sliders: brightness, contrast, and saturation</li>
-											<li>Eraser brush for manually removing areas of artwork (adjustable size, circle or square tip)</li>
-											<li>Gradient overlay with adjustable angle and opacity</li>
-											<li>Flip horizontal and flip vertical transformations</li>
-											<li>Export in JPG, PNG, or WEBP &mdash; all at 300&thinsp;DPI with print quality settings built in</li>
-											<li>Automatically rearranges to fit on smaller screens</li>
-											<li>In-app help documentation accessible from the editor</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>Editing with large images is now smoother and faster</li>
-											<li>9 fonts suited to game-themed designs added</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.3.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">June 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Game overlay system introduced. MTG, Pok&eacute;mon, and One Piece templates available at launch.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>Game layout overlays with Game, Format, and Handedness options &mdash; each choice updates the next automatically</li>
-											<li>Launch overlays: Magic: The Gathering (60-Card and Commander), Pok&eacute;mon, and One Piece Card Game</li>
-											<li>A warning now appears if your design doesn&rsquo;t fully cover the printable area, including the edges</li>
-											<li>Overlay opacity control in the Quick Upload tool</li>
-											<li>Specialty mat sizes added: Victor, Secundus, Primus, Tiro, Veteranus, and Gladiator</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>The editor was updated to support game overlays displayed on top of your artwork</li>
-											<li>Downloaded files now have a unique name to avoid replacing files you&rsquo;ve already saved</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.2.1b</span>
-								<span class="cl-tag cl-tag-patch">Patch</span>
-								<span class="cl-vdate">May 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Responsive polish, caching improvements, and editor fixes.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-improved">Improved</p>
-										<ul class="cl-list">
-											<li>The site&rsquo;s appearance now always loads fresh after an update &mdash; no more outdated-looking pages</li>
-											<li>Mobile navigation behaviour refined at narrower screen widths</li>
-											<li>Back-to-top button now appears only after scrolling down, keeping the page clean on load</li>
-											<li>Low-resolution upload warning added &mdash; alerts you if your image may not print at full quality</li>
-											<li>Consistent in-app error messaging introduced across all tools</li>
-											<li>Import image from URL now available via a dedicated dialog</li>
-										</ul>
-									</div>
-									<div class="cl-group">
-										<p class="cl-label cl-label-fixed">Fixed</p>
-										<ul class="cl-list">
-											<li>Zoom slider range corrected in the Quick Upload tool</li>
-											<li>Rotate controls now apply correctly to the uploaded artwork in all editors</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.2.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">April 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Contact form launched. Social sharing previews and search engine visibility added.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>Contact form &mdash; messages delivered directly to the support inbox with reply-to set to the sender</li>
-											<li>A preview image and description now appear when the site link is shared on social media or messaging apps</li>
-											<li>App icon for saving the site to a phone or tablet home screen</li>
-											<li>Custom error page for broken or mistyped URLs</li>
-											<li>The site is now findable on Google and other search engines</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry cl-major">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.1.0b</span>
-								<span class="cl-tag cl-tag-major">Minor</span>
-								<span class="cl-vdate">March 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">Full site structure established. Quick Upload tool launched. Public beta begins.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>The full site was built out: navigation, main banner, how-it-works, features, tools, about, contact, and footer sections</li>
-											<li><strong>Quick Upload</strong> &mdash; upload artwork, zoom, rotate, fit to canvas, enhance or grayscale filter, download at 300&thinsp;DPI</li>
-											<li>Standard, Expanded, and Extended mat sizes</li>
-											<li>The site&rsquo;s look and feel was finalized: colors, fonts, and icons</li>
-											<li>The site works on all screen sizes, from large desktops to small phones</li>
-											<li>A slide-out navigation menu for mobile devices</li>
-											<li>Custom domain live at playmatstudio.com</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="cl-entry">
-							<div class="cl-vheader">
-								<span class="cl-vnum">v1.0.0b</span>
-								<span class="cl-tag cl-tag-initial">Initial</span>
-								<span class="cl-vdate">January 2025</span>
-							</div>
-							<div class="cl-card">
-								<p class="cl-summary">First version. The site was built and the brand style was established.</p>
-								<div class="cl-groups">
-									<div class="cl-group">
-										<p class="cl-label cl-label-added">Added</p>
-										<ul class="cl-list">
-											<li>The site was first created and published online</li>
-											<li>Brand color palette and visual identity established</li>
-											<li>The basic structure of the site was set up</li>
-											<li>Hosting and custom domain configured</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div><!-- /.cl-timeline -->
-				</div><!-- /.changelog-body -->
-			</div><!-- /.changelog-box -->
-		</div><!-- /#changelog-modal -->
-
-		<script>
-			// Back-to-top visibility — only show after user scrolls past the About section
-			(function(){
-				var btn = document.getElementById('back-to-top');
-				var aboutEl = document.getElementById('about');
-				var _threshold = 800;
-				function _calcThreshold(){
-					if(aboutEl){ var r = aboutEl.getBoundingClientRect(); _threshold = r.bottom + window.pageYOffset; }
-				}
-				_calcThreshold();
-				window.addEventListener('resize', _calcThreshold, {passive:true});
-				window.addEventListener('scroll', function(){
-					if(window.scrollY > _threshold){ btn.classList.add('visible'); }
-					else { btn.classList.remove('visible'); }
-				}, {passive:true});
-				btn.addEventListener('click', function(e){
-					e.preventDefault();
-					window.scrollTo({top:0, behavior:'smooth'});
-				});
-				// Close privacy modal on backdrop click
-				document.getElementById('privacy-modal').addEventListener('click', function(e){
-					if(e.target === this) this.style.display = 'none';
-				});
-
-				// Changelog modal
-				var clModal     = document.getElementById('changelog-modal');
-				var clOpenBtn   = document.getElementById('footer-changelog-link');
-				var clCloseBtn  = document.getElementById('changelog-close-btn');
-
-				clOpenBtn.addEventListener('click', function(e){
-					e.preventDefault();
-					clModal.style.display = 'flex';
-					document.body.style.overflow = 'hidden';
-				});
-				clCloseBtn.addEventListener('click', function(){
-					clModal.style.display = 'none';
-					document.body.style.overflow = '';
-				});
-				clModal.addEventListener('click', function(e){
-					if(e.target === this){
-						this.style.display = 'none';
-						document.body.style.overflow = '';
-					}
-				});
-				document.addEventListener('keydown', function(e){
-					if(e.key === 'Escape' && clModal.style.display === 'flex'){
-						clModal.style.display = 'none';
-						document.body.style.overflow = '';
-					}
-				});
-			})();
-		</script>
 
 		<script>
 		// Force tool wrapper to 90vw — always 90% of browser window, no more
@@ -1572,12 +1651,12 @@
 				fetch(CONTACT_WORKER, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ name: name, email: email, message: message })
+					body: JSON.stringify({ to: ‘ideas@playmatstudio.com’, name: name, email: email, message: message })
 				})
 				.then(function(res) { return res.json(); })
 				.then(function(data) {
 					if (data.ok) {
-						showStatus('Message sent! We’ll get back to you soon.', true);
+						showStatus(‘Message sent! We’ll get back to you soon.’, true);
 						form.reset();
 					} else {
 						showStatus(data.error || 'Something went wrong. Please try again.', false);
@@ -1619,7 +1698,469 @@
         <a href="https://www.rubicongamesupplies.com/collections/custom-playmats/?bg_ref=gBU3NKBThS" target="_blank" rel="noopener" class="action-btn" style="display:flex; box-sizing:border-box; width:100%; height:48px; font-size:15px; margin:0; background:#83BB30; text-decoration:none; color:#fff; border-radius:6px; align-items:center; justify-content:center; gap:8px;">&#128424;&#65039; OPEN PRINT SITE</a>
     </div>
 </div>
+
+<!-- ── Changelog modal ───────────────────────────────────────────────── -->
+<div id="changelog-modal" role="dialog" aria-modal="true" aria-label="Changelog">
+	<div class="changelog-box">
+		<div class="changelog-header">
+			<div class="changelog-header-left">
+				<h2>What's New</h2>
+				<span class="changelog-beta-badge">Beta</span>
+			</div>
+			<button class="changelog-close" id="changelog-close" aria-label="Close">&times;</button>
+		</div>
+		<div class="changelog-body">
+			<div class="cl-timeline">
+
+				<div class="cl-entry cl-latest cl-major">
+					<div class="cl-vheader">
+						<span class="cl-vnum">v2.0.0</span>
+						<span class="cl-tag cl-tag-major">Major</span>
+						<span class="cl-tag cl-tag-latest">Latest</span>
+						<span class="cl-vdate">2026-04-24</span>
+					</div>
+					<div class="cl-card">
+						<p class="cl-summary">A big update to the editor and site — new built-in tools, a refreshed header, and several important bug fixes including a long-standing issue where custom overlays were missing from exported images.</p>
+						<div class="cl-groups">
+							<div class="cl-group">
+								<p class="cl-label cl-label-added">Added</p>
+								<ul class="cl-list">
+									<li><strong>Image Hosting</strong> — upload any image and get a permanent shareable link instantly, right from the header. No third-party services needed.</li>
+									<li><strong>File Converter</strong> — convert images to JPG, PNG, or WEBP directly in your browser. Supports batch conversion with ZIP download.</li>
+									<li><strong>Direct tool links</strong> — you can now link directly to the Image Hosting or File Converter panels using a URL hash (e.g. <code>#upload</code> or <code>#file-converter</code>).</li>
+									<li><strong>New landing page background</strong> — replaced the repeating grid pattern with a custom non-repeating ring and line composition.</li>
+								</ul>
+							</div>
+							<div class="cl-group">
+								<p class="cl-label cl-label-improved">Improved</p>
+								<ul class="cl-list">
+									<li><strong>Header layout</strong> — the logo now sits on the left, tool buttons in the middle, and navigation on the right. All items are vertically centred regardless of logo size.</li>
+									<li><strong>Logo rendering</strong> — the logo SVG is now inlined so the full artwork displays without clipping. Previously a few pixels on each side were trimmed by the browser.</li>
+									<li><strong>Tool and nav buttons</strong> — the Image Hosting and File Converter buttons match the shape and weight of the main navigation pills. Tool buttons use purple to distinguish them from the teal nav links.</li>
+									<li><strong>Page width</strong> — header and content are now capped at 960 px for better readability on wide monitors.</li>
+									<li><strong>UI text casing</strong> — button labels and headings throughout the tool now use Title Case instead of ALL CAPS.</li>
+								</ul>
+							</div>
+							<div class="cl-group">
+								<p class="cl-label cl-label-fixed">Fixed</p>
+								<ul class="cl-list">
+									<li><strong>Custom overlay missing from exports</strong> — zone art or overlay images added in the Advanced Editor now correctly appear in downloaded files. This was a long-standing bug where the overlay layer was dropped during the export process.</li>
+									<li><strong>Contact form blocked by security policy</strong> — the Content Security Policy was missing the contact endpoint, which silently prevented form submissions from going through.</li>
+									<li><strong>File Converter freezing on bad files</strong> — if a corrupted or unreadable image was loaded, the converter would hang indefinitely showing "Converting…". It now fails gracefully with an error message.</li>
+									<li><strong>Direct links unreliable on slow loads</strong> — hash-based deep links (e.g. <code>#upload</code>) now wait for the page to be ready before opening, rather than relying on an arbitrary 300 ms timeout.</li>
+									<li><strong>Image Hosting: no feedback after upload</strong> — after a successful upload the form now shows a confirmation message, clears the selected file, and resets so you can upload another image without reloading.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="cl-entry">
+					<div class="cl-vheader">
+						<span class="cl-vnum">v1.7.1</span>
+						<span class="cl-tag cl-tag-patch">Patch</span>
+						<span class="cl-vdate">2025-11-10</span>
+					</div>
+					<div class="cl-card">
+						<p class="cl-summary">Stability and print-quality improvements.</p>
+						<div class="cl-groups">
+							<div class="cl-group">
+								<p class="cl-label cl-label-improved">Improved</p>
+								<ul class="cl-list">
+									<li>Export now writes correct 300 DPI metadata for print vendors.</li>
+									<li>AI upscale and background-remove workers updated for faster response times.</li>
+									<li>Zoom toolbar repositioned to avoid overlapping the canvas on small screens.</li>
+								</ul>
+							</div>
+							<div class="cl-group">
+								<p class="cl-label cl-label-fixed">Fixed</p>
+								<ul class="cl-list">
+									<li>Large canvas mode no longer clips at the bottom on tall displays.</li>
+									<li>Pinned info bar (bleed/safe-zone guide) now stays anchored below the editor on all screen sizes.</li>
+									<li>Share link expiry note was showing the wrong time unit in some locales.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ── Lightbox overlay ───────────────────────────────────────────────── -->
+<div id="lb-overlay">
+	<div id="lb-modal">
+		<button id="lb-close" aria-label="Close">&times;</button>
+		<div id="lb-body"></div>
+	</div>
+</div>
+
+<!-- ── Lightbox content panels (hidden, cloned into modal on open) ──── -->
+<div id="lb-panel-how-it-works" hidden>
+	<h2>How It Works</h2>
+	<p class="lb-subtitle">Three steps from your artwork to a print-ready file.</p>
+	<div class="lb-steps">
+		<div class="lb-step">
+			<span class="lb-step-icon"><svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg></span>
+			<h3>Upload Your Art</h3>
+			<p>Drop any image&mdash;JPG, PNG, WEBP, or paste a URL. The tool auto-fits it to your chosen mat size with full bleed.</p>
+		</div>
+		<div class="lb-step">
+			<span class="lb-step-icon"><svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M3 17v2h6v-2H3zm0-8v2h10V9H3zm10 12v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg></span>
+			<h3>Customize</h3>
+			<p>Add game zone overlays, enhance colors, upscale with AI, adjust zoom and position&mdash;or keep it simple.</p>
+		</div>
+		<div class="lb-step">
+			<span class="lb-step-icon"><svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></span>
+			<h3>Download &amp; Print</h3>
+			<p>Export a 300&nbsp;DPI JPG with proper metadata&mdash;exactly what print-on-demand vendors need for a sharp, professional mat.</p>
+		</div>
+	</div>
+</div>
+
+<div id="lb-panel-features" hidden>
+	<h2>Features</h2>
+	<p class="lb-subtitle">Everything you need, from upload to print-ready file.</p>
+	<div class="lb-features">
+		<div class="lb-feature">
+			<h3><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><path d="M20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0L3 17.25V21h3.75L20.71 7.04zM5.92 19H5v-.92l9.06-9.06.92.92L5.92 19z"/><path d="M12 3l1.09 2.41L15.5 6.5l-2.41 1.09L12 10l-1.09-2.41L8.5 6.5l2.41-1.09z" opacity=".5"/></svg>Editor</h3>
+			<p>Full canvas editor with AI upscaling, zone overlays, recolor, transform tools, and one-click fit-to-mat. Drop an image or paste a URL and you&rsquo;re ready to go.</p>
+		</div>
+		<div class="lb-feature">
+			<h3><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><path d="M19 3l-1.26 2.75L15 7l2.74 1.26L19 11l1.25-2.74L23 7l-2.75-1.25L19 3zM9 4L6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5L9 4zm10 9l-1.26 2.74L15 17l2.74 1.25L19 21l1.25-2.75L23 17l-2.75-1.26L19 13z"/></svg>Batch Enhance</h3>
+			<p>Auto color-correct multiple images and download them individually or as a ZIP.</p>
+		</div>
+		<div class="lb-feature">
+			<h3><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>Format Converter</h3>
+			<p>Convert any image to JPG, PNG, or WEBP&mdash;single file or batch ZIP download.</p>
+		</div>
+		<div class="lb-feature">
+			<h3><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm2.5 4a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm9 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM12 10.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-4.5 3.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm9 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/></svg>Game Overlays</h3>
+			<p>Pre-made zone layouts for popular TCGs and CCGs, applied at full print resolution.</p>
+		</div>
+		<div class="lb-feature">
+			<h3><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-10 3l-3-3 1.41-1.41L13 13.17l4.59-4.58L19 10l-6 6z"/></svg>300&nbsp;DPI Output</h3>
+			<p>Every export writes proper 300&nbsp;DPI metadata&mdash;exactly what print vendors require.</p>
+		</div>
+	</div>
+</div>
+
+<div id="lb-panel-about" hidden>
+	<h2>About Playmat Studio</h2>
+	<p>Playmat Studio is a free, browser-based image prep tool built for tabletop game players who want to print custom playmats with their own artwork. No installs, no subscriptions, no sign-up&mdash;just open the tool and start designing.</p>
+	<p>Playmat Studio is a community-driven project designed for anyone who wants to create custom playmats with their own artwork. Every feature is informed by real user feedback and requests. There are no ads, no fees, and no account required&mdash;just a free tool that improves as more people use and share it. If there&rsquo;s something you&rsquo;d like to see added, reach out&mdash;community input directly shapes what gets built next.</p>
+</div>
+
+<div id="lb-panel-contact" hidden>
+	<h2>Contact</h2>
+	<p class="lb-subtitle">Questions, feedback, or just want to say hi? We&rsquo;d love to hear from you.</p>
+	<form id="lb-contact-form" novalidate>
+		<div class="lb-form-row">
+			<div class="lb-field">
+				<label for="lb-contact-name">Name</label>
+				<input type="text" id="lb-contact-name" placeholder="Your name" required />
+			</div>
+			<div class="lb-field">
+				<label for="lb-contact-email">Email</label>
+				<input type="email" id="lb-contact-email" placeholder="you@example.com" required />
+			</div>
+		</div>
+		<div class="lb-field" style="margin-bottom:14px;">
+			<label for="lb-contact-message">Message</label>
+			<textarea id="lb-contact-message" placeholder="What&apos;s on your mind?" required></textarea>
+		</div>
+		<div id="lb-contact-status"></div>
+		<div class="lb-submit">
+			<button type="submit" id="lb-contact-submit">Send Message</button>
+		</div>
+		<p style="margin-top:16px; font-size:12px; color:rgba(255,255,255,0.38); text-align:center;">
+			Or email us directly at <a href="mailto:ideas@playmatstudio.com" style="color:var(--brand-hover); text-decoration:none;">ideas@playmatstudio.com</a>
+		</p>
+	</form>
+</div>
+
+<div id="lb-panel-upload" hidden>
+	<h2>Image Hosting</h2>
+	<p class="lb-subtitle">Upload an image and get a permanent shareable link instantly.</p>
+	<div id="ih-drop" class="tool-drop-zone">
+		<svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+		Drop an image here, or click to browse
+		<input type="file" id="ih-file" accept="image/*" style="display:none;">
+	</div>
+	<img id="ih-preview" class="tool-preview-img" style="display:none;" alt="Preview">
+	<div id="ih-status" class="tool-status"></div>
+	<div class="tool-row" id="ih-action-row" style="display:none;">
+		<button class="tool-btn" id="ih-upload-btn">Upload &amp; Get Link</button>
+	</div>
+	<ul class="tool-result-list" id="ih-results"></ul>
+</div>
+
+<div id="lb-panel-file-converter" hidden>
+	<h2>File Converter</h2>
+	<p class="lb-subtitle">Convert images to JPG, PNG, or WEBP — in your browser, no upload needed.</p>
+	<div id="fc-drop" class="tool-drop-zone">
+		<svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+		Drop images here, or click to browse (multiple OK)
+		<input type="file" id="fc-files" accept="image/*" multiple style="display:none;">
+	</div>
+	<div class="tool-row">
+		<select class="tool-select" id="fc-format">
+			<option value="image/jpeg">JPG</option>
+			<option value="image/png">PNG</option>
+			<option value="image/webp">WEBP</option>
+		</select>
+		<label style="color:rgba(255,255,255,0.6); font-size:var(--fs-md); white-space:nowrap;">Quality</label>
+		<input type="range" id="fc-quality" min="60" max="100" value="92" style="flex:1; min-width:80px; accent-color:#30BBAD;">
+		<span id="fc-quality-val" style="color:rgba(255,255,255,0.6); font-size:var(--fs-md); min-width:32px;">92%</span>
+	</div>
+	<div id="fc-status" class="tool-status"></div>
+	<div class="tool-row">
+		<button class="tool-btn" id="fc-convert-btn" disabled>Convert &amp; Download</button>
+		<button class="tool-btn" id="fc-zip-btn" disabled style="background:rgba(48,187,173,0.18); color:#30BBAD; border:1px solid rgba(48,187,173,0.4); display:none;">&#128230; Download ZIP</button>
+	</div>
+	<ul class="tool-result-list" id="fc-results"></ul>
+</div>
+
+<script>
+(function() {
+	// ── Lightbox open/close ────────────────────────────────────────────
+	var overlay = document.getElementById('lb-overlay');
+	var body    = document.getElementById('lb-body');
+
+	function setNavActive(key) {
+		document.querySelectorAll('[data-lb]').forEach(function(l) {
+			l.classList.toggle('lb-nav-active', key && l.dataset.lb === key);
+		});
+	}
+	function openLb(key) {
+		var panel = document.getElementById('lb-panel-' + key);
+		if (!panel) return;
+		body.innerHTML = panel.innerHTML;
+		overlay.classList.add('open');
+		setNavActive(key);
+		history.replaceState(null, '', '#' + key);
+		if (key === 'contact') initLbContactForm();
+		if (key === 'upload') initImageHosting();
+		if (key === 'file-converter') initFileConverter();
+	}
+	function closeLb() {
+		overlay.classList.remove('open');
+		setNavActive(null);
+		history.replaceState(null, '', window.location.pathname + window.location.search);
+	}
+
+	document.querySelectorAll('[data-lb]').forEach(function(link) {
+		link.addEventListener('click', function(e) { e.preventDefault(); openLb(link.dataset.lb); });
+	});
+	document.getElementById('lb-close').addEventListener('click', closeLb);
+	overlay.addEventListener('click', function(e) { if (e.target === overlay) closeLb(); });
+	document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeLb(); closeChangelog(); } });
+
+	// ── Changelog modal ────────────────────────────────────────────────────
+	var changelogModal = document.getElementById('changelog-modal');
+	function openChangelog() { changelogModal.style.display = 'flex'; }
+	function closeChangelog() { changelogModal.style.display = 'none'; }
+	document.querySelectorAll('.changelog-trigger').forEach(function(el) {
+		el.addEventListener('click', openChangelog);
+	});
+	var footerChangelogLink = document.getElementById('footer-changelog-link');
+	if (footerChangelogLink) { footerChangelogLink.addEventListener('click', function(e) { e.preventDefault(); openChangelog(); }); }
+	document.getElementById('changelog-close').addEventListener('click', closeChangelog);
+	changelogModal.addEventListener('click', function(e) { if (e.target === changelogModal) closeChangelog(); });
+
+	// ── Open via URL hash on load ──────────────────────────────────────────
+	(function() {
+		var hash = window.location.hash.replace('#', '');
+		if (hash) { (function tryOpen() { if (typeof openLb === 'function') { openLb(hash); } else { setTimeout(tryOpen, 50); } })(); }
+	})();
+
+	// ── Contact form inside lightbox ───────────────────────────────────
+	function initLbContactForm() {
+		var form   = document.getElementById('lb-contact-form');
+		var status = document.getElementById('lb-contact-status');
+		var btn    = document.getElementById('lb-contact-submit');
+		if (!form) return;
+		form.addEventListener('submit', function(e) {
+			e.preventDefault();
+			var name    = document.getElementById('lb-contact-name').value.trim();
+			var email   = document.getElementById('lb-contact-email').value.trim();
+			var message = document.getElementById('lb-contact-message').value.trim();
+			if (!name || !email || !message) {
+				showStatus('Please fill in all fields.', false); return;
+			}
+			btn.disabled = true; btn.textContent = 'Sending\u2026';
+			status.style.display = 'none';
+			fetch('https://contact.playmatstudio.com', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ to: 'ideas@playmatstudio.com', name: name, email: email, message: message })
+			})
+			.then(function(r) { return r.json(); })
+			.then(function(d) {
+				if (d.ok) { showStatus('Message sent! We\u2019ll get back to you soon.', true); form.reset(); }
+				else       { showStatus(d.error || 'Something went wrong. Please try again.', false); }
+			})
+			.catch(function() { showStatus('Could not send message. Please check your connection.', false); })
+			.finally(function() { btn.disabled = false; btn.textContent = 'Send Message'; });
+
+			function showStatus(msg, ok) {
+				status.textContent = msg;
+				status.style.display = 'block';
+				status.style.background = ok ? 'rgba(131,187,48,0.15)' : 'rgba(187,48,62,0.15)';
+				status.style.border = ok ? '1px solid rgba(131,187,48,0.4)' : '1px solid rgba(187,48,62,0.4)';
+				status.style.color = ok ? '#83BB30' : '#e05060';
+				status.style.borderRadius = '6px'; status.style.padding = '10px 14px';
+				status.style.fontSize = '13px'; status.style.fontWeight = '600';
+			}
+		});
+	}
+
+	// ── Image Hosting tool ────────────────────────────────────────────────
+	function initImageHosting() {
+		var drop    = document.getElementById('ih-drop');
+		var fileIn  = document.getElementById('ih-file');
+		var preview = document.getElementById('ih-preview');
+		var status  = document.getElementById('ih-status');
+		var actRow  = document.getElementById('ih-action-row');
+		var results = document.getElementById('ih-results');
+		var btn     = document.getElementById('ih-upload-btn');
+		if (!drop) return;
+		var selectedFile = null;
+
+		function showFile(file) {
+			selectedFile = file;
+			var url = URL.createObjectURL(file);
+			preview.src = url; preview.style.display = 'block';
+			actRow.style.display = 'flex';
+			status.style.display = 'none';
+		}
+		drop.addEventListener('click', function() { fileIn.click(); });
+		drop.addEventListener('dragover', function(e) { e.preventDefault(); drop.classList.add('drag-over'); });
+		drop.addEventListener('dragleave', function() { drop.classList.remove('drag-over'); });
+		drop.addEventListener('drop', function(e) { e.preventDefault(); drop.classList.remove('drag-over'); var f = e.dataTransfer.files[0]; if (f) showFile(f); });
+		fileIn.addEventListener('change', function() { if (fileIn.files[0]) showFile(fileIn.files[0]); });
+
+		btn.addEventListener('click', function() {
+			if (!selectedFile) return;
+			btn.disabled = true; btn.textContent = 'Uploading…';
+			status.className = 'tool-status'; status.style.display = 'none';
+			var fd = new FormData();
+			fd.append('file', selectedFile);
+			fetch('https://files.playmatstudio.com/upload', { method: 'POST', body: fd })
+				.then(function(r) { return r.json(); })
+				.then(function(d) {
+					if (d && d.url) {
+						var li = document.createElement('li');
+						li.innerHTML = '<span>' + d.url + '</span><div style="display:flex;gap:6px;"><button class="copy-btn" data-url="' + d.url + '">Copy</button><a href="' + d.url + '" target="_blank" rel="noopener">Open</a></div>';
+						results.prepend(li);
+						li.querySelector('.copy-btn').addEventListener('click', function() { navigator.clipboard.writeText(d.url); this.textContent = 'Copied!'; var b = this; setTimeout(function() { b.textContent = 'Copy'; }, 2000); });
+						status.textContent = 'Upload complete!'; status.className = 'tool-status'; status.style.display = 'block';
+						selectedFile = null; fileIn.value = ''; preview.style.display = 'none'; actRow.style.display = 'none';
+						drop.innerHTML = '<span>Drag &amp; drop an image here, or <u>browse</u></span>';
+					} else { throw new Error(d.error || 'Upload failed'); }
+				})
+				.catch(function(err) {
+					status.textContent = err.message || 'Upload failed. Please try again.';
+					status.className = 'tool-status err'; status.style.display = 'block';
+				})
+				.finally(function() { btn.disabled = false; btn.textContent = 'Upload & Get Link'; });
+		});
+	}
+
+	// ── File Converter tool ───────────────────────────────────────────────
+	function initFileConverter() {
+		var drop    = document.getElementById('fc-drop');
+		var fileIn  = document.getElementById('fc-files');
+		var fmtSel  = document.getElementById('fc-format');
+		var qual    = document.getElementById('fc-quality');
+		var qualVal = document.getElementById('fc-quality-val');
+		var status  = document.getElementById('fc-status');
+		var cvtBtn  = document.getElementById('fc-convert-btn');
+		var zipBtn  = document.getElementById('fc-zip-btn');
+		var results = document.getElementById('fc-results');
+		if (!drop) return;
+		var files = [];
+
+		qual.addEventListener('input', function() { qualVal.textContent = qual.value + '%'; });
+		fmtSel.addEventListener('change', function() {
+			var isLossy = fmtSel.value !== 'image/png';
+			qual.disabled = !isLossy; qualVal.style.opacity = isLossy ? '1' : '0.35';
+		});
+
+		function setFiles(list) {
+			files = Array.from(list).filter(function(f) { return f.type.startsWith('image/'); });
+			if (!files.length) return;
+			drop.textContent = files.length + ' file' + (files.length > 1 ? 's' : '') + ' selected';
+			cvtBtn.disabled = false;
+			zipBtn.style.display = files.length > 1 ? 'inline-block' : 'none';
+			zipBtn.disabled = false;
+			results.innerHTML = ''; status.style.display = 'none';
+		}
+		drop.addEventListener('click', function() { fileIn.click(); });
+		drop.addEventListener('dragover', function(e) { e.preventDefault(); drop.classList.add('drag-over'); });
+		drop.addEventListener('dragleave', function() { drop.classList.remove('drag-over'); });
+		drop.addEventListener('drop', function(e) { e.preventDefault(); drop.classList.remove('drag-over'); setFiles(e.dataTransfer.files); });
+		fileIn.addEventListener('change', function() { setFiles(fileIn.files); });
+
+		function convertFile(file, fmt, q) {
+			return new Promise(function(resolve, reject) {
+				var img = new Image();
+				var url = URL.createObjectURL(file);
+				img.onload = function() {
+					var c = document.createElement('canvas');
+					c.width = img.naturalWidth; c.height = img.naturalHeight;
+					c.getContext('2d').drawImage(img, 0, 0);
+					URL.revokeObjectURL(url);
+					c.toBlob(function(blob) { resolve(blob); }, fmt, q / 100);
+				};
+				img.onerror = function() { URL.revokeObjectURL(url); reject(new Error('Failed to load: ' + file.name)); };
+				img.src = url;
+			});
+		}
+		function extFor(fmt) { return {  'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[fmt] || 'jpg'; }
+		function baseName(name) { return name.replace(/\.[^.]+$/, ''); }
+
+		cvtBtn.addEventListener('click', function() {
+			if (!files.length) return;
+			var fmt = fmtSel.value, q = parseInt(qual.value);
+			cvtBtn.disabled = true; cvtBtn.textContent = 'Converting…';
+			results.innerHTML = '';
+			Promise.all(files.map(function(f) { return convertFile(f, fmt, q).then(function(blob) { return { name: baseName(f.name) + '.' + extFor(fmt), blob: blob }; }); }))
+				.then(function(items) {
+					items.forEach(function(item) {
+						var objUrl = URL.createObjectURL(item.blob);
+						var li = document.createElement('li');
+						li.innerHTML = '<span>' + item.name + '</span><a href="' + objUrl + '" download="' + item.name + '">Download</a>';
+						results.appendChild(li);
+					});
+				})
+				.finally(function() { cvtBtn.disabled = false; cvtBtn.textContent = 'Convert & Download'; });
+		});
+
+		zipBtn.addEventListener('click', function() {
+			if (!files.length || typeof JSZip === 'undefined') return;
+			var fmt = fmtSel.value, q = parseInt(qual.value);
+			zipBtn.disabled = true; zipBtn.textContent = 'Zipping…';
+			Promise.all(files.map(function(f) { return convertFile(f, fmt, q).then(function(blob) { return { name: baseName(f.name) + '.' + extFor(fmt), blob: blob }; }); }))
+				.then(function(items) {
+					var zip = new JSZip();
+					items.forEach(function(item) { zip.file(item.name, item.blob); });
+					return zip.generateAsync({ type: 'blob' });
+				})
+				.then(function(blob) {
+					var a = document.createElement('a');
+					a.href = URL.createObjectURL(blob);
+					a.download = 'converted-images.zip';
+					a.click();
+				})
+				.finally(function() { zipBtn.disabled = false; zipBtn.textContent = '📦 Download ZIP'; });
+		});
+	}
+
+})();
+</script>
 </body>
 </html>
-
 
