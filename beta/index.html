@@ -112,10 +112,9 @@
 				align-items: center !important;
 				height: auto !important;
 				overflow: visible !important;
-				max-width: 1200px !important;
+				max-width: 960px !important;
 				margin-left: auto !important;
 				margin-right: auto !important;
-				gap: 2em !important;
 			}
 			/* Logo on the far left */
 			#header .inner .logo {
@@ -130,22 +129,25 @@
 				width: auto;
 				display: block;
 			}
-			/* Tool buttons next to logo */
+			/* Tool buttons just left of nav, pushed right by margin-left: auto */
 			#header-tools {
 				flex: 0 0 auto !important;
 				order: 2 !important;
 				display: flex !important;
-				justify-content: flex-start !important;
-				gap: 0.9em !important;
 				align-items: center !important;
+				gap: 0.9em !important;
+				margin-left: auto !important;
 			}
-			/* Nav pushed to the far right */
+			/* Nav buttons immediately right of tool buttons */
 			#header .inner nav {
-				flex: 1 !important;
+				flex: 0 0 auto !important;
 				order: 3 !important;
 				display: flex !important;
 				justify-content: flex-end !important;
 			}
+
+			/* Gap between tool buttons and nav */
+			#header .inner nav { margin-left: 1.2em !important; }
 
 			/* ── Beta nav ────────────────────────────────────────────────── */
 			#header nav ul li.ps-nav-link a {
