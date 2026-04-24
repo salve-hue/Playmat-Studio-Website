@@ -1267,16 +1267,19 @@
         if (mode === 'l') {
             targetW = Math.max(measuredW, 250);
             targetH = targetW / aspect;
-            // Cap height in fullscreen or lightbox mode so the actions bar stays within the viewport.
+            // Cap height in fullscreen, lightbox, or tab-mode so the actions bar stays within the viewport.
             const backdrop     = document.getElementById('adv-backdrop');
             const isLightbox   = backdrop && !backdrop.classList.contains('tab-mode');
             const isFullscreen = root && root.classList.contains('app-fullscreen-mode');
-            if (isLightbox || isFullscreen) {
-                // In fullscreen L mode the root expands to 100vh; otherwise capped at 90vh.
-                // In lightbox the backdrop has a computed padding-top before the root starts.
-                const availH = isFullscreen
-                    ? window.innerHeight
-                    : window.innerHeight - (parseFloat(getComputedStyle(backdrop).paddingTop) || 40);
+            const isTabMode    = backdrop &&  backdrop.classList.contains('tab-mode');
+            if (isLightbox || isFullscreen || isTabMode) {
+                // Tab-mode: col.clientHeight is already the visible height (same as Auto/S/M).
+                // Fullscreen: use full window height. Lightbox: subtract backdrop top padding.
+                const availH = isTabMode
+                    ? col.clientHeight
+                    : isFullscreen
+                        ? window.innerHeight
+                        : window.innerHeight - (parseFloat(getComputedStyle(backdrop).paddingTop) || 40);
                 const infoBar2    = document.getElementById('adv-info-bar');
                 const infoH2      = infoBar2    ? (infoBar2.offsetHeight    || 40)  : 40;
                 const actionsBar2 = document.getElementById('adv-canvas-actions');

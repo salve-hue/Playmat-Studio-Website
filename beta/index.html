@@ -80,31 +80,6 @@
 				height: calc(100vh - 155px) !important;
 				border-radius: 0 !important;
 			}
-			/* Large mode: same fixed-height container as other sizes.
-			   Canvas column scrolls inside rather than pushing the container off-screen. */
-			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large {
-				height: calc(100vh - 155px) !important;
-				max-height: none !important;
-				overflow: hidden !important;
-			}
-			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large #editor-main {
-				flex: 1 !important;
-				min-height: 0 !important;
-				height: auto !important;
-				overflow: hidden !important;
-			}
-			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large #canvas-column {
-				overflow: auto !important;
-				align-items: flex-start !important;
-				justify-content: flex-start !important;
-			}
-			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large #sidebar {
-				position: sticky !important;
-				top: 0 !important;
-				max-height: 100% !important;
-				overflow-y: auto !important;
-				align-self: flex-start !important;
-			}
 			/* Suppress fullscreen toggle — users restart instead */
 			#fs-toggle-btn { display: none !important; }
 
@@ -1426,7 +1401,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=17"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=18"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────
