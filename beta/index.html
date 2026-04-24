@@ -538,7 +538,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					<!-- Tool links (left) -->
 					<div id="header-tools">
-						<a href="#" data-lb="image-hosting">Image Hosting</a>
+						<a href="#" data-lb="upload">Image Hosting</a>
 						<a href="#" data-lb="file-converter">File Converter</a>
 					</div>
 
@@ -1791,7 +1791,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 	</form>
 </div>
 
-<div id="lb-panel-image-hosting" hidden>
+<div id="lb-panel-upload" hidden>
 	<h2>Image Hosting</h2>
 	<p class="lb-subtitle">Upload an image and get a permanent shareable link instantly.</p>
 	<div id="ih-drop" class="tool-drop-zone">
@@ -1852,7 +1852,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 		setNavActive(key);
 		history.replaceState(null, '', '#' + key);
 		if (key === 'contact') initLbContactForm();
-		if (key === 'image-hosting') initImageHosting();
+		if (key === 'upload') initImageHosting();
 		if (key === 'file-converter') initFileConverter();
 	}
 	function closeLb() {
