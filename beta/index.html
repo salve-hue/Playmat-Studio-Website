@@ -55,7 +55,7 @@
 			#get-printed-modal p  { font-size: var(--fs-md) !important; }
 
 			html, body { height: 100%; overflow-x: hidden; }
-			#wrapper { min-height: 100vh; display: flex; flex-direction: column; padding-top: 145px !important; }
+			#wrapper { min-height: 100vh; display: flex; flex-direction: column; padding-top: 133px !important; }
 			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
 			section#tools .inner { max-width: none !important; padding: 0 !important; }
 			#designer-visibility-wrapper {
@@ -101,12 +101,8 @@
 
 			/* ── Global fixes (main.css not loaded on beta) ─────────────── */
 			a { text-decoration: none !important; }
-			/* ── Header layout: flex with absolutely centred logo ─────────── */
+			/* ── Header layout: equal-flex sides force logo to true centre ─── */
 			#header {
-				min-height: 133px !important;
-				overflow: visible !important;
-			}
-			#header .inner {
 				overflow: visible !important;
 			}
 			#header .inner {
@@ -114,16 +110,17 @@
 				display: flex !important;
 				flex-direction: row !important;
 				align-items: center !important;
-				justify-content: space-between !important;
-				position: relative !important;
 				height: auto !important;
+				overflow: visible !important;
 			}
-			/* Logo sits in absolute centre so left/right items balance freely */
+			#header-tools {
+				flex: 1 !important;
+				justify-content: flex-start !important;
+			}
 			#header .inner .logo {
-				position: absolute !important;
-				left: 50% !important;
-				top: 50% !important;
-				transform: translate(-50%, -50%) !important;
+				flex: 0 0 auto !important;
+				position: static !important;
+				transform: none !important;
 				margin: 0 !important;
 			}
 			#header .inner .logo .symbol svg {
@@ -131,9 +128,10 @@
 				width: auto;
 				display: block;
 			}
-			/* Nav stays at the right end of the flex row */
 			#header .inner nav {
-				margin-left: auto !important;
+				flex: 1 !important;
+				display: flex !important;
+				justify-content: flex-end !important;
 			}
 
 			/* ── Beta nav ────────────────────────────────────────────────── */
@@ -409,10 +407,9 @@
 
 			/* ── Header tool buttons (left side) ─────────────────────────── */
 			#header-tools {
-				display: flex;
-				gap: 0.9em;
-				align-items: center;
-				flex-shrink: 0;
+				display: flex !important;
+				gap: 0.9em !important;
+				align-items: center !important;
 			}
 			#header-tools a {
 				background-color: #8B60CC !important;
