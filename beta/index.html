@@ -1720,35 +1720,30 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 						<span class="cl-vdate">2026-04-24</span>
 					</div>
 					<div class="cl-card">
-						<p class="cl-summary">A big update to the editor and site — new built-in tools, a refreshed header, and several important bug fixes including a long-standing issue where custom overlays were missing from exported images.</p>
+						<p class="cl-summary">A major update — two new built-in tools, a cleaner header, and several fixes including one where custom overlays were missing from downloaded designs.</p>
 						<div class="cl-groups">
 							<div class="cl-group">
 								<p class="cl-label cl-label-added">Added</p>
 								<ul class="cl-list">
-									<li><strong>Image Hosting</strong> — upload any image and get a permanent shareable link instantly, right from the header. No third-party services needed.</li>
-									<li><strong>File Converter</strong> — convert images to JPG, PNG, or WEBP directly in your browser. Supports batch conversion with ZIP download.</li>
-									<li><strong>Direct tool links</strong> — you can now link directly to the Image Hosting or File Converter panels using a URL hash (e.g. <code>#upload</code> or <code>#file-converter</code>).</li>
-									<li><strong>New landing page background</strong> — replaced the repeating grid pattern with a custom non-repeating ring and line composition.</li>
+									<li><strong>Image Hosting</strong> — upload any image and get a permanent shareable link instantly, right from the header. No account or third-party service needed.</li>
+									<li><strong>File Converter</strong> — convert images to JPG, PNG, or WEBP directly in your browser. Convert one file or a whole batch and download them as a ZIP.</li>
+									<li><strong>Shareable panel links</strong> — you can now send someone a direct link that opens straight to Image Hosting or File Converter. Just share the URL while the panel is open.</li>
 								</ul>
 							</div>
 							<div class="cl-group">
 								<p class="cl-label cl-label-improved">Improved</p>
 								<ul class="cl-list">
-									<li><strong>Header layout</strong> — the logo now sits on the left, tool buttons in the middle, and navigation on the right. All items are vertically centred regardless of logo size.</li>
-									<li><strong>Logo rendering</strong> — the logo SVG is now inlined so the full artwork displays without clipping. Previously a few pixels on each side were trimmed by the browser.</li>
-									<li><strong>Tool and nav buttons</strong> — the Image Hosting and File Converter buttons match the shape and weight of the main navigation pills. Tool buttons use purple to distinguish them from the teal nav links.</li>
-									<li><strong>Page width</strong> — header and content are now capped at 960 px for better readability on wide monitors.</li>
-									<li><strong>UI text casing</strong> — button labels and headings throughout the tool now use Title Case instead of ALL CAPS.</li>
+									<li><strong>Cleaner header</strong> — the logo, tool shortcuts, and navigation links are now neatly laid out across the top of the page and easier to find at a glance.</li>
+									<li><strong>Refreshed homepage design</strong> — the background has been updated with a new look that's easier on the eyes.</li>
 								</ul>
 							</div>
 							<div class="cl-group">
 								<p class="cl-label cl-label-fixed">Fixed</p>
 								<ul class="cl-list">
-									<li><strong>Custom overlay missing from exports</strong> — zone art or overlay images added in the Advanced Editor now correctly appear in downloaded files. This was a long-standing bug where the overlay layer was dropped during the export process.</li>
-									<li><strong>Contact form blocked by security policy</strong> — the Content Security Policy was missing the contact endpoint, which silently prevented form submissions from going through.</li>
-									<li><strong>File Converter freezing on bad files</strong> — if a corrupted or unreadable image was loaded, the converter would hang indefinitely showing "Converting…". It now fails gracefully with an error message.</li>
-									<li><strong>Direct links unreliable on slow loads</strong> — hash-based deep links (e.g. <code>#upload</code>) now wait for the page to be ready before opening, rather than relying on an arbitrary 300 ms timeout.</li>
-									<li><strong>Image Hosting: no feedback after upload</strong> — after a successful upload the form now shows a confirmation message, clears the selected file, and resets so you can upload another image without reloading.</li>
+									<li><strong>Custom overlays missing from downloads</strong> — if you added game zone art or a custom overlay in the editor, it now correctly appears in your downloaded image. Previously it was being left out.</li>
+									<li><strong>Contact form not sending</strong> — messages submitted through the Contact panel were not being delivered. This is now fixed.</li>
+									<li><strong>File Converter getting stuck</strong> — dropping in an unsupported or damaged file would cause the converter to freeze on "Converting…" with no way out. It now shows a clear error message instead.</li>
+									<li><strong>Image Hosting confirmation</strong> — after a successful upload you now get a confirmation message and the form resets automatically so you can upload another image straight away.</li>
 								</ul>
 							</div>
 						</div>
@@ -1767,17 +1762,17 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 							<div class="cl-group">
 								<p class="cl-label cl-label-improved">Improved</p>
 								<ul class="cl-list">
-									<li>Export now writes correct 300 DPI metadata for print vendors.</li>
-									<li>AI upscale and background-remove workers updated for faster response times.</li>
-									<li>Zoom toolbar repositioned to avoid overlapping the canvas on small screens.</li>
+									<li>Downloaded files now include the correct 300 DPI setting that print shops expect.</li>
+									<li>AI Upscale and Background Removal are noticeably faster.</li>
+									<li>The zoom controls no longer overlap your artwork on smaller screens.</li>
 								</ul>
 							</div>
 							<div class="cl-group">
 								<p class="cl-label cl-label-fixed">Fixed</p>
 								<ul class="cl-list">
-									<li>Large canvas mode no longer clips at the bottom on tall displays.</li>
-									<li>Pinned info bar (bleed/safe-zone guide) now stays anchored below the editor on all screen sizes.</li>
-									<li>Share link expiry note was showing the wrong time unit in some locales.</li>
+									<li>The bottom of the canvas was getting cut off on taller screens — now fully visible.</li>
+									<li>The bleed and safe-zone guide bar now stays in place at the bottom of the editor where it belongs.</li>
+									<li>The expiry countdown on shared design links was showing the wrong unit of time.</li>
 								</ul>
 							</div>
 						</div>
