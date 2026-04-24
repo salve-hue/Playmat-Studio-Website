@@ -101,32 +101,36 @@
 
 			/* ── Global fixes (main.css not loaded on beta) ─────────────── */
 			a { text-decoration: none !important; }
-			/* Without main.css box-sizing reset, padding adds to 100% width → nav overflows */
+			/* ── Header layout: flex with absolutely centred logo ─────────── */
 			#header,
 			#header .inner {
 				overflow: visible !important;
 			}
 			#header .inner {
 				box-sizing: border-box !important;
-				display: grid !important;
-				grid-template-columns: 1fr auto 1fr !important;
+				display: flex !important;
+				flex-direction: row !important;
 				align-items: center !important;
+				justify-content: space-between !important;
+				position: relative !important;
 				height: auto !important;
 			}
+			/* Logo sits in absolute centre so left/right items balance freely */
 			#header .inner .logo {
-				grid-column: 2 !important;
-				justify-self: center !important;
-				align-self: center !important;
+				position: absolute !important;
+				left: 50% !important;
+				top: 50% !important;
+				transform: translate(-50%, -50%) !important;
+				margin: 0 !important;
 			}
 			#header .inner .logo .symbol svg {
 				height: 113px;
 				width: auto;
 				display: block;
 			}
+			/* Nav stays at the right end of the flex row */
 			#header .inner nav {
-				grid-column: 3 !important;
-				justify-self: end !important;
-				align-self: center !important;
+				margin-left: auto !important;
 			}
 
 			/* ── Beta nav ────────────────────────────────────────────────── */
@@ -402,12 +406,10 @@
 
 			/* ── Header tool buttons (left side) ─────────────────────────── */
 			#header-tools {
-				grid-column: 1;
-				justify-self: start;
-				align-self: center;
 				display: flex;
 				gap: 0.9em;
 				align-items: center;
+				flex-shrink: 0;
 			}
 			#header-tools a {
 				background-color: #8B60CC !important;
