@@ -753,7 +753,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					</div>
 					<p id="beta-landing-tagline">Your Playmat Starts Here.</p>
 				</div><!-- /#beta-landing-inner -->
-				<footer id="beta-landing-footer">&#169; 2026 Playmat Studio</footer>
+				<footer id="beta-landing-footer">&#169; 2026 Playmat Studio &nbsp;&middot;&nbsp; <a href="#" id="footer-changelog-link" style="color:inherit; opacity:0.7; text-decoration:none; border-bottom:1px solid currentColor; padding-bottom:1px;">What's New</a></footer>
 			</div><!-- /#beta-landing -->
 			<div id="mat-tooltip"></div>
 
@@ -1651,12 +1651,12 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				fetch(CONTACT_WORKER, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ name: name, email: email, message: message })
+					body: JSON.stringify({ to: ‘ideas@playmatstudio.com’, name: name, email: email, message: message })
 				})
 				.then(function(res) { return res.json(); })
 				.then(function(data) {
 					if (data.ok) {
-						showStatus('Message sent! We’ll get back to you soon.', true);
+						showStatus(‘Message sent! We’ll get back to you soon.’, true);
 						form.reset();
 					} else {
 						showStatus(data.error || 'Something went wrong. Please try again.', false);
@@ -1965,6 +1965,8 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 	document.querySelectorAll('.changelog-trigger').forEach(function(el) {
 		el.addEventListener('click', openChangelog);
 	});
+	var footerChangelogLink = document.getElementById('footer-changelog-link');
+	if (footerChangelogLink) { footerChangelogLink.addEventListener('click', function(e) { e.preventDefault(); openChangelog(); }); }
 	document.getElementById('changelog-close').addEventListener('click', closeChangelog);
 	changelogModal.addEventListener('click', function(e) { if (e.target === changelogModal) closeChangelog(); });
 
@@ -1993,7 +1995,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 			fetch('https://contact.playmatstudio.com', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ name: name, email: email, message: message })
+				body: JSON.stringify({ to: 'ideas@playmatstudio.com', name: name, email: email, message: message })
 			})
 			.then(function(r) { return r.json(); })
 			.then(function(d) {
