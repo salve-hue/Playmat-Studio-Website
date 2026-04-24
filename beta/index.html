@@ -80,11 +80,30 @@
 				height: calc(100vh - 155px) !important;
 				border-radius: 0 !important;
 			}
-			/* Large mode must escape the height cap above */
+			/* Large mode: same fixed-height container as other sizes.
+			   Canvas column scrolls inside rather than pushing the container off-screen. */
 			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large {
-				height: auto !important;
+				height: calc(100vh - 155px) !important;
 				max-height: none !important;
-				overflow: visible !important;
+				overflow: hidden !important;
+			}
+			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large #editor-main {
+				flex: 1 !important;
+				min-height: 0 !important;
+				height: auto !important;
+				overflow: hidden !important;
+			}
+			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large #canvas-column {
+				overflow: auto !important;
+				align-items: flex-start !important;
+				justify-content: flex-start !important;
+			}
+			#adv-backdrop.tab-mode #playmat-tool-root.size-mode-large #sidebar {
+				position: sticky !important;
+				top: 0 !important;
+				max-height: 100% !important;
+				overflow-y: auto !important;
+				align-self: flex-start !important;
 			}
 			/* Suppress fullscreen toggle — users restart instead */
 			#fs-toggle-btn { display: none !important; }
