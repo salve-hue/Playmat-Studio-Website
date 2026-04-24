@@ -1,10 +1,11 @@
-# Playmat Studio — Standalone Advanced Editor Demo
+# Playmat Studio — Advanced Editor
 
-## What this repo is
+## Site structure
 
-This is a **standalone, single-file copy of the Playmat Studio Advanced Editor** (the tool at `playmatstudio.com/beta/`). It exists so the editor can be served independently (e.g. via GitHub Pages) without needing a full copy of the main site's assets.
-
-There is exactly one page: `index.html`.
+| URL | File on `main` | Purpose |
+|---|---|---|
+| `playmatstudio.com/` | `index.html` | **Production tool** — stable, promoted manually |
+| `playmatstudio.com/beta/` | `beta/index.html` | **Development preview** — auto-updated on every feature branch push |
 
 ## How assets work
 
@@ -22,36 +23,34 @@ All assets — stylesheets, scripts, fonts, and images — are loaded from the l
 
 | Change type | Where to edit |
 |---|---|
-| Editor UI layout, page structure, CSP, meta tags | `index.html` in **this repo** |
-| Tool behaviour, canvas logic, game layouts | `assets/js/tool.js` in **salve-hue/Playmat-Studio-Website** |
-| Tool styling, component appearance | `assets/css/tool.css` in **salve-hue/Playmat-Studio-Website** |
-| Global site styles (variables, typography) | `assets/css/custom.css` in **salve-hue/Playmat-Studio-Website** |
+| Editor UI layout, page structure, CSP, meta tags | `beta/index.html` on the feature branch |
+| Tool behaviour, canvas logic, game layouts | `assets/js/tool.js` on the feature branch |
+| Tool styling, component appearance | `assets/css/tool.css` on the feature branch |
+| Global site styles (variables, typography) | `assets/css/custom.css` on the feature branch |
 
-After changing `tool.js` or `tool.css` in the main repo, bump the `?v=` cache-buster query string in `index.html` here to match.
+After changing `tool.js` or `tool.css`, bump the `?v=` cache-buster query string in `beta/index.html` to match.
 
-## GitHub Pages
+## Development workflow
 
-This repo is intended to be served via GitHub Pages from the `main` branch root. The page will be available at the repo's GitHub Pages URL (e.g. `https://salve-hue.github.io/Playmat-Studio-Website/` or a custom domain if a CNAME is configured).
+Every push to the feature branch (`claude/setup-standalone-demo-site-gfFAb`) automatically:
+1. Copies `beta/index.html` → main's `beta/index.html` (updates `/beta/` preview)
+2. Copies `tool.js` and `tool.css` → main's shared assets (used by both `/` and `/beta/`)
+3. Triggers a Pages redeploy
 
-## Deployment workflow
+`main`'s root `index.html` (production) is **never touched automatically**.
 
-**IMPORTANT: Never push to `main` unless the user explicitly requests it.** All development work goes to the feature branch only. The sync workflow (`sync-beta.yml`) automatically copies `beta/index.html`, `tool.js`, and `tool.css` to `main` on push.
+## Promoting to production
 
-**Never sync or overwrite the root `index.html` on `main`.** It is the full main site homepage and must not be touched by the sync workflow or manual deploys. Only `beta/index.html`, `assets/js/tool.js`, and `assets/css/tool.css` are safe to sync.
-
-When the user explicitly asks to deploy:
-1. Commit and push to the feature branch (`claude/setup-standalone-demo-site-gfFAb`)
-2. Check out `main`, pull, copy only the changed tool files (never root `index.html`), commit, and push
-3. Return to the feature branch
+When the user explicitly asks to deploy / make changes live at the root URL:
 
 ```bash
 git fetch origin main && git checkout main && git pull origin main
-git show <feature-branch>:beta/index.html > beta/index.html
-git show <feature-branch>:assets/js/tool.js > assets/js/tool.js   # if changed
-git show <feature-branch>:assets/css/tool.css > assets/css/tool.css  # if changed
-git add beta/index.html assets/js/tool.js assets/css/tool.css
+git show claude/setup-standalone-demo-site-gfFAb:beta/index.html > index.html
+git show claude/setup-standalone-demo-site-gfFAb:assets/js/tool.js > assets/js/tool.js   # if changed
+git show claude/setup-standalone-demo-site-gfFAb:assets/css/tool.css > assets/css/tool.css  # if changed
+git add index.html assets/js/tool.js assets/css/tool.css
 git commit -m "deploy: <description>" && git push origin main
 git checkout claude/setup-standalone-demo-site-gfFAb
 ```
 
-Also bump the `?v=` cache-buster on `tool.js` in `beta/index.html` whenever `tool.js` changes.
+**IMPORTANT:** Never push to `main` unless the user explicitly requests it. Never overwrite `main`'s `beta/index.html` manually — the sync workflow manages it. Never delete or replace the redirect at `beta/index.html` on main outside of the sync flow.
