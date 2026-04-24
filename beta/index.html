@@ -112,38 +112,39 @@
 				align-items: center !important;
 				height: auto !important;
 				overflow: visible !important;
-				max-width: 900px !important;
+				max-width: 1200px !important;
 				margin-left: auto !important;
 				margin-right: auto !important;
+				gap: 2em !important;
 			}
-			/* Nav moves to left side */
-			#header .inner nav {
-				flex: 1 !important;
-				order: 1 !important;
-				display: flex !important;
-				justify-content: flex-start !important;
-			}
-			/* Logo stays centred */
+			/* Logo on the far left */
 			#header .inner .logo {
 				flex: 0 0 auto !important;
-				order: 2 !important;
+				order: 1 !important;
 				position: static !important;
 				transform: none !important;
-				margin: 0 1.5em !important;
+				margin: 0 !important;
 			}
 			#header .inner .logo .symbol svg {
 				height: 113px;
 				width: auto;
 				display: block;
 			}
-			/* Tool buttons move to right side */
+			/* Tool buttons next to logo */
 			#header-tools {
+				flex: 0 0 auto !important;
+				order: 2 !important;
+				display: flex !important;
+				justify-content: flex-start !important;
+				gap: 0.9em !important;
+				align-items: center !important;
+			}
+			/* Nav pushed to the far right */
+			#header .inner nav {
 				flex: 1 !important;
 				order: 3 !important;
 				display: flex !important;
 				justify-content: flex-end !important;
-				gap: 0.9em !important;
-				align-items: center !important;
 			}
 
 			/* ── Beta nav ────────────────────────────────────────────────── */
