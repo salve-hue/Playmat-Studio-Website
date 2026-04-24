@@ -55,6 +55,9 @@
 			#get-printed-modal p  { font-size: var(--fs-md) !important; }
 
 			html, body { min-height: 100%; overflow-x: hidden; }
+			/* tool.js sets body.style.overflow='hidden' for the fixed-overlay flow on the main site.
+			   On this standalone page the editor is inline (tab-mode), so the body must always scroll. */
+			body { overflow-y: auto !important; }
 			#wrapper { min-height: 100vh; display: flex; flex-direction: column; padding-top: 133px !important; }
 			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
 			section#tools .inner { max-width: none !important; padding: 0 !important; }
