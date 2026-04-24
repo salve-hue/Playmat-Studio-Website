@@ -1255,13 +1255,16 @@
         const hPad = (mode === 'l') ? (isMobile ? 8 : 16) : (isMobile ? 20 : 80);
         const vPad=isMobile?20:64;
         const root = document.getElementById('playmat-tool-root');
-        // Large mode: let the editor box grow to fit the canvas — no height cap
-        if (mode === 'l') { if (root) root.classList.add('size-mode-large'); }
-        else               { if (root) root.classList.remove('size-mode-large'); }
+        const _backdrop  = document.getElementById('adv-backdrop');
+        const _isTabMode = _backdrop && _backdrop.classList.contains('tab-mode');
+        // In tab-mode keep the fixed-height container (same as Auto/S/M) so col.clientHeight is reliable.
+        // In lightbox/fullscreen, add size-mode-large to let the editor expand freely.
+        if (mode === 'l' && !_isTabMode) { if (root) root.classList.add('size-mode-large'); }
+        else                              { if (root) root.classList.remove('size-mode-large'); }
         const measuredW = col.clientWidth - hPad;
         // Defer until the column has been painted and has real dimensions
         if (measuredW <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
-        if (mode !== 'l' && col.clientHeight <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
+        if ((mode !== 'l' || _isTabMode) && col.clientHeight <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
         const aspect = conf.w / conf.h;
         let targetW, targetH;
         if (mode === 'l') {
@@ -1271,11 +1274,10 @@
             const backdrop     = document.getElementById('adv-backdrop');
             const isLightbox   = backdrop && !backdrop.classList.contains('tab-mode');
             const isFullscreen = root && root.classList.contains('app-fullscreen-mode');
-            const isTabMode    = backdrop &&  backdrop.classList.contains('tab-mode');
-            if (isLightbox || isFullscreen || isTabMode) {
-                // Tab-mode: col.clientHeight is already the visible height (same as Auto/S/M).
+            if (isLightbox || isFullscreen || _isTabMode) {
+                // Tab-mode: container is fixed-height so col.clientHeight is the real available height.
                 // Fullscreen: use full window height. Lightbox: subtract backdrop top padding.
-                const availH = isTabMode
+                const availH = _isTabMode
                     ? col.clientHeight
                     : isFullscreen
                         ? window.innerHeight
