@@ -8,7 +8,7 @@ name: Sync to /beta/
 on:
   push:
     branches:
-      - 'claude/setup-standalone-demo-site-gfFAb'
+      - 'beta'
     paths:
       - 'beta/index.html'
       - 'assets/js/tool.js'
