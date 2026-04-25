@@ -1311,9 +1311,10 @@
                 if (maxH > 100) {
                     targetH = maxH;
                     targetW = Math.round(targetH * aspect);
-                    if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
+                    const maxW = Math.round(col.clientWidth * 0.70); // cap at 70% — always below L (80%)
+                    if (targetW > maxW) { targetW = maxW; targetH = Math.round(targetW / aspect); }
                 } else {
-                    targetW = Math.max(measuredW, 250);
+                    targetW = Math.round(col.clientWidth * 0.70);
                     targetH = Math.round(targetW / aspect);
                 }
             } else {
