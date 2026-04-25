@@ -1,4 +1,4 @@
-    fabric.Object.prototype.objectCaching = false;
+fabric.Object.prototype.objectCaching = false;
     fabric.textureSize = 16384;
 
     var _dbg = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -1210,64 +1210,46 @@
         const hPad=isMobile?20:80, vPad=isMobile?20:64;
         const mode = APP.canvasSizeMode || 'auto';
         const root = document.getElementById('playmat-tool-root');
+        
         // Large mode: let the editor box grow to fit the canvas — no height cap
         if (mode === 'l') { if (root) root.classList.add('size-mode-large'); }
         else               { if (root) root.classList.remove('size-mode-large'); }
+        
         const measuredW = col.clientWidth - hPad;
+        
         // Defer until the column has been painted and has real dimensions
         if (measuredW <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
-        if (mode !== 'l' && col.clientHeight <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
+        if (col.clientHeight <= 0) { requestAnimationFrame(() => window.changeSize()); return; }
+        
         const aspect = conf.w / conf.h;
         let targetW, targetH;
-        if (mode === 'l') {
+        
+        // Measure the fixed elements that share canvas-column with the canvas
+        const infoBar  = document.getElementById('adv-info-bar');
+        const infoH    = infoBar  ? (infoBar.offsetHeight  || 40)  : 40;
+        const actionsBar = document.getElementById('adv-canvas-actions');
+        const actionsH = actionsBar ? (actionsBar.offsetHeight || 120) : 120;
+        const maxH = col.clientHeight - vPad - infoH - actionsH - 24; // 16px canvas-wrapper margin-bottom + 8px safety
+
+        if (mode === 'l' || mode === 'auto') {
+            // Auto and Large: fill available width, cap height so nothing overflows out of the browser
             targetW = Math.max(measuredW, 250);
             targetH = targetW / aspect;
-            // Cap height in fullscreen or lightbox mode so the actions bar stays within the viewport.
-            const backdrop     = document.getElementById('adv-backdrop');
-            const isLightbox   = backdrop && !backdrop.classList.contains('tab-mode');
-            const isFullscreen = root && root.classList.contains('app-fullscreen-mode');
-            if (isLightbox || isFullscreen) {
-                // In fullscreen the root is fixed at top:5vh, height:90vh.
-                // In lightbox the backdrop has a computed padding-top before the root starts.
-                const availH = isFullscreen
-                    ? window.innerHeight * 0.90
-                    : window.innerHeight - (parseFloat(getComputedStyle(backdrop).paddingTop) || 40);
-                const infoBar2    = document.getElementById('adv-info-bar');
-                const infoH2      = infoBar2    ? (infoBar2.offsetHeight    || 40)  : 40;
-                const actionsBar2 = document.getElementById('adv-canvas-actions');
-                const actionsH2   = actionsBar2 ? (actionsBar2.offsetHeight || 120) : 120;
-                const topBar      = document.getElementById('editor-top-bar');
-                const topBarH     = topBar      ? (topBar.offsetHeight      || 52)  : 52;
-                const maxH2       = availH - topBarH - vPad - 24 - infoH2 - actionsH2;
-                if (maxH2 > 100 && targetH > maxH2) {
-                    targetH = maxH2;
-                    targetW = Math.round(targetH * aspect);
-                    if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
-                }
+            if (maxH > 100 && targetH > maxH) { 
+                targetH = maxH; 
+                targetW = targetH * aspect; 
             }
         } else {
-            // Measure the fixed elements that share canvas-column with the canvas
-            const infoBar  = document.getElementById('adv-info-bar');
-            const infoH    = infoBar  ? (infoBar.offsetHeight  || 40)  : 40;
-            const actionsBar = document.getElementById('adv-canvas-actions');
-            const actionsH = actionsBar ? (actionsBar.offsetHeight || 120) : 120;
-            const maxH = col.clientHeight - vPad - infoH - actionsH - 24; // 16px canvas-wrapper margin-bottom + 8px safety
-            if (mode === 'auto') {
-                // Auto: fill available width, cap height so nothing overflows
-                targetW = Math.max(measuredW, 250);
-                targetH = targetW / aspect;
-                if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
-            } else {
-                // S = 80% of max-fit height (was M), M = 90% (between old M and L)
-                const fracs = { s: 0.80, m: 0.90 };
-                targetH = Math.round(maxH * (fracs[mode] || 1));
-                targetW = Math.round(targetH * aspect);
-                // Cap width to available column width
-                if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
-                // Safety cap
-                if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = Math.round(targetH * aspect); }
-            }
+            // S = 80% of max-fit height (was M), M = 90% (between old M and L)
+            const fracs = { s: 0.80, m: 0.90 };
+            targetH = Math.round(maxH * (fracs[mode] || 1));
+            targetW = Math.round(targetH * aspect);
+            // Cap width to available column width
+            if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
+            // Safety cap
+            if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = Math.round(targetH * aspect); }
         }
+        
         APP.canvasW = targetW;
         APP.canvasH = targetH;
         window.canvas.setDimensions({ width:APP.canvasW, height:APP.canvasH });
