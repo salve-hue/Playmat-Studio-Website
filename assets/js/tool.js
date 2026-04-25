@@ -1315,10 +1315,17 @@
             const actionsH = actionsBar ? (actionsBar.offsetHeight || 120) : 120;
             const maxH = col.clientHeight - vPad - infoH - actionsH - 24;
             if (mode === 'auto') {
-                // Auto: fill available width, cap by height — adapts to the user's screen
-                targetW = Math.max(measuredW, 250);
-                targetH = Math.round(targetW / aspect);
-                if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = Math.round(targetH * aspect); }
+                // Auto: fill available height first, derive width from aspect ratio.
+                // This keeps the canvas safely within the container on any screen size,
+                // and naturally lands narrower than L (80%) on typical widescreen displays.
+                if (maxH > 100) {
+                    targetH = maxH;
+                    targetW = Math.round(targetH * aspect);
+                    if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
+                } else {
+                    targetW = Math.max(measuredW, 250);
+                    targetH = Math.round(targetW / aspect);
+                }
             } else {
                 // S = 40%, M = 60% of column width (L = 80% handled in the large branch above)
                 const fracs = { s: 0.40, m: 0.60 };
