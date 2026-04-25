@@ -24,11 +24,13 @@ jobs:
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
+        with:
+          path: main-site
 
       - name: Assemble site
         run: |
           mkdir -p deploy
-          cp -r . deploy/
+          cp -r main-site/. deploy/
           rm -rf deploy/.git deploy/.github
 
       - name: Upload Pages artifact
