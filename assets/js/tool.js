@@ -1271,19 +1271,10 @@
             targetW = Math.max(measuredW, 250);
             targetH = targetW / aspect;
             if (_isTabMode) {
-                // Tab-mode: target 80% of column width, capped by height using the same formula as Auto/S/M.
-                // col.clientHeight already excludes editor-top-bar, so no topBarH subtraction needed.
+                // Tab-mode: 80% of column width. No height cap — canvas-column scrolls if needed
+                // and the info bar is sticky, so both always remain accessible.
                 targetW = Math.round(col.clientWidth * 0.80);
                 targetH = Math.round(targetW / aspect);
-                const infoBar2    = document.getElementById('adv-info-bar');
-                const infoH2      = infoBar2    ? (infoBar2.offsetHeight    || 40)  : 40;
-                const actionsBar2 = document.getElementById('adv-canvas-actions');
-                const actionsH2   = actionsBar2 ? (actionsBar2.offsetHeight || 120) : 120;
-                const maxH2       = col.clientHeight - vPad - 24 - infoH2 - actionsH2;
-                if (maxH2 > 100 && targetH > maxH2) {
-                    targetH = maxH2;
-                    targetW = Math.round(targetH * aspect);
-                }
             } else {
                 // Lightbox/fullscreen: cap by viewport height.
                 const backdrop     = document.getElementById('adv-backdrop');
@@ -1308,16 +1299,15 @@
                 }
             }
         } else {
-            // Measure the fixed elements that share canvas-column with the canvas
+            // Auto/S/M modes
             const infoBar  = document.getElementById('adv-info-bar');
             const infoH    = infoBar  ? (infoBar.offsetHeight  || 40)  : 40;
-            const actionsBar = document.getElementById('adv-canvas-actions');
-            const actionsH = actionsBar ? (actionsBar.offsetHeight || 120) : 120;
-            const maxH = col.clientHeight - vPad - infoH - actionsH - 24;
             if (mode === 'auto') {
-                // Auto: fill available height first, derive width from aspect ratio.
-                // This keeps the canvas safely within the container on any screen size,
-                // and naturally lands narrower than L (80%) on typical widescreen displays.
+                // Auto: fill available height — no scroll needed, always fits the container.
+                // actionsH uses 0 fallback (hidden elements occupy no space).
+                const actionsBar = document.getElementById('adv-canvas-actions');
+                const actionsH   = actionsBar ? actionsBar.offsetHeight : 0;
+                const maxH = col.clientHeight - vPad - infoH - actionsH - 24;
                 if (maxH > 100) {
                     targetH = maxH;
                     targetW = Math.round(targetH * aspect);
@@ -1327,12 +1317,19 @@
                     targetH = Math.round(targetW / aspect);
                 }
             } else {
-                // S = 40%, M = 60% of column width (L = 80% handled in the large branch above)
+                // S = 40%, M = 60% of column width (L = 80% handled in the large branch above).
+                // Tab-mode: no height cap — canvas-column scrolls; info bar is sticky.
+                // Lightbox: cap to avoid overflowing the overlay.
                 const fracs = { s: 0.40, m: 0.60 };
                 targetW = Math.round(col.clientWidth * (fracs[mode] || 0.60));
                 targetH = Math.round(targetW / aspect);
                 if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
-                if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = Math.round(targetH * aspect); }
+                if (!_isTabMode) {
+                    const actionsBar = document.getElementById('adv-canvas-actions');
+                    const actionsH   = actionsBar ? actionsBar.offsetHeight : 0;
+                    const maxH = col.clientHeight - vPad - infoH - actionsH - 24;
+                    if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = Math.round(targetH * aspect); }
+                }
             }
         }
         APP.canvasW = targetW;
