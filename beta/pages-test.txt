@@ -1,0 +1,2 @@
+If you can read this, GitHub Pages is serving directly from the main branch.
+Timestamp: 2026-04-25
