@@ -1313,20 +1313,18 @@
             const infoH    = infoBar  ? (infoBar.offsetHeight  || 40)  : 40;
             const actionsBar = document.getElementById('adv-canvas-actions');
             const actionsH = actionsBar ? (actionsBar.offsetHeight || 120) : 120;
-            const maxH = col.clientHeight - vPad - infoH - actionsH - 24; // 16px canvas-wrapper margin-bottom + 8px safety
+            const maxH = col.clientHeight - vPad - infoH - actionsH - 24;
             if (mode === 'auto') {
-                // Auto: fill available width, cap height so nothing overflows
+                // Auto: fill available width, cap by height — adapts to the user's screen
                 targetW = Math.max(measuredW, 250);
-                targetH = targetW / aspect;
-                if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = targetH * aspect; }
+                targetH = Math.round(targetW / aspect);
+                if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = Math.round(targetH * aspect); }
             } else {
-                // S = 80% of max-fit height (was M), M = 90% (between old M and L)
-                const fracs = { s: 0.80, m: 0.90 };
-                targetH = Math.round(maxH * (fracs[mode] || 1));
-                targetW = Math.round(targetH * aspect);
-                // Cap width to available column width
+                // S = 40%, M = 60% of column width (L = 80% handled in the large branch above)
+                const fracs = { s: 0.40, m: 0.60 };
+                targetW = Math.round(col.clientWidth * (fracs[mode] || 0.60));
+                targetH = Math.round(targetW / aspect);
                 if (targetW > measuredW) { targetW = measuredW; targetH = Math.round(targetW / aspect); }
-                // Safety cap
                 if (maxH > 100 && targetH > maxH) { targetH = maxH; targetW = Math.round(targetH * aspect); }
             }
         }
