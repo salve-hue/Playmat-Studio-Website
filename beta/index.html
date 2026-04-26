@@ -573,6 +573,17 @@
 				#header .inner nav { display: none !important; }
 				#mobile-hamburger { display: flex !important; }
 
+				/* Shrink logo so header stays compact on mobile (~60px tall) */
+				#header .inner .logo .symbol svg { height: 40px !important; }
+
+				/* Push landing overlay below the fixed header */
+				#beta-landing {
+					top: 62px !important;
+					padding: 16px 16px 16px !important;
+					justify-content: flex-start !important;
+					overflow-y: auto !important;
+				}
+
 				/* Size grid: 2 columns instead of 3 on mobile */
 				.size-group--playmat .mat-size-btn,
 				.size-group--deskmat .mat-size-btn {
