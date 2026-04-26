@@ -569,8 +569,10 @@
     // --- ACCORDION ---
     window.toggleAcc = (id, forceOpen = false) => {
         const target = document.getElementById(id);
+        if (!target) return;
         if (forceOpen) { target.style.display = 'block'; return; }
-        target.style.display = target.style.display === 'block' ? 'none' : 'block';
+        const isVisible = getComputedStyle(target).display !== 'none';
+        target.style.display = isVisible ? 'none' : 'block';
     };
 
     window.updateLandingVars = () => {

@@ -347,13 +347,9 @@
 				padding: 0 !important;
 			}
 
-			/* ── Zoom toolbar: flow above canvas, centered, instead of overlapping ── */
+			/* ── Zoom toolbar: overlay top-right of canvas-wrapper ── */
 			#zoom-toolbar {
-				position: relative !important;
-				top: auto !important;
-				right: auto !important;
-				align-self: center;
-				margin-bottom: 8px;
+				z-index: 100 !important;
 			}
 			/* ── Size button tooltip ─────────────────────────────────────── */
 			#mat-tooltip {
@@ -1483,12 +1479,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					        </div>
 
 					        <div id="canvas-column">
-					            <div id="zoom-toolbar">
-					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">View:</span>
-					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-in-btn">+</button>
-					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-out-btn">-</button>
-					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">Reset</button>
-					            </div>
 
 					            <div id="canvas-wrapper">
 					                <canvas id="main-canvas"></canvas>
@@ -1499,6 +1489,12 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					                    <canvas id="recolor-canvas"></canvas>
 					                </div>
 					                <div id="eraser-interaction" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none;"></div>
+					                <div id="zoom-toolbar">
+					                    <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">View:</span>
+					                    <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-in-btn">+</button>
+					                    <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-out-btn">-</button>
+					                    <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">Reset</button>
+					                </div>
 					            </div>
 
 					            <div id="adv-canvas-actions">
@@ -1527,7 +1523,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=24"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=25"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────
