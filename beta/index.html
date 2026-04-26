@@ -347,29 +347,22 @@
 				padding: 0 !important;
 			}
 
-			/* ── Zoom toolbar: flow item above canvas, right-aligned ── */
-			#zoom-toolbar {
-				position: relative !important;
-				top: auto !important;
-				right: auto !important;
-				align-self: flex-end;
-				margin-bottom: 8px;
-				flex-shrink: 0;
-			}
-
 			/* ── Accordion smooth animation (beta only) ─────────────── */
+			/* Base closed state: tool.css display:none hides the element;
+			   max-height/opacity drive the open/close transition. */
 			.acc-content {
-				display: block !important;
-				max-height: 0;
 				overflow: hidden !important;
-				opacity: 0;
+				max-height: 0 !important;
+				opacity: 0 !important;
 				padding-top: 0 !important;
 				padding-bottom: 0 !important;
-				transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.18s ease !important;
+				transition: max-height 0.28s ease, opacity 0.22s ease !important;
 			}
+			/* Open state: override display:none and reveal content */
 			.acc-content.acc-open {
-				max-height: 1200px;
-				opacity: 1;
+				display: block !important;
+				max-height: 1200px !important;
+				opacity: 1 !important;
 				padding-top: 16px !important;
 				padding-bottom: 16px !important;
 			}
@@ -1546,7 +1539,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=26"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=27"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────

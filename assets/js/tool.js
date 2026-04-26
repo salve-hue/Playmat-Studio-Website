@@ -575,14 +575,19 @@
             target.classList.add('acc-open');
             return;
         }
-        const isOpen = target.classList.contains('acc-open') ||
-                       getComputedStyle(target).display !== 'none';
+        const isOpen = target.classList.contains('acc-open');
         if (isOpen) {
             target.classList.remove('acc-open');
-            target.style.display = 'none';
-        } else {
-            target.classList.add('acc-open');
+            // Keep element visible so the CSS close transition can play,
+            // then let tool.css display:none take over after the transition.
             target.style.display = 'block';
+            setTimeout(function() {
+                if (!target.classList.contains('acc-open')) target.style.display = '';
+            }, 310);
+        } else {
+            target.style.display = 'block';
+            target.getBoundingClientRect(); // force reflow so transition fires from closed state
+            target.classList.add('acc-open');
             setTimeout(function() {
                 target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 50);
