@@ -55,9 +55,10 @@
 			#get-printed-modal p  { font-size: var(--fs-md) !important; }
 
 			html, body { min-height: 100%; overflow-x: hidden; }
-			/* tool.js sets body.style.overflow='hidden' for the fixed-overlay flow on the main site.
-			   On this standalone page the editor is inline (tab-mode), so the body must always scroll. */
-			body { overflow-y: auto !important; }
+			/* tool.js sets body.style.overflow='hidden' when entering the editor; no !important so
+			   that inline style takes effect. Before the editor opens, html.landing-active locks
+			   scroll via a separate rule. */
+			body { overflow-y: auto; }
 			#wrapper { min-height: 100vh; display: flex; flex-direction: column; padding-top: 133px !important; }
 			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
 			section#tools .inner { max-width: none !important; padding: 0 !important; }
@@ -360,24 +361,15 @@
 				margin-bottom: 8px;
 			}
 
-			/* ── Accordion smooth animation (beta only) ─────────────── */
-			/* Base closed state: tool.css display:none hides the element;
-			   max-height/opacity drive the open/close transition. */
-			.acc-content {
-				overflow: hidden !important;
-				max-height: 0 !important;
-				opacity: 0 !important;
-				padding-top: 0 !important;
-				padding-bottom: 0 !important;
-				transition: max-height 0.28s ease, opacity 0.22s ease !important;
-			}
-			/* Open state: override display:none and reveal content */
+			/* ── Accordion open animation (beta only) ───────────────── */
+			/* Closed state handled by tool.css (display:none). Open: fade in. */
 			.acc-content.acc-open {
 				display: block !important;
-				max-height: 1200px !important;
-				opacity: 1 !important;
-				padding-top: 16px !important;
-				padding-bottom: 16px !important;
+				animation: accOpen 0.2s ease;
+			}
+			@keyframes accOpen {
+				from { opacity: 0; }
+				to   { opacity: 1; }
 			}
 			/* ── Size button tooltip ─────────────────────────────────────── */
 			#mat-tooltip {
@@ -1191,7 +1183,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
-					            <div id="acc-size" class="acc-content acc-open">
+					            <div id="acc-size" class="acc-content">
 
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
@@ -1240,7 +1232,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-layouts">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
-					            <div id="acc-layouts" class="acc-content acc-open">
+					            <div id="acc-layouts" class="acc-content">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
 					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -1350,7 +1342,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-art">Adjustments <span>▼</span></button>
-					            <div id="acc-art" class="acc-content acc-open">
+					            <div id="acc-art" class="acc-content">
 
 					                <div class="inner-panel">
 					                    <span class="panel-title">Print Color Correction</span>
@@ -1490,7 +1482,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-export">Export <span>▼</span></button>
-					            <div id="acc-export" class="acc-content acc-open">
+					            <div id="acc-export" class="acc-content">
 					                <div class="action-row-3" style="margin-top:10px;">
 					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
 					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; Download</button>
@@ -1552,7 +1544,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=27"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=28"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────
@@ -1691,11 +1683,14 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				setTimeout(ensureToolInit, 1000);
 				patchLandingFlow();
 				initUploadBar();
-				// Artwork accordion must be open by default; switchTab fires in
-				// a setTimeout(0) so we wait a tick before forcing it open.
+				// Open all accordions once the editor is fully initialised.
 				setTimeout(function() {
-					if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
-				}, 200);
+					if (typeof window.toggleAcc === 'function') {
+						['acc-size', 'acc-layouts', 'acc-art', 'acc-export'].forEach(function(id) {
+							window.toggleAcc(id, true);
+						});
+					}
+				}, 500);
 			});
 		})();
 		</script>
