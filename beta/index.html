@@ -516,6 +516,9 @@
 			}
 			.copy-btn:hover { background: rgba(48,187,173,0.1); }
 
+			/* Lock body scroll while the landing overlay is visible */
+			body.landing-active { overflow: hidden !important; }
+
 			/* ── Mobile hamburger + slide-out drawer ────────────────────── */
 			#mobile-hamburger {
 				display: none;
@@ -1544,6 +1547,9 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 			}
 
 			// ── Two-step landing patches (run after tool.js is ready) ────
+			// Lock body scroll while landing is visible so editor can't scroll into view
+			document.body.classList.add('landing-active');
+
 			function patchLandingFlow() {
 				if (typeof window.selectMatSize !== 'function' || typeof window.toggleFullScreen !== 'function') {
 					setTimeout(patchLandingFlow, 100);
@@ -1562,10 +1568,11 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					}, 80);
 				};
 
-				// Step 2 → 3: fade out landing when fullscreen is entered
+				// Step 2 → 3: fade out landing and unlock body scroll when editor is entered
 				var _origFS = window.toggleFullScreen;
 				window.toggleFullScreen = function() {
 					_origFS.apply(this, arguments);
+					document.body.classList.remove('landing-active');
 					var landing = document.getElementById('beta-landing');
 					if (landing && !landing.classList.contains('exiting')) {
 						landing.classList.add('exiting');
