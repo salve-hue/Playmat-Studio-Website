@@ -570,9 +570,23 @@
     window.toggleAcc = (id, forceOpen = false) => {
         const target = document.getElementById(id);
         if (!target) return;
-        if (forceOpen) { target.style.display = 'block'; return; }
-        const isVisible = getComputedStyle(target).display !== 'none';
-        target.style.display = isVisible ? 'none' : 'block';
+        if (forceOpen) {
+            target.style.display = 'block';
+            target.classList.add('acc-open');
+            return;
+        }
+        const isOpen = target.classList.contains('acc-open') ||
+                       getComputedStyle(target).display !== 'none';
+        if (isOpen) {
+            target.classList.remove('acc-open');
+            target.style.display = 'none';
+        } else {
+            target.classList.add('acc-open');
+            target.style.display = 'block';
+            setTimeout(function() {
+                target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 50);
+        }
     };
 
     window.updateLandingVars = () => {

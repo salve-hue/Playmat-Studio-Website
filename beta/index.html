@@ -347,9 +347,31 @@
 				padding: 0 !important;
 			}
 
-			/* ── Zoom toolbar: overlay top-right of canvas-wrapper ── */
+			/* ── Zoom toolbar: flow item above canvas, right-aligned ── */
 			#zoom-toolbar {
-				z-index: 100 !important;
+				position: relative !important;
+				top: auto !important;
+				right: auto !important;
+				align-self: flex-end;
+				margin-bottom: 8px;
+				flex-shrink: 0;
+			}
+
+			/* ── Accordion smooth animation (beta only) ─────────────── */
+			.acc-content {
+				display: block !important;
+				max-height: 0;
+				overflow: hidden !important;
+				opacity: 0;
+				padding-top: 0 !important;
+				padding-bottom: 0 !important;
+				transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.18s ease !important;
+			}
+			.acc-content.acc-open {
+				max-height: 1200px;
+				opacity: 1;
+				padding-top: 16px !important;
+				padding-bottom: 16px !important;
 			}
 			/* ── Size button tooltip ─────────────────────────────────────── */
 			#mat-tooltip {
@@ -1163,7 +1185,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
-					            <div id="acc-size" class="acc-content" style="display:block;">
+					            <div id="acc-size" class="acc-content acc-open">
 
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
@@ -1212,7 +1234,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-layouts">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
-					            <div id="acc-layouts" class="acc-content" style="display:block;">
+					            <div id="acc-layouts" class="acc-content acc-open">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
 					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -1322,7 +1344,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-art">Adjustments <span>▼</span></button>
-					            <div id="acc-art" class="acc-content" style="display:block;">
+					            <div id="acc-art" class="acc-content acc-open">
 
 					                <div class="inner-panel">
 					                    <span class="panel-title">Print Color Correction</span>
@@ -1462,7 +1484,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-export">Export <span>▼</span></button>
-					            <div id="acc-export" class="acc-content" style="display:block;">
+					            <div id="acc-export" class="acc-content acc-open">
 					                <div class="action-row-3" style="margin-top:10px;">
 					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
 					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; Download</button>
@@ -1480,6 +1502,13 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					        <div id="canvas-column">
 
+					            <div id="zoom-toolbar">
+					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">View:</span>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-in-btn">+</button>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-out-btn">-</button>
+					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">Reset</button>
+					            </div>
+
 					            <div id="canvas-wrapper">
 					                <canvas id="main-canvas"></canvas>
 					                <canvas id="layout-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; opacity: 1;"></canvas>
@@ -1489,12 +1518,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					                    <canvas id="recolor-canvas"></canvas>
 					                </div>
 					                <div id="eraser-interaction" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none;"></div>
-					                <div id="zoom-toolbar">
-					                    <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">View:</span>
-					                    <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-in-btn">+</button>
-					                    <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-out-btn">-</button>
-					                    <button class="action-btn btn-secondary" style="margin:0; padding: 6px 12px; width:auto;" id="ws-zoom-reset-btn">Reset</button>
-					                </div>
 					            </div>
 
 					            <div id="adv-canvas-actions">
@@ -1523,7 +1546,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=25"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=26"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────
