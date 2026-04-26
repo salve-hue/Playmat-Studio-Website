@@ -86,6 +86,10 @@
 				overflow-y: auto !important;
 				overflow-x: hidden !important;
 				justify-content: flex-start !important;
+				overscroll-behavior: contain !important;
+			}
+			#sidebar {
+				overscroll-behavior: contain !important;
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
 				margin-top: auto !important;
@@ -345,6 +349,15 @@
 				background: none !important;
 				border-top: none !important;
 				padding: 0 !important;
+			}
+
+			/* ── Zoom toolbar: centered flow item above canvas ── */
+			#zoom-toolbar {
+				position: relative !important;
+				top: auto !important;
+				right: auto !important;
+				align-self: center;
+				margin-bottom: 8px;
 			}
 
 			/* ── Accordion smooth animation (beta only) ─────────────── */
@@ -1678,6 +1691,11 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				setTimeout(ensureToolInit, 1000);
 				patchLandingFlow();
 				initUploadBar();
+				// Artwork accordion must be open by default; switchTab fires in
+				// a setTimeout(0) so we wait a tick before forcing it open.
+				setTimeout(function() {
+					if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
+				}, 200);
 			});
 		})();
 		</script>
