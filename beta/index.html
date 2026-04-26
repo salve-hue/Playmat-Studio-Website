@@ -1548,7 +1548,12 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				var _origSelect = window.selectMatSize;
 				window.selectMatSize = function(sizeKey, btn) {
 					_origSelect(sizeKey, btn);
-					document.getElementById('landing-upload-bar').classList.add('visible');
+					var bar = document.getElementById('landing-upload-bar');
+					bar.classList.add('visible');
+					// Scroll the upload buttons into view after the fade-in starts
+					setTimeout(function() {
+						bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+					}, 80);
 				};
 
 				// Step 2 → 3: fade out landing when fullscreen is entered
