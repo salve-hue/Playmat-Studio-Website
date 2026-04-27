@@ -1669,21 +1669,26 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				document.getElementById('landing-upload-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
-					// On mobile _autoFullscreenIfDesktop never fires, so hide landing now
-					if (window.innerWidth <= 900) hideLandingAndRevealEditor();
+					// On mobile: enter fullscreen so the sidebar layout/CSS overrides apply.
+					// On desktop: _autoFullscreenIfDesktop fires after upload completes.
+					if (window.innerWidth <= 900 && typeof window.toggleFullScreen === 'function') {
+						window.toggleFullScreen();
+					}
 					setTimeout(function() { document.getElementById('adv-file-in').click(); }, 100);
 				});
 				document.getElementById('landing-url-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
-					if (window.innerWidth <= 900) hideLandingAndRevealEditor();
+					if (window.innerWidth <= 900 && typeof window.toggleFullScreen === 'function') {
+						window.toggleFullScreen();
+					}
 					setTimeout(function() { window.promptPasteUrl(); }, 100);
 				});
 				document.getElementById('landing-color-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
 					setTimeout(function() {
-						// toggleFullScreen wrapper handles landing-hide and skips fullscreen on mobile
+						// Patched toggleFullScreen handles landing-hide and accordion open.
 						if (typeof window.toggleFullScreen === 'function') window.toggleFullScreen();
 						setTimeout(function() {
 							var picker = document.getElementById('bg-color-picker');
