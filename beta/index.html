@@ -1611,13 +1611,11 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				};
 
 				// Step 2 → 3: enter the editor.
-				// Desktop: let toggleFullScreen run (enters fixed overlay, sets body.overflow).
-				// Mobile: skip fullscreen — stay in tab-mode and let sidebar scroll internally.
+				// Always enter fullscreen (makes the editor visible on all screen sizes).
+				// hideLandingAndRevealEditor hides the landing and re-opens accordions.
 				var _origFS = window.toggleFullScreen;
 				window.toggleFullScreen = function() {
-					if (window.innerWidth > 900) {
-						_origFS.apply(this, arguments);
-					}
+					_origFS.apply(this, arguments);
 					hideLandingAndRevealEditor();
 				};
 			}
