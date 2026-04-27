@@ -89,10 +89,38 @@
 				justify-content: flex-start !important;
 				overscroll-behavior: contain !important;
 			}
+			/* Desktop: tool.css already gives #sidebar overflow-y:auto.
+			   Overscroll containment prevents bubble to page. */
 			#sidebar {
-				overflow-y: auto !important;
-				min-height: 0 !important;
 				overscroll-behavior: contain !important;
+			}
+
+			/* ── Mobile fullscreen: tool.css uses overflow:visible + scrolling page,
+			   which breaks inside a fixed 90vh overlay. Override to a constrained
+			   flex-column layout so the sidebar gets a real height and can scroll. ── */
+			@media (max-width: 900px) {
+				#playmat-tool-root.app-fullscreen-mode {
+					overflow: hidden !important;
+				}
+				#playmat-tool-root.app-fullscreen-mode #editor-main {
+					flex: 1 1 0 !important;
+					min-height: 0 !important;
+					overflow: hidden !important;
+				}
+				/* Cap the canvas area so sidebar gets space below it */
+				#playmat-tool-root.app-fullscreen-mode #canvas-column {
+					flex: 0 0 auto !important;
+					max-height: 40vh !important;
+					overflow: hidden !important;
+					padding-top: 10px !important;
+				}
+				/* Sidebar: take remaining height, scroll internally */
+				#playmat-tool-root.app-fullscreen-mode #sidebar {
+					flex: 1 1 0 !important;
+					min-height: 0 !important;
+					overflow-y: auto !important;
+					overflow-x: hidden !important;
+				}
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
 				margin-top: auto !important;
