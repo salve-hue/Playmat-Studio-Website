@@ -90,6 +90,8 @@
 				overscroll-behavior: contain !important;
 			}
 			#sidebar {
+				overflow-y: auto !important;
+				min-height: 0 !important;
 				overscroll-behavior: contain !important;
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
@@ -535,6 +537,9 @@
 			/* Lock body scroll while the landing overlay is visible */
 			html.landing-active,
 			html.landing-active body { overflow: hidden !important; height: 100% !important; }
+			/* Once the editor is showing, keep body locked — sidebar scrolls internally */
+			html.editor-active,
+			html.editor-active body { overflow: hidden !important; height: 100% !important; }
 
 			/* ── Mobile hamburger + slide-out drawer ────────────────────── */
 			#mobile-hamburger {
@@ -1565,8 +1570,28 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 			}
 
 			// ── Two-step landing patches (run after tool.js is ready) ────
-			// Lock scroll while landing is visible — class on <html> beats body { overflow-y: auto !important }
+			// Lock scroll while landing is visible
 			document.documentElement.classList.add('landing-active');
+
+			// Called whenever the editor becomes the active view.
+			// Hides the landing overlay and switches body lock to editor-active.
+			function hideLandingAndRevealEditor() {
+				document.documentElement.classList.remove('landing-active');
+				document.documentElement.classList.add('editor-active');
+				var landing = document.getElementById('beta-landing');
+				if (landing && !landing.classList.contains('exiting')) {
+					landing.classList.add('exiting');
+					setTimeout(function() { landing.style.display = 'none'; }, 520);
+				}
+				// Re-open any accordion that may have been reset since the init timer
+				setTimeout(function() {
+					if (typeof window.toggleAcc !== 'function') return;
+					['acc-size', 'acc-layouts', 'acc-art', 'acc-export'].forEach(function(id) {
+						var el = document.getElementById(id);
+						if (el && !el.classList.contains('acc-open')) window.toggleAcc(id, true);
+					});
+				}, 120);
+			}
 
 			function patchLandingFlow() {
 				if (typeof window.selectMatSize !== 'function' || typeof window.toggleFullScreen !== 'function') {
@@ -1580,22 +1605,20 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					_origSelect(sizeKey, btn);
 					var bar = document.getElementById('landing-upload-bar');
 					bar.classList.add('visible');
-					// Scroll the upload buttons into view after the fade-in starts
 					setTimeout(function() {
 						bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 					}, 80);
 				};
 
-				// Step 2 → 3: fade out landing and unlock body scroll when editor is entered
+				// Step 2 → 3: enter the editor.
+				// Desktop: let toggleFullScreen run (enters fixed overlay, sets body.overflow).
+				// Mobile: skip fullscreen — stay in tab-mode and let sidebar scroll internally.
 				var _origFS = window.toggleFullScreen;
 				window.toggleFullScreen = function() {
-					_origFS.apply(this, arguments);
-					document.documentElement.classList.remove('landing-active');
-					var landing = document.getElementById('beta-landing');
-					if (landing && !landing.classList.contains('exiting')) {
-						landing.classList.add('exiting');
-						setTimeout(function() { landing.style.display = 'none'; }, 520);
+					if (window.innerWidth > 900) {
+						_origFS.apply(this, arguments);
 					}
+					hideLandingAndRevealEditor();
 				};
 			}
 
@@ -1626,17 +1649,21 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				document.getElementById('landing-upload-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					// On mobile _autoFullscreenIfDesktop never fires, so hide landing now
+					if (window.innerWidth <= 900) hideLandingAndRevealEditor();
 					setTimeout(function() { document.getElementById('adv-file-in').click(); }, 100);
 				});
 				document.getElementById('landing-url-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					if (window.innerWidth <= 900) hideLandingAndRevealEditor();
 					setTimeout(function() { window.promptPasteUrl(); }, 100);
 				});
 				document.getElementById('landing-color-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
 					setTimeout(function() {
+						// toggleFullScreen wrapper handles landing-hide and skips fullscreen on mobile
 						if (typeof window.toggleFullScreen === 'function') window.toggleFullScreen();
 						setTimeout(function() {
 							var picker = document.getElementById('bg-color-picker');
