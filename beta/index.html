@@ -1617,6 +1617,15 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 						if (el && !el.classList.contains('acc-open')) window.toggleAcc(id, true);
 					});
 				}, 120);
+				// On mobile, changeSize() runs 350ms after fullscreen entry and may
+				// close acc-size. Force it open again after that window has passed.
+				if (window.innerWidth <= 900) {
+					setTimeout(function() {
+						if (typeof window.toggleAcc === 'function') {
+							window.toggleAcc('acc-size', true);
+						}
+					}, 500);
+				}
 			}
 
 			function patchLandingFlow() {
