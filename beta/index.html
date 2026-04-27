@@ -537,9 +537,6 @@
 			/* Lock body scroll while the landing overlay is visible */
 			html.landing-active,
 			html.landing-active body { overflow: hidden !important; height: 100% !important; }
-			/* Once the editor is showing, keep body locked — sidebar scrolls internally */
-			html.editor-active,
-			html.editor-active body { overflow: hidden !important; height: 100% !important; }
 
 			/* ── Mobile hamburger + slide-out drawer ────────────────────── */
 			#mobile-hamburger {
@@ -1574,10 +1571,11 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 			document.documentElement.classList.add('landing-active');
 
 			// Called whenever the editor becomes the active view.
-			// Hides the landing overlay and switches body lock to editor-active.
+			// Hides the landing overlay and locks body scroll via inline style
+			// (avoids setting overflow on <html> which can clip position:fixed children).
 			function hideLandingAndRevealEditor() {
 				document.documentElement.classList.remove('landing-active');
-				document.documentElement.classList.add('editor-active');
+				document.body.style.overflow = 'hidden';
 				var landing = document.getElementById('beta-landing');
 				if (landing && !landing.classList.contains('exiting')) {
 					landing.classList.add('exiting');
