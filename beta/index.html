@@ -391,15 +391,10 @@
 				margin-bottom: 8px;
 			}
 
-			/* ── Accordion open animation (beta only) ───────────────── */
-			/* Closed state handled by tool.css (display:none). Open: fade in. */
+			/* ── Accordion open state ───────────────────────────────── */
+			/* No animation: avoids opacity:0 flash on DOM reattachment (mobile fullscreen). */
 			.acc-content.acc-open {
 				display: block !important;
-				animation: accOpen 0.2s ease;
-			}
-			@keyframes accOpen {
-				from { opacity: 0; }
-				to   { opacity: 1; }
 			}
 			/* ── Size button tooltip ─────────────────────────────────────── */
 			#mat-tooltip {
@@ -1213,7 +1208,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
-					            <div id="acc-size" class="acc-content">
+					            <div id="acc-size" class="acc-content acc-open" style="display:block">
 
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
@@ -1609,23 +1604,15 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					landing.classList.add('exiting');
 					setTimeout(function() { landing.style.display = 'none'; }, 520);
 				}
-				// Re-open any accordion that may have been reset since the init timer
-				setTimeout(function() {
-					if (typeof window.toggleAcc !== 'function') return;
-					['acc-size', 'acc-layouts', 'acc-art', 'acc-export'].forEach(function(id) {
-						var el = document.getElementById(id);
-						if (el && !el.classList.contains('acc-open')) window.toggleAcc(id, true);
-					});
-				}, 120);
-				// On mobile, changeSize() runs 350ms after fullscreen entry and may
-				// close acc-size. Force it open again after that window has passed.
-				if (window.innerWidth <= 900) {
+				// Unconditionally force-open all accordions each time the editor is entered.
+				[120, 500].forEach(function(delay) {
 					setTimeout(function() {
-						if (typeof window.toggleAcc === 'function') {
-							window.toggleAcc('acc-size', true);
-						}
-					}, 500);
-				}
+						if (typeof window.toggleAcc !== 'function') return;
+						['acc-size', 'acc-layouts', 'acc-art', 'acc-export'].forEach(function(id) {
+							window.toggleAcc(id, true);
+						});
+					}, delay);
+				});
 			}
 
 			function patchLandingFlow() {
