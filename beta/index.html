@@ -131,6 +131,19 @@
 				#acc-size:not([data-user-closed]) {
 					display: block !important;
 				}
+				/* Info bar: stack each item on its own line and allow text to wrap */
+				#adv-info-bar {
+					display: flex !important;
+					flex-direction: column !important;
+					align-items: center !important;
+					gap: 1px !important;
+					padding: 6px 12px !important;
+				}
+				#adv-info-bar span {
+					white-space: normal !important;
+					margin: 0 !important;
+					text-align: center !important;
+				}
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
 				margin-top: auto !important;
