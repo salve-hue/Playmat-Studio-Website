@@ -121,6 +121,12 @@
 					overflow-y: auto !important;
 					overflow-x: hidden !important;
 				}
+				/* Artwork accordion: force-open on mobile. CSS !important beats any
+				   inline style="display:none" that JS might set, so this cannot be
+				   closed by toggleAcc. Removes all JS timing dependency. */
+				#acc-size {
+					display: block !important;
+				}
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
 				margin-top: auto !important;
