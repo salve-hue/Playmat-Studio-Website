@@ -99,14 +99,10 @@
 			   which breaks inside a fixed 90vh overlay. Override to a constrained
 			   flex-column layout so the sidebar gets a real height and can scroll. ── */
 			@media (max-width: 900px) {
-				/* Shift tool box 15px closer to the header on mobile */
-				#wrapper {
-					padding-top: 118px !important;
-				}
 				/* dvh = dynamic viewport height: shrinks when browser address bar is visible,
 				   preventing the info bar from being clipped off the bottom of the screen. */
 				#adv-backdrop.tab-mode #playmat-tool-root {
-					height: calc(100dvh - 140px) !important;
+					height: calc(100dvh - 155px) !important;
 				}
 				#playmat-tool-root.app-fullscreen-mode {
 					overflow: hidden !important;
@@ -134,6 +130,19 @@
 				   data-user-closed is set by the toggleAcc patch below when the user taps close. */
 				#acc-size:not([data-user-closed]) {
 					display: block !important;
+				}
+				/* Info bar: stack each item on its own line and allow text to wrap */
+				#adv-info-bar {
+					display: flex !important;
+					flex-direction: column !important;
+					align-items: center !important;
+					gap: 1px !important;
+					padding: 6px 12px !important;
+				}
+				#adv-info-bar span {
+					white-space: normal !important;
+					margin: 0 !important;
+					text-align: center !important;
 				}
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
