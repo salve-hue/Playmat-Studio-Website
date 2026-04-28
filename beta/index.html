@@ -1208,7 +1208,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 							<!-- Artwork Accordion -->
 					            <div class="acc-card">
-								<button class="acc-btn" id="artwork-btn-fix" style="position: relative; z-index: 999999; transform: translateZ(0); pointer-events: auto;">Artwork <span>▼</span></button>
+								<button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
 								<script>
 								(function(){
 								    var btn = document.getElementById('artwork-btn-fix');
@@ -1639,19 +1639,28 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					window.switchTab('adv-editor');
 				}
 
-				// Wait for fullscreen animation to finish, then force mobile browser to fix hit-areas
 				setTimeout(function() {
+					// 1. Force mobile browser to recalculate layout hit-areas
 					var sidebar = document.getElementById('sidebar');
 					if (sidebar) {
 						var currentDisplay = sidebar.style.display;
 						sidebar.style.display = 'none';
-						sidebar.offsetHeight; // Forces browser to recalculate layout
+						sidebar.offsetHeight; 
 						sidebar.style.display = currentDisplay;
 					}
 
-					// Safely open the Artwork accordion
-					var acc = document.getElementById('acc-size');
-					if (acc && !acc.classList.contains('acc-open') && typeof window.toggleAcc === 'function') {
+					// 2. Erase the double-binding bug by cloning the button to strip old listeners
+					var btn = document.querySelector('button[data-acc="acc-size"]');
+					if (btn) {
+						var cleanBtn = btn.cloneNode(true);
+						btn.parentNode.replaceChild(cleanBtn, btn);
+						cleanBtn.addEventListener('click', function() {
+							if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size');
+						});
+					}
+
+					// 3. Open the Artwork accordion safely
+					if (typeof window.toggleAcc === 'function') {
 						window.toggleAcc('acc-size', true);
 					}
 				}, 600);
