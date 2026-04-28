@@ -472,7 +472,7 @@
         #editor-top-bar { flex-wrap: wrap; gap: 8px; }
         #editor-top-bar .etb-title { order: -1; flex: 0 0 100%; text-align: center; }
         #editor-main { flex-direction: column; overflow: visible; }
-        #sidebar { width: 100%; order: 2; border-right: none; overflow: visible; flex-shrink: 0; }
+        #sidebar { width: 100%; order: 2; border-right: none; overflow: visible; flex-shrink: 0; position: relative; z-index: 50; }
         #canvas-column { order: 1; flex-shrink: 0; width: 100%; padding: 10px; padding-top: 120px;
                          height: auto; min-height: 0;
                          background: #0A1F26; border-bottom: 2px solid var(--brand-primary);
