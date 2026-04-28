@@ -121,6 +121,11 @@
 					overflow-y: auto !important;
 					overflow-x: hidden !important;
 				}
+				/* Artwork open by default on mobile — unless the user explicitly closed it.
+				   data-user-closed is set by the toggleAcc patch below when the user taps close. */
+				#acc-size:not([data-user-closed]) {
+					display: block !important;
+				}
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
 				margin-top: auto !important;
@@ -1208,7 +1213,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
-					            <div id="acc-size" class="acc-content acc-open" style="display:block">
+					            <div id="acc-size" class="acc-content">
 
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
@@ -1732,7 +1737,28 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				setTimeout(ensureToolInit, 1000);
 				patchLandingFlow();
 				initUploadBar();
-				// Open only the Artwork accordion by default.
+
+				// Patch toggleAcc so acc-size tracks whether the user explicitly closed it.
+				// The CSS rule #acc-size:not([data-user-closed]) forces it open by default;
+				// this patch sets/removes that attribute so the user can still close/reopen it.
+				if (typeof window.toggleAcc === 'function') {
+					var _origTA = window.toggleAcc;
+					window.toggleAcc = function(id, forceOpen) {
+						_origTA(id, forceOpen);
+						if (id === 'acc-size') {
+							var el = document.getElementById('acc-size');
+							if (el) {
+								if (el.classList.contains('acc-open')) {
+									el.removeAttribute('data-user-closed');
+								} else {
+									el.setAttribute('data-user-closed', '1');
+								}
+							}
+						}
+					};
+				}
+
+				// Ensure acc-size starts in the open state (clears any stale data-user-closed).
 				setTimeout(function() {
 					if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
 				}, 500);
