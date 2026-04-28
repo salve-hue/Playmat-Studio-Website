@@ -1639,21 +1639,22 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					window.switchTab('adv-editor');
 				}
 
-				// Wait for the DOM and native file picker to settle, then force open
+				// Wait for fullscreen animation to finish, then force mobile browser to fix hit-areas
 				setTimeout(function() {
+					var sidebar = document.getElementById('sidebar');
+					if (sidebar) {
+						var currentDisplay = sidebar.style.display;
+						sidebar.style.display = 'none';
+						sidebar.offsetHeight; // Forces browser to recalculate layout
+						sidebar.style.display = currentDisplay;
+					}
+
+					// Safely open the Artwork accordion
 					var acc = document.getElementById('acc-size');
 					if (acc && !acc.classList.contains('acc-open') && typeof window.toggleAcc === 'function') {
 						window.toggleAcc('acc-size', true);
 					}
-					
-					// Force a physical redraw of the sidebar for mobile browsers
-					var sidebar = document.getElementById('sidebar');
-					if (sidebar) {
-						sidebar.style.display = 'none';
-						sidebar.offsetHeight; // Triggers the browser reflow
-						sidebar.style.display = 'flex';
-					}
-				}, 800);
+				}, 600);
 			}
 
 			function patchLandingFlow() {
