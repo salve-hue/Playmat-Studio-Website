@@ -1,4 +1,4 @@
-<!DOCTYPE HTML> 
+<!DOCTYPE HTML>
 <!--
 	Playmat Studio
 	Built on Phantom by HTML5 UP (html5up.net | @ajlkn)
@@ -120,6 +120,11 @@
 					min-height: 0 !important;
 					overflow-y: auto !important;
 					overflow-x: hidden !important;
+				}
+				/* Artwork open by default on mobile — unless the user explicitly closed it.
+				   data-user-closed is set by the toggleAcc patch below when the user taps close. */
+				#acc-size:not([data-user-closed]) {
+					display: block !important;
 				}
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
@@ -754,7 +759,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					    <div class="overlay-box" style="border-color: var(--brand-hover); text-align: center;">
 					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">AI Frame Break</h3>
 					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
-					            This magical feature securely sends your artwork to a powerful cloud server, accurately separating the main character from the background!<br><br>
+					            This magical feature securely sends your artwork to a powerful cloud server to accurately separate the main character from the background!<br><br>
 					            It usually takes <strong>5 to 10 seconds</strong> to process.
 					        </p>
 					        <div style="display:flex; gap:10px; justify-content:center;">
@@ -1206,38 +1211,10 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					        <div id="editor-main">
 					        <div id="sidebar">
 
-							<!-- Artwork Accordion -->
 					            <div class="acc-card">
-								<button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
-								<script>
-								(function(){
-								    var btn = document.getElementById('artwork-btn-fix');
-								    var tgt = document.getElementById('acc-size');
-								    function toggleArtwork(e) {
-								        if(e && e.type === 'touchstart') e.preventDefault();
-								        if(e) e.stopPropagation();
-								        if(tgt.classList.contains('acc-open')) {
-								            tgt.classList.remove('acc-open');
-								            tgt.style.display = 'none';
-								        } else {
-								            tgt.classList.add('acc-open');
-								            tgt.style.display = 'block';
-								        }
-								    }
-								    if(btn) {
-								        btn.addEventListener('touchstart', toggleArtwork, {passive: false});
-								        btn.addEventListener('click', toggleArtwork);
-								    }
-								    // Guarantee it renders open on mobile load
-								    setTimeout(function(){
-								        if(tgt && !tgt.classList.contains('acc-open')) {
-								            tgt.classList.add('acc-open');
-								            tgt.style.display = 'block';
-								        }
-								    }, 800);
-								})();
-								</script>					            
-									<div id="acc-size" class="acc-content acc-open" style="display:block">
+					            <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
+					            <div id="acc-size" class="acc-content">
+
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
 					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="width:100%;">
@@ -1283,7 +1260,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            </div>
 					            </div>
 
-								<!-- Game Layout Accordion -->
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-layouts">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
 					            <div id="acc-layouts" class="acc-content">
@@ -1394,7 +1370,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            </div>
 					            </div>
 
-								<!-- Adjustments Accordion -->
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-art">Adjustments <span>▼</span></button>
 					            <div id="acc-art" class="acc-content">
@@ -1535,7 +1510,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            </div>
 					            </div>
 
-								<!-- Export Accordion -->
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-export">Export <span>▼</span></button>
 					            <div id="acc-export" class="acc-content">
@@ -1577,7 +1551,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            <div id="adv-canvas-actions">
 					                <div id="adv-bleed-warning" class="bleed-warning-banner">
 					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
-					                    Scale your artwork to fill the entire canvas, including the red bleed area.
+					                    Scale your artwork to fill the entire canvas including the red bleed area.
 					                </div>
 					            </div>
 					        </div>
@@ -1626,6 +1600,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 			// Called whenever the editor becomes the active view.
 			// Hides the landing overlay and locks body scroll via inline style
+			// (avoids setting overflow on <html> which can clip position:fixed children).
 			function hideLandingAndRevealEditor() {
 				document.documentElement.classList.remove('landing-active');
 				document.body.style.overflow = 'hidden';
@@ -1634,36 +1609,12 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					landing.classList.add('exiting');
 					setTimeout(function() { landing.style.display = 'none'; }, 520);
 				}
-
-				if (typeof window.switchTab === 'function') {
-					window.switchTab('adv-editor');
-				}
-
-				setTimeout(function() {
-					// 1. Force mobile browser to recalculate layout hit-areas
-					var sidebar = document.getElementById('sidebar');
-					if (sidebar) {
-						var currentDisplay = sidebar.style.display;
-						sidebar.style.display = 'none';
-						sidebar.offsetHeight; 
-						sidebar.style.display = currentDisplay;
-					}
-
-					// 2. Erase the double-binding bug by cloning the button to strip old listeners
-					var btn = document.querySelector('button[data-acc="acc-size"]');
-					if (btn) {
-						var cleanBtn = btn.cloneNode(true);
-						btn.parentNode.replaceChild(cleanBtn, btn);
-						cleanBtn.addEventListener('click', function() {
-							if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size');
-						});
-					}
-
-					// 3. Open the Artwork accordion safely
-					if (typeof window.toggleAcc === 'function') {
-						window.toggleAcc('acc-size', true);
-					}
-				}, 600);
+				// Ensure Artwork accordion is open when the editor first appears.
+				[120, 500].forEach(function(delay) {
+					setTimeout(function() {
+						if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
+					}, delay);
+				});
 			}
 
 			function patchLandingFlow() {
@@ -1684,6 +1635,8 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				};
 
 				// Step 2 → 3: enter the editor.
+				// Always enter fullscreen (makes the editor visible on all screen sizes).
+				// hideLandingAndRevealEditor hides the landing and re-opens accordions.
 				var _origFS = window.toggleFullScreen;
 				window.toggleFullScreen = function() {
 					_origFS.apply(this, arguments);
@@ -1692,6 +1645,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 			}
 
 			// ── Axis lock button highlight (belt-and-suspenders) ────────
+			// Runs after onclick fires so .active class is already toggled.
 			document.addEventListener('click', function(e) {
 				var btn = e.target && e.target.closest && e.target.closest('.axis-lock-btn');
 				if (!btn) return;
@@ -1717,6 +1671,8 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				document.getElementById('landing-upload-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					// On mobile: enter fullscreen so the sidebar layout/CSS overrides apply.
+					// On desktop: _autoFullscreenIfDesktop fires after upload completes.
 					if (window.innerWidth <= 900 && typeof window.toggleFullScreen === 'function') {
 						window.toggleFullScreen();
 					}
@@ -1734,6 +1690,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
 					setTimeout(function() {
+						// Patched toggleFullScreen handles landing-hide and accordion open.
 						if (typeof window.toggleFullScreen === 'function') window.toggleFullScreen();
 						setTimeout(function() {
 							var picker = document.getElementById('bg-color-picker');
@@ -1780,7 +1737,28 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				setTimeout(ensureToolInit, 1000);
 				patchLandingFlow();
 				initUploadBar();
-				// Open only the Artwork accordion by default.
+
+				// Patch toggleAcc so acc-size tracks whether the user explicitly closed it.
+				// The CSS rule #acc-size:not([data-user-closed]) forces it open by default;
+				// this patch sets/removes that attribute so the user can still close/reopen it.
+				if (typeof window.toggleAcc === 'function') {
+					var _origTA = window.toggleAcc;
+					window.toggleAcc = function(id, forceOpen) {
+						_origTA(id, forceOpen);
+						if (id === 'acc-size') {
+							var el = document.getElementById('acc-size');
+							if (el) {
+								if (el.classList.contains('acc-open')) {
+									el.removeAttribute('data-user-closed');
+								} else {
+									el.setAttribute('data-user-closed', '1');
+								}
+							}
+						}
+					};
+				}
+
+				// Ensure acc-size starts in the open state (clears any stale data-user-closed).
 				setTimeout(function() {
 					if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
 				}, 500);
@@ -1801,7 +1779,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				</div>
 				<div class="privacy-body">
 					<p><strong>Effective Date: March 2025</strong></p>
-					<p>Playmat Studio is a free, browser-based image preparation tool. This policy explains what data is collected, how it is used, and your rights under applicable privacy law, including the GDPR (EU/UK) and the CCPA (California).</p>
+					<p>Playmat Studio is a free, browser-based image preparation tool. This policy explains what data is collected, how it is used, and your rights under applicable privacy law including the GDPR (EU/UK) and the CCPA (California).</p>
 
 					<h3>1. Data We Collect</h3>
 					<p>We collect <strong>no personal information</strong> and require no account, registration, or login. The following data may be processed during normal use:</p>
@@ -1812,12 +1790,12 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					</ul>
 
 					<h3>2. In-Browser Processing</h3>
-					<p>All core image-processing tasks &mdash; resizing, cropping, color correction, format conversion, overlay rendering, and export &mdash; run <strong>entirely within your browser</strong> using the HTML5 Canvas API and the Fabric.js library. Your artwork is never uploaded to any server during these operations.</p>
+					<p>All core image-processing tasks &mdash; resizing, cropping, colour correction, format conversion, overlay rendering, and export &mdash; run <strong>entirely within your browser</strong> using the HTML5 Canvas API and the Fabric.js library. Your artwork is never uploaded to any server during these operations.</p>
 
 					<h3>3. Optional Cloud AI Features</h3>
 					<p>Two features optionally transmit image data to a serverless cloud environment:</p>
 					<ul>
-						<li><strong>AI Resolution Enhancer</strong> &mdash; sends your image to a serverless processing function to upscale it to a higher resolution.</li>
+						<li><strong>AI Resolution Enhancer</strong> &mdash; sends your image to a serverless processing function to upscale it to higher resolution.</li>
 						<li><strong>AI Frame Break (background removal)</strong> &mdash; sends your image to a serverless processing function to isolate the foreground subject.</li>
 					</ul>
 					<p>These transmissions occur <strong>only when you explicitly initiate the feature</strong> by clicking the corresponding button and confirming the prompt. Image data sent to these functions is processed transiently and is <strong>not stored, logged, or retained</strong> after the response is returned to your browser. No metadata identifying you is attached to these requests.</p>
@@ -1838,7 +1816,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					<p>We do not sell, share, or disclose personal information to third parties for commercial purposes. California residents have the right to know what personal information is collected and to request deletion. Because we collect only contact form submissions and retain them for the limited purpose of responding to you, there is nothing to &ldquo;sell&rdquo; and deletion requests are honoured upon request.</p>
 
 					<h3>9. Children&rsquo;s Privacy</h3>
-					<p>This site is not directed to children under 13 (or under 16 in the EEA). We do not knowingly collect information from minors. If you believe a minor has submitted information via the contact form, please contact us, and we will delete it promptly.</p>
+					<p>This site is not directed to children under 13 (or under 16 in the EEA). We do not knowingly collect information from minors. If you believe a minor has submitted information via the contact form, please contact us and we will delete it promptly.</p>
 
 					<h3>10. Changes to This Policy</h3>
 					<p>We may update this policy to reflect changes in technology or law. The effective date at the top of this page will be updated accordingly. Continued use of the site after changes are posted constitutes acceptance of the revised policy.</p>
@@ -1983,7 +1961,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 							<div class="cl-group">
 								<p class="cl-label cl-label-improved">Improved</p>
 								<ul class="cl-list">
-									<li><strong>Tidier top bar</strong> — everything across the top of the page has been reorganized so the tools and navigation are easier to find.</li>
+									<li><strong>Tidier top bar</strong> — everything across the top of the page has been reorganised so the tools and navigation are easier to find.</li>
 									<li><strong>Fresh look on the homepage</strong> — the background got a cleaner, less busy design.</li>
 								</ul>
 							</div>
