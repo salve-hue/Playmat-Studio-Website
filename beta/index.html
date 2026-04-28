@@ -1208,7 +1208,35 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 							<!-- Artwork Accordion -->
 					            <div class="acc-card">
-								<button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>					            
+								<button class="acc-btn" id="artwork-btn-fix" style="position: relative; z-index: 999999; transform: translateZ(0); pointer-events: auto;">Artwork <span>▼</span></button>
+								<script>
+								(function(){
+								    var btn = document.getElementById('artwork-btn-fix');
+								    var tgt = document.getElementById('acc-size');
+								    function toggleArtwork(e) {
+								        if(e && e.type === 'touchstart') e.preventDefault();
+								        if(e) e.stopPropagation();
+								        if(tgt.classList.contains('acc-open')) {
+								            tgt.classList.remove('acc-open');
+								            tgt.style.display = 'none';
+								        } else {
+								            tgt.classList.add('acc-open');
+								            tgt.style.display = 'block';
+								        }
+								    }
+								    if(btn) {
+								        btn.addEventListener('touchstart', toggleArtwork, {passive: false});
+								        btn.addEventListener('click', toggleArtwork);
+								    }
+								    // Guarantee it renders open on mobile load
+								    setTimeout(function(){
+								        if(tgt && !tgt.classList.contains('acc-open')) {
+								            tgt.classList.add('acc-open');
+								            tgt.style.display = 'block';
+								        }
+								    }, 800);
+								})();
+								</script>					            
 									<div id="acc-size" class="acc-content acc-open" style="display:block">
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
