@@ -99,10 +99,14 @@
 			   which breaks inside a fixed 90vh overlay. Override to a constrained
 			   flex-column layout so the sidebar gets a real height and can scroll. ── */
 			@media (max-width: 900px) {
+				/* Shift tool box 15px closer to the header on mobile */
+				#wrapper {
+					padding-top: 118px !important;
+				}
 				/* dvh = dynamic viewport height: shrinks when browser address bar is visible,
 				   preventing the info bar from being clipped off the bottom of the screen. */
 				#adv-backdrop.tab-mode #playmat-tool-root {
-					height: calc(100dvh - 155px) !important;
+					height: calc(100dvh - 140px) !important;
 				}
 				#playmat-tool-root.app-fullscreen-mode {
 					overflow: hidden !important;
