@@ -374,10 +374,10 @@
 				color: #0b0912 !important;
 				font-weight: 800 !important;
 			}
-			/* Inactive axis-lock hover: visually distinct from active teal */
-			.axis-lock-btn:not(.active):hover {
+			/* Inactive axis-lock: no hover highlight — looks identical to resting state */
+			#playmat-tool-root .axis-lock-btn:not(.active):hover:not(:disabled) {
 				background: rgba(255,255,255,0.15) !important;
-				border-color: rgba(255,255,255,0.35) !important;
+				border-color: rgba(255,255,255,0.25) !important;
 				color: #fff !important;
 			}
 			/* ── Info bar: static footer of the tool, never moves with canvas ── */
