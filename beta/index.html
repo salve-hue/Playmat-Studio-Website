@@ -1597,20 +1597,28 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 			// Hides the landing overlay and locks body scroll via inline style
 			// (avoids setting overflow on <html> which can clip position:fixed children).
 			function hideLandingAndRevealEditor() {
-				document.documentElement.classList.remove('landing-active');
-				document.body.style.overflow = 'hidden';
-				var landing = document.getElementById('beta-landing');
-				if (landing && !landing.classList.contains('exiting')) {
-					landing.classList.add('exiting');
-					setTimeout(function() { landing.style.display = 'none'; }, 520);
-				}
-				// Ensure Artwork accordion is open when the editor first appears.
-				[120, 500].forEach(function(delay) {
-					setTimeout(function() {
-						if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
-					}, delay);
-				});
-			}
+    document.documentElement.classList.remove('landing-active');
+    document.body.style.overflow = 'hidden';
+    var landing = document.getElementById('beta-landing');
+    if (landing && !landing.classList.contains('exiting')) {
+        landing.classList.add('exiting');
+        setTimeout(function() { landing.style.display = 'none'; }, 520);
+    }
+    
+    // Switch the tab FIRST
+    if (typeof window.switchTab === 'function') {
+        window.switchTab('adv-editor');
+    }
+
+    // Set an interval to ensure the accordion script executes 
+    // ONLY AFTER the tool.js functions are fully registered
+    var checkReady = setInterval(function() {
+        if (typeof window.toggleAcc === 'function') {
+            window.toggleAcc('acc-size', true);
+            clearInterval(checkReady);
+        }
+    }, 100);
+}
 
 			function patchLandingFlow() {
 				if (typeof window.selectMatSize !== 'function' || typeof window.toggleFullScreen !== 'function') {
