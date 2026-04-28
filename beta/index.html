@@ -754,7 +754,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					    <div class="overlay-box" style="border-color: var(--brand-hover); text-align: center;">
 					        <h3 style="color:var(--brand-hover); margin-top:0; font-size:20px; text-transform:uppercase;">AI Frame Break</h3>
 					        <p style="color:var(--brand-text-sec); font-size:14px; line-height:1.6; margin-bottom:25px;">
-					            This magical feature securely sends your artwork to a powerful cloud server to accurately separate the main character from the background!<br><br>
+					            This magical feature securely sends your artwork to a powerful cloud server, accurately separating the main character from the background!<br><br>
 					            It usually takes <strong>5 to 10 seconds</strong> to process.
 					        </p>
 					        <div style="display:flex; gap:10px; justify-content:center;">
@@ -1206,8 +1206,9 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					        <div id="editor-main">
 					        <div id="sidebar">
 
+							<!-- Artwork Accordion -->
 					            <div class="acc-card">
-					           <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
+					           <button class="acc-btn" onclick="window.toggleAcc('acc-size')">Artwork <span>▼</span></button>
 					            <div id="acc-size" class="acc-content acc-open" style="display:block">
 
 					                <div class="slider-row" style="margin-top: 15px;">
@@ -1255,8 +1256,9 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            </div>
 					            </div>
 
+								<!-- Game Layout Accordion -->
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-layouts">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
+					            <button class="acc-btn" onclick="window.toggleAcc('acc-layouts')">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
 					            <div id="acc-layouts" class="acc-content">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -1365,8 +1367,9 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            </div>
 					            </div>
 
+								<!-- Adjustments Accordion -->
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-art">Adjustments <span>▼</span></button>
+					            <button class="acc-btn" onclick="window.toggleAcc('acc-art')">Adjustments <span>▼</span></button>
 					            <div id="acc-art" class="acc-content">
 
 					                <div class="inner-panel">
@@ -1505,8 +1508,9 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            </div>
 					            </div>
 
+								<!-- Export Accordion -->
 					            <div class="acc-card">
-					            <button class="acc-btn" data-acc="acc-export">Export <span>▼</span></button>
+					            <button class="acc-btn" onclick="window.toggleAcc('acc-export')">Export <span>▼</span></button>
 					            <div id="acc-export" class="acc-content">
 					                <div class="action-row-3" style="margin-top:10px;">
 					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
@@ -1546,7 +1550,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            <div id="adv-canvas-actions">
 					                <div id="adv-bleed-warning" class="bleed-warning-banner">
 					                    &#9888;&#65039; Artwork does not cover the full canvas. White borders will appear on your printed mat.<br>
-					                    Scale your artwork to fill the entire canvas including the red bleed area.
+					                    Scale your artwork to fill the entire canvas, including the red bleed area.
 					                </div>
 					            </div>
 					        </div>
@@ -1754,7 +1758,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				</div>
 				<div class="privacy-body">
 					<p><strong>Effective Date: March 2025</strong></p>
-					<p>Playmat Studio is a free, browser-based image preparation tool. This policy explains what data is collected, how it is used, and your rights under applicable privacy law including the GDPR (EU/UK) and the CCPA (California).</p>
+					<p>Playmat Studio is a free, browser-based image preparation tool. This policy explains what data is collected, how it is used, and your rights under applicable privacy law, including the GDPR (EU/UK) and the CCPA (California).</p>
 
 					<h3>1. Data We Collect</h3>
 					<p>We collect <strong>no personal information</strong> and require no account, registration, or login. The following data may be processed during normal use:</p>
@@ -1765,12 +1769,12 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					</ul>
 
 					<h3>2. In-Browser Processing</h3>
-					<p>All core image-processing tasks &mdash; resizing, cropping, colour correction, format conversion, overlay rendering, and export &mdash; run <strong>entirely within your browser</strong> using the HTML5 Canvas API and the Fabric.js library. Your artwork is never uploaded to any server during these operations.</p>
+					<p>All core image-processing tasks &mdash; resizing, cropping, color correction, format conversion, overlay rendering, and export &mdash; run <strong>entirely within your browser</strong> using the HTML5 Canvas API and the Fabric.js library. Your artwork is never uploaded to any server during these operations.</p>
 
 					<h3>3. Optional Cloud AI Features</h3>
 					<p>Two features optionally transmit image data to a serverless cloud environment:</p>
 					<ul>
-						<li><strong>AI Resolution Enhancer</strong> &mdash; sends your image to a serverless processing function to upscale it to higher resolution.</li>
+						<li><strong>AI Resolution Enhancer</strong> &mdash; sends your image to a serverless processing function to upscale it to a higher resolution.</li>
 						<li><strong>AI Frame Break (background removal)</strong> &mdash; sends your image to a serverless processing function to isolate the foreground subject.</li>
 					</ul>
 					<p>These transmissions occur <strong>only when you explicitly initiate the feature</strong> by clicking the corresponding button and confirming the prompt. Image data sent to these functions is processed transiently and is <strong>not stored, logged, or retained</strong> after the response is returned to your browser. No metadata identifying you is attached to these requests.</p>
@@ -1791,7 +1795,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					<p>We do not sell, share, or disclose personal information to third parties for commercial purposes. California residents have the right to know what personal information is collected and to request deletion. Because we collect only contact form submissions and retain them for the limited purpose of responding to you, there is nothing to &ldquo;sell&rdquo; and deletion requests are honoured upon request.</p>
 
 					<h3>9. Children&rsquo;s Privacy</h3>
-					<p>This site is not directed to children under 13 (or under 16 in the EEA). We do not knowingly collect information from minors. If you believe a minor has submitted information via the contact form, please contact us and we will delete it promptly.</p>
+					<p>This site is not directed to children under 13 (or under 16 in the EEA). We do not knowingly collect information from minors. If you believe a minor has submitted information via the contact form, please contact us, and we will delete it promptly.</p>
 
 					<h3>10. Changes to This Policy</h3>
 					<p>We may update this policy to reflect changes in technology or law. The effective date at the top of this page will be updated accordingly. Continued use of the site after changes are posted constitutes acceptance of the revised policy.</p>
@@ -1936,7 +1940,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 							<div class="cl-group">
 								<p class="cl-label cl-label-improved">Improved</p>
 								<ul class="cl-list">
-									<li><strong>Tidier top bar</strong> — everything across the top of the page has been reorganised so the tools and navigation are easier to find.</li>
+									<li><strong>Tidier top bar</strong> — everything across the top of the page has been reorganized so the tools and navigation are easier to find.</li>
 									<li><strong>Fresh look on the homepage</strong> — the background got a cleaner, less busy design.</li>
 								</ul>
 							</div>
