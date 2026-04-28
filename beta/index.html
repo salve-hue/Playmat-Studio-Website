@@ -374,6 +374,12 @@
 				color: #0b0912 !important;
 				font-weight: 800 !important;
 			}
+			/* Inactive axis-lock hover: visually distinct from active teal */
+			.axis-lock-btn:not(.active):hover {
+				background: rgba(255,255,255,0.15) !important;
+				border-color: rgba(255,255,255,0.35) !important;
+				color: #fff !important;
+			}
 			/* ── Info bar: static footer of the tool, never moves with canvas ── */
 			#adv-info-bar {
 				flex-shrink: 0 !important;
