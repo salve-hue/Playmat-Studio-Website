@@ -1208,9 +1208,8 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 							<!-- Artwork Accordion -->
 					            <div class="acc-card">
-					           <button class="acc-btn" onclick="var content = document.getElementById('acc-size'); if (content.classList.contains('acc-open')) { content.classList.remove('acc-open'); content.style.display = 'none'; } else { content.classList.add('acc-open'); content.style.display = 'block'; }">Artwork <span>▼</span></button>
-					            <div id="acc-size" class="acc-content acc-open" style="display:block">
-
+								<button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>					            
+									<div id="acc-size" class="acc-content acc-open" style="display:block">
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
 					                    <input type="range" id="zoom-in" min="0.1" max="2.5" step="0.01" value="1" style="width:100%;">
