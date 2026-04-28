@@ -1595,7 +1595,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 			// Called whenever the editor becomes the active view.
 			// Hides the landing overlay and locks body scroll via inline style
-			// (avoids setting overflow on <html> which can clip position:fixed children).
 			function hideLandingAndRevealEditor() {
 				document.documentElement.classList.remove('landing-active');
 				document.body.style.overflow = 'hidden';
@@ -1619,21 +1618,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					if (attempts > 10) clearInterval(forceOpen);
 				}, 100);
 			}
-    
-    // Switch the tab FIRST
-    if (typeof window.switchTab === 'function') {
-        window.switchTab('adv-editor');
-    }
-
-    // Set an interval to ensure the accordion script executes 
-    // ONLY AFTER the tool.js functions are fully registered
-    var checkReady = setInterval(function() {
-        if (typeof window.toggleAcc === 'function') {
-            window.toggleAcc('acc-size', true);
-            clearInterval(checkReady);
-        }
-    }, 100);
-}
 
 			function patchLandingFlow() {
 				if (typeof window.selectMatSize !== 'function' || typeof window.toggleFullScreen !== 'function') {
@@ -1653,8 +1637,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				};
 
 				// Step 2 → 3: enter the editor.
-				// Always enter fullscreen (makes the editor visible on all screen sizes).
-				// hideLandingAndRevealEditor hides the landing and re-opens accordions.
 				var _origFS = window.toggleFullScreen;
 				window.toggleFullScreen = function() {
 					_origFS.apply(this, arguments);
@@ -1663,7 +1645,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 			}
 
 			// ── Axis lock button highlight (belt-and-suspenders) ────────
-			// Runs after onclick fires so .active class is already toggled.
 			document.addEventListener('click', function(e) {
 				var btn = e.target && e.target.closest && e.target.closest('.axis-lock-btn');
 				if (!btn) return;
@@ -1689,8 +1670,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				document.getElementById('landing-upload-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
-					// On mobile: enter fullscreen so the sidebar layout/CSS overrides apply.
-					// On desktop: _autoFullscreenIfDesktop fires after upload completes.
 					if (window.innerWidth <= 900 && typeof window.toggleFullScreen === 'function') {
 						window.toggleFullScreen();
 					}
@@ -1708,7 +1687,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
 					setTimeout(function() {
-						// Patched toggleFullScreen handles landing-hide and accordion open.
 						if (typeof window.toggleFullScreen === 'function') window.toggleFullScreen();
 						setTimeout(function() {
 							var picker = document.getElementById('bg-color-picker');
