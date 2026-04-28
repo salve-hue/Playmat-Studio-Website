@@ -121,12 +121,6 @@
 					overflow-y: auto !important;
 					overflow-x: hidden !important;
 				}
-				/* Artwork accordion: force-open on mobile. CSS !important beats any
-				   inline style="display:none" that JS might set, so this cannot be
-				   closed by toggleAcc. Removes all JS timing dependency. */
-				#acc-size {
-					display: block !important;
-				}
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
 				margin-top: auto !important;
@@ -1610,13 +1604,10 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					landing.classList.add('exiting');
 					setTimeout(function() { landing.style.display = 'none'; }, 520);
 				}
-				// Unconditionally force-open all accordions each time the editor is entered.
+				// Ensure Artwork accordion is open when the editor first appears.
 				[120, 500].forEach(function(delay) {
 					setTimeout(function() {
-						if (typeof window.toggleAcc !== 'function') return;
-						['acc-size', 'acc-layouts', 'acc-art', 'acc-export'].forEach(function(id) {
-							window.toggleAcc(id, true);
-						});
+						if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
 					}, delay);
 				});
 			}
@@ -1741,13 +1732,9 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				setTimeout(ensureToolInit, 1000);
 				patchLandingFlow();
 				initUploadBar();
-				// Open all accordions once the editor is fully initialised.
+				// Open only the Artwork accordion by default.
 				setTimeout(function() {
-					if (typeof window.toggleAcc === 'function') {
-						['acc-size', 'acc-layouts', 'acc-art', 'acc-export'].forEach(function(id) {
-							window.toggleAcc(id, true);
-						});
-					}
+					if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
 				}, 500);
 			});
 		})();
