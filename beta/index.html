@@ -1257,7 +1257,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 								<!-- Game Layout Accordion -->
 					            <div class="acc-card">
-					            <button class="acc-btn" onclick="window.toggleAcc('acc-layouts')">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-layouts">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
 					            <div id="acc-layouts" class="acc-content">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -1368,7 +1368,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 								<!-- Adjustments Accordion -->
 					            <div class="acc-card">
-					            <button class="acc-btn" onclick="window.toggleAcc('acc-art')">Adjustments <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-art">Adjustments <span>▼</span></button>
 					            <div id="acc-art" class="acc-content">
 
 					                <div class="inner-panel">
@@ -1509,7 +1509,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 								<!-- Export Accordion -->
 					            <div class="acc-card">
-					            <button class="acc-btn" onclick="window.toggleAcc('acc-export')">Export <span>▼</span></button>
+					            <button class="acc-btn" data-acc="acc-export">Export <span>▼</span></button>
 					            <div id="acc-export" class="acc-content">
 					                <div class="action-row-3" style="margin-top:10px;">
 					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
@@ -1611,15 +1611,21 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					window.switchTab('adv-editor');
 				}
 
-				// Aggressively force the accordion open to beat mobile browser freezing
-				var attempts = 0;
-				var forceOpen = setInterval(function() {
-					if (typeof window.toggleAcc === 'function') {
+				// Wait for the DOM and native file picker to settle, then force open
+				setTimeout(function() {
+					var acc = document.getElementById('acc-size');
+					if (acc && !acc.classList.contains('acc-open') && typeof window.toggleAcc === 'function') {
 						window.toggleAcc('acc-size', true);
 					}
-					attempts++;
-					if (attempts > 10) clearInterval(forceOpen);
-				}, 100);
+					
+					// Force a physical redraw of the sidebar for mobile browsers
+					var sidebar = document.getElementById('sidebar');
+					if (sidebar) {
+						sidebar.style.display = 'none';
+						sidebar.offsetHeight; // Triggers the browser reflow
+						sidebar.style.display = 'flex';
+					}
+				}, 800);
 			}
 
 			function patchLandingFlow() {
