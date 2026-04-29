@@ -55,7 +55,10 @@
 			#get-printed-modal p  { font-size: var(--fs-md) !important; }
 
 			html, body { min-height: 100%; overflow-x: hidden; }
-			body { overflow-y: auto !important; }
+			/* tool.js sets body.style.overflow='hidden' when entering the editor; no !important so
+			   that inline style takes effect. Before the editor opens, html.landing-active locks
+			   scroll via a separate rule. */
+			body { overflow-y: auto; }
 			#wrapper { min-height: 100vh; display: flex; flex-direction: column; padding-top: 133px !important; }
 			section#tools.ps-tools { flex: 1; padding: 0 !important; margin: 0 !important; }
 			section#tools .inner { max-width: none !important; padding: 0 !important; }
@@ -84,6 +87,63 @@
 				overflow-y: auto !important;
 				overflow-x: hidden !important;
 				justify-content: flex-start !important;
+				overscroll-behavior: contain !important;
+			}
+			/* Desktop: tool.css already gives #sidebar overflow-y:auto.
+			   Overscroll containment prevents bubble to page. */
+			#sidebar {
+				overscroll-behavior: contain !important;
+			}
+
+			/* ── Mobile fullscreen: tool.css uses overflow:visible + scrolling page,
+			   which breaks inside a fixed 90vh overlay. Override to a constrained
+			   flex-column layout so the sidebar gets a real height and can scroll. ── */
+			@media (max-width: 900px) {
+				/* dvh = dynamic viewport height: shrinks when browser address bar is visible,
+				   preventing the info bar from being clipped off the bottom of the screen. */
+				#adv-backdrop.tab-mode #playmat-tool-root {
+					height: calc(100dvh - 155px) !important;
+				}
+				#playmat-tool-root.app-fullscreen-mode {
+					overflow: hidden !important;
+				}
+				#playmat-tool-root.app-fullscreen-mode #editor-main {
+					flex: 1 1 0 !important;
+					min-height: 0 !important;
+					overflow: hidden !important;
+				}
+				/* Cap the canvas area so sidebar gets space below it */
+				#playmat-tool-root.app-fullscreen-mode #canvas-column {
+					flex: 0 0 auto !important;
+					max-height: 40vh !important;
+					overflow: hidden !important;
+					padding-top: 10px !important;
+				}
+				/* Sidebar: take remaining height, scroll internally */
+				#playmat-tool-root.app-fullscreen-mode #sidebar {
+					flex: 1 1 0 !important;
+					min-height: 0 !important;
+					overflow-y: auto !important;
+					overflow-x: hidden !important;
+				}
+				/* Artwork open by default on mobile — unless the user explicitly closed it.
+				   data-user-closed is set by the toggleAcc patch below when the user taps close. */
+				#acc-size:not([data-user-closed]) {
+					display: block !important;
+				}
+				/* Info bar: stack each item on its own line and allow text to wrap */
+				#adv-info-bar {
+					display: flex !important;
+					flex-direction: column !important;
+					align-items: center !important;
+					gap: 1px !important;
+					padding: 6px 12px !important;
+				}
+				#adv-info-bar span {
+					white-space: normal !important;
+					margin: 0 !important;
+					text-align: center !important;
+				}
 			}
 			#adv-backdrop.tab-mode #adv-info-bar {
 				margin-top: auto !important;
@@ -332,6 +392,12 @@
 				color: #0b0912 !important;
 				font-weight: 800 !important;
 			}
+			/* Inactive axis-lock: no hover highlight — looks identical to resting state */
+			#playmat-tool-root .axis-lock-btn:not(.active):hover:not(:disabled) {
+				background: rgba(255,255,255,0.15) !important;
+				border-color: rgba(255,255,255,0.25) !important;
+				color: #fff !important;
+			}
 			/* ── Info bar: static footer of the tool, never moves with canvas ── */
 			#adv-info-bar {
 				flex-shrink: 0 !important;
@@ -345,13 +411,19 @@
 				padding: 0 !important;
 			}
 
-			/* ── Zoom toolbar: flow above canvas, centered, instead of overlapping ── */
+			/* ── Zoom toolbar: centered flow item above canvas ── */
 			#zoom-toolbar {
 				position: relative !important;
 				top: auto !important;
 				right: auto !important;
 				align-self: center;
 				margin-bottom: 8px;
+			}
+
+			/* ── Accordion open state ───────────────────────────────── */
+			/* No animation: avoids opacity:0 flash on DOM reattachment (mobile fullscreen). */
+			.acc-content.acc-open {
+				display: block !important;
 			}
 			/* ── Size button tooltip ─────────────────────────────────────── */
 			#mat-tooltip {
@@ -513,6 +585,102 @@
 				cursor: pointer; transition: all 0.15s; white-space: nowrap;
 			}
 			.copy-btn:hover { background: rgba(48,187,173,0.1); }
+
+			/* Lock body scroll while the landing overlay is visible */
+			html.landing-active,
+			html.landing-active body { overflow: hidden !important; height: 100% !important; }
+
+			/* ── Mobile hamburger + slide-out drawer ────────────────────── */
+			#mobile-hamburger {
+				display: none;
+				background: none; border: none; cursor: pointer;
+				padding: 8px; margin-left: auto;
+				flex-direction: column; gap: 5px; align-items: center; justify-content: center;
+			}
+			#mobile-hamburger span {
+				display: block; width: 22px; height: 2px;
+				background: rgba(255,255,255,0.85); border-radius: 2px;
+			}
+			#mobile-drawer {
+				position: fixed; top: 0; right: -300px;
+				width: 260px; height: 100%;
+				background: #0d0a1a;
+				border-left: 1px solid rgba(255,255,255,0.08);
+				box-shadow: -8px 0 32px rgba(0,0,0,0.6);
+				z-index: 100000;
+				padding: 64px 24px 32px;
+				display: flex; flex-direction: column; gap: 4px;
+				transition: right 0.28s ease;
+				overflow-y: auto;
+			}
+			#mobile-drawer.open { right: 0; }
+			#mobile-drawer a {
+				color: rgba(255,255,255,0.8) !important;
+				font-family: 'Plus Jakarta Sans', sans-serif;
+				font-size: 15px; font-weight: 600;
+				letter-spacing: 0.4px;
+				text-decoration: none !important;
+				border: none !important;
+				padding: 11px 0;
+				border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+			}
+			#mobile-drawer a:hover { color: #30BBAD !important; }
+			#mobile-drawer .drawer-divider {
+				border: none; border-top: 1px solid rgba(255,255,255,0.12);
+				margin: 8px 0;
+			}
+			#mobile-drawer-overlay {
+				display: none; position: fixed; inset: 0;
+				background: rgba(0,0,0,0.55); z-index: 99999;
+			}
+			#mobile-drawer-overlay.open { display: block; }
+			#mobile-close-btn {
+				position: absolute; top: 14px; right: 16px;
+				background: none; border: none;
+				color: rgba(255,255,255,0.5); font-size: 26px;
+				cursor: pointer; line-height: 1; padding: 4px;
+			}
+			#mobile-close-btn:hover { color: #fff; }
+
+			@media (max-width: 980px) {
+				#header-tools { display: none !important; }
+				#header .inner nav { display: none !important; }
+				#mobile-hamburger { display: flex !important; }
+
+				/* Footer: flow below content instead of overlapping it */
+				#beta-landing-footer {
+					position: relative !important;
+					margin-top: 24px;
+				}
+
+				/* Shrink logo so header stays compact on mobile (~60px tall) */
+				#header .inner .logo .symbol svg { height: 40px !important; }
+
+				/* Push landing overlay below the fixed header */
+				#beta-landing {
+					top: 62px !important;
+					padding: 16px 16px 16px !important;
+					justify-content: flex-start !important;
+					overflow-y: auto !important;
+				}
+
+				/* Size grid: 2 columns instead of 3 on mobile */
+				.size-group--playmat .mat-size-btn,
+				.size-group--deskmat .mat-size-btn {
+					flex: 0 0 calc(50% - 6px) !important;
+					min-width: 0 !important;
+					padding: 10px 10px !important;
+				}
+			}
+
+			#beta-watermark {
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				z-index: 99990;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Ctext x='100' y='110' font-family='Arial%2Csans-serif' font-size='32' font-weight='bold' letter-spacing='8' fill='white' fill-opacity='0.08' text-anchor='middle' transform='rotate(-45 100 100)'%3EBETA%3C%2Ftext%3E%3C%2Fsvg%3E");
+				background-size: 200px 200px;
+			}
 		</style>
 		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
 		     data-cfasync="false" opts out of Cloudflare Rocket Loader -->
@@ -520,6 +688,7 @@
 		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 	</head>
 	<body class="is-preload">
+		<div id="beta-watermark" aria-hidden="true"></div>
 
 		<!-- Wrapper -->
 		<div id="wrapper">
@@ -561,10 +730,25 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 						</ul>
 					</nav>
 
+					<button id="mobile-hamburger" aria-label="Open menu">
+						<span></span><span></span><span></span>
+					</button>
+
 				</div>
 			</header>
 
-			<!-- Tools — native embed -->
+			<div id="mobile-drawer-overlay"></div>
+			<div id="mobile-drawer">
+				<button id="mobile-close-btn" aria-label="Close menu">&#215;</button>
+				<a href="#" data-lb="upload">Image Hosting</a>
+				<a href="#" data-lb="file-converter">File Converter</a>
+				<hr class="drawer-divider">
+				<a href="#" data-lb="how-it-works">How It Works</a>
+				<a href="#" data-lb="features">Features</a>
+				<a href="#" data-lb="about">About</a>
+				<a href="#" data-lb="contact">Contact</a>
+			</div>
+
 			<a id="upload" style="display:block; visibility:hidden; position:relative; top:-80px;"></a>
 			<section id="tools" class="ps-tools">
 				<!-- ═══ TOOL HTML (native embed) ══════════════════════════════ -->
@@ -1053,7 +1237,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-size">Artwork <span>▼</span></button>
-					            <div id="acc-size" class="acc-content" style="display:block;">
+					            <div id="acc-size" class="acc-content">
 
 					                <div class="slider-row" style="margin-top: 15px;">
 					                    <label>Art Scale</label>
@@ -1102,7 +1286,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-layouts">Game Layout <span style="font-size:10px; font-weight:normal;">(Optional)</span> <span>▼</span></button>
-					            <div id="acc-layouts" class="acc-content" style="display:block;">
+					            <div id="acc-layouts" class="acc-content">
 					                <select id="game-sel" class="ui-select" style="margin:0;"><option value="">-- Select Game (Optional) --</option></select>
 					                <select id="format-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
 					                <select id="hand-sel" class="ui-select hidden-field" style="margin-top:10px;"></select>
@@ -1212,7 +1396,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-art">Adjustments <span>▼</span></button>
-					            <div id="acc-art" class="acc-content" style="display:block;">
+					            <div id="acc-art" class="acc-content">
 
 					                <div class="inner-panel">
 					                    <span class="panel-title">Print Color Correction</span>
@@ -1352,7 +1536,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-export">Export <span>▼</span></button>
-					            <div id="acc-export" class="acc-content" style="display:block;">
+					            <div id="acc-export" class="acc-content">
 					                <div class="action-row-3" style="margin-top:10px;">
 					                    <button id="sidebar-print-btn" class="action-btn" style="flex:1; margin:0; background:var(--success-green);">&#128424;&#65039; Get Printed</button>
 					                    <button id="sidebar-atc" class="action-btn" style="flex:1; margin:0;">&#11015;&#65039; Download</button>
@@ -1369,6 +1553,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					        </div>
 
 					        <div id="canvas-column">
+
 					            <div id="zoom-toolbar">
 					                <span style="color: var(--brand-text-sec); font-size: 12px; font-weight:bold; letter-spacing:1px; margin-right: 5px;">View:</span>
 					                <button class="action-btn btn-secondary" style="margin:0; padding: 6px 14px; font-size:16px; width:auto;" id="ws-zoom-in-btn">+</button>
@@ -1413,7 +1598,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=24"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=28"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────
@@ -1434,6 +1619,28 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 			}
 
 			// ── Two-step landing patches (run after tool.js is ready) ────
+			// Lock scroll while landing is visible
+			document.documentElement.classList.add('landing-active');
+
+			// Called whenever the editor becomes the active view.
+			// Hides the landing overlay and locks body scroll via inline style
+			// (avoids setting overflow on <html> which can clip position:fixed children).
+			function hideLandingAndRevealEditor() {
+				document.documentElement.classList.remove('landing-active');
+				document.body.style.overflow = 'hidden';
+				var landing = document.getElementById('beta-landing');
+				if (landing && !landing.classList.contains('exiting')) {
+					landing.classList.add('exiting');
+					setTimeout(function() { landing.style.display = 'none'; }, 520);
+				}
+				// Ensure Artwork accordion is open when the editor first appears.
+				[120, 500].forEach(function(delay) {
+					setTimeout(function() {
+						if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
+					}, delay);
+				});
+			}
+
 			function patchLandingFlow() {
 				if (typeof window.selectMatSize !== 'function' || typeof window.toggleFullScreen !== 'function') {
 					setTimeout(patchLandingFlow, 100);
@@ -1444,18 +1651,20 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				var _origSelect = window.selectMatSize;
 				window.selectMatSize = function(sizeKey, btn) {
 					_origSelect(sizeKey, btn);
-					document.getElementById('landing-upload-bar').classList.add('visible');
+					var bar = document.getElementById('landing-upload-bar');
+					bar.classList.add('visible');
+					setTimeout(function() {
+						bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+					}, 80);
 				};
 
-				// Step 2 → 3: fade out landing when fullscreen is entered
+				// Step 2 → 3: enter the editor.
+				// Always enter fullscreen (makes the editor visible on all screen sizes).
+				// hideLandingAndRevealEditor hides the landing and re-opens accordions.
 				var _origFS = window.toggleFullScreen;
 				window.toggleFullScreen = function() {
 					_origFS.apply(this, arguments);
-					var landing = document.getElementById('beta-landing');
-					if (landing && !landing.classList.contains('exiting')) {
-						landing.classList.add('exiting');
-						setTimeout(function() { landing.style.display = 'none'; }, 520);
-					}
+					hideLandingAndRevealEditor();
 				};
 			}
 
@@ -1486,17 +1695,26 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				document.getElementById('landing-upload-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					// On mobile: enter fullscreen so the sidebar layout/CSS overrides apply.
+					// On desktop: _autoFullscreenIfDesktop fires after upload completes.
+					if (window.innerWidth <= 900 && typeof window.toggleFullScreen === 'function') {
+						window.toggleFullScreen();
+					}
 					setTimeout(function() { document.getElementById('adv-file-in').click(); }, 100);
 				});
 				document.getElementById('landing-url-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
+					if (window.innerWidth <= 900 && typeof window.toggleFullScreen === 'function') {
+						window.toggleFullScreen();
+					}
 					setTimeout(function() { window.promptPasteUrl(); }, 100);
 				});
 				document.getElementById('landing-color-btn').addEventListener('click', function() {
 					var adv = document.getElementById('adv-backdrop');
 					if (adv && !adv.classList.contains('tab-mode')) window.switchTab('adv-editor');
 					setTimeout(function() {
+						// Patched toggleFullScreen handles landing-hide and accordion open.
 						if (typeof window.toggleFullScreen === 'function') window.toggleFullScreen();
 						setTimeout(function() {
 							var picker = document.getElementById('bg-color-picker');
@@ -1543,6 +1761,31 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				setTimeout(ensureToolInit, 1000);
 				patchLandingFlow();
 				initUploadBar();
+
+				// Patch toggleAcc so acc-size tracks whether the user explicitly closed it.
+				// The CSS rule #acc-size:not([data-user-closed]) forces it open by default;
+				// this patch sets/removes that attribute so the user can still close/reopen it.
+				if (typeof window.toggleAcc === 'function') {
+					var _origTA = window.toggleAcc;
+					window.toggleAcc = function(id, forceOpen) {
+						_origTA(id, forceOpen);
+						if (id === 'acc-size') {
+							var el = document.getElementById('acc-size');
+							if (el) {
+								if (el.classList.contains('acc-open')) {
+									el.removeAttribute('data-user-closed');
+								} else {
+									el.setAttribute('data-user-closed', '1');
+								}
+							}
+						}
+					};
+				}
+
+				// Ensure acc-size starts in the open state (clears any stale data-user-closed).
+				setTimeout(function() {
+					if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
+				}, 500);
 			});
 		})();
 		</script>
@@ -1571,7 +1814,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					</ul>
 
 					<h3>2. In-Browser Processing</h3>
-					<p>All core image-processing tasks &mdash; resizing, cropping, colour correction, format conversion, overlay rendering, and export &mdash; run <strong>entirely within your browser</strong> using the HTML5 Canvas API and the Fabric.js library. Your artwork is never uploaded to any server during these operations.</p>
+					<p>All core image-processing tasks &mdash; resizing, cropping, color correction, format conversion, overlay rendering, and export &mdash; run <strong>entirely within your browser</strong> using the HTML5 Canvas API and the Fabric.js library. Your artwork is never uploaded to any server during these operations.</p>
 
 					<h3>3. Optional Cloud AI Features</h3>
 					<p>Two features optionally transmit image data to a serverless cloud environment:</p>
@@ -1742,7 +1985,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 							<div class="cl-group">
 								<p class="cl-label cl-label-improved">Improved</p>
 								<ul class="cl-list">
-									<li><strong>Tidier top bar</strong> — everything across the top of the page has been reorganised so the tools and navigation are easier to find.</li>
+									<li><strong>Tidier top bar</strong> — everything across the top of the page has been reorganized so the tools and navigation are easier to find.</li>
 									<li><strong>Fresh look on the homepage</strong> — the background got a cleaner, less busy design.</li>
 								</ul>
 							</div>
@@ -2163,6 +2406,22 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 		});
 	}
 
+})();
+
+// Mobile drawer
+(function() {
+	var hamburger = document.getElementById('mobile-hamburger');
+	var closeBtn  = document.getElementById('mobile-close-btn');
+	var overlay   = document.getElementById('mobile-drawer-overlay');
+	var drawer    = document.getElementById('mobile-drawer');
+	function open()  { drawer.classList.add('open');    overlay.classList.add('open'); }
+	function close() { drawer.classList.remove('open'); overlay.classList.remove('open'); }
+	if (hamburger) hamburger.addEventListener('click', open);
+	if (closeBtn)  closeBtn.addEventListener('click', close);
+	if (overlay)   overlay.addEventListener('click', close);
+	if (drawer) drawer.querySelectorAll('a[data-lb]').forEach(function(a) {
+		a.addEventListener('click', close);
+	});
 })();
 </script>
 </body>
