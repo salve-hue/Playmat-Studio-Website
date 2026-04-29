@@ -38,7 +38,7 @@
 		<link rel="preload" href="https://playmatstudio.com/assets/Under%20Subway.ttf" as="font" type="font/truetype" crossorigin />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:wght@400;500&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Bangers&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Roboto:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" />
 		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/custom.css?v=16" />
-		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/tool.css?v=11" />
+		<link rel="stylesheet" href="https://playmatstudio.com/assets/css/tool.css?v=12" />
 		<style>
 			/* ── 3-tier font size system ─────────────────────────────────── */
 			:root {
@@ -673,6 +673,14 @@
 				}
 			}
 
+			#beta-watermark {
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				z-index: 99990;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Ctext x='100' y='110' font-family='Arial%2Csans-serif' font-size='32' font-weight='bold' letter-spacing='8' fill='white' fill-opacity='0.08' text-anchor='middle' transform='rotate(-45 100 100)'%3EBETA%3C%2Ftext%3E%3C%2Fsvg%3E");
+				background-size: 200px 200px;
+			}
 		</style>
 		<!-- Tool dependencies — no SRI so hash mismatches can't silently block execution;
 		     data-cfasync="false" opts out of Cloudflare Rocket Loader -->
@@ -680,7 +688,8 @@
 		<script data-cfasync="false" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 	</head>
 	<body class="is-preload">
-	
+		<div id="beta-watermark" aria-hidden="true"></div>
+
 		<!-- Wrapper -->
 		<div id="wrapper">
 
