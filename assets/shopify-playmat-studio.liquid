@@ -2094,10 +2094,7 @@
     };
 
     function _autoFullscreenIfDesktop() {
-        if (window.innerWidth <= 900) return;
-        var root = document.getElementById('playmat-tool-root');
-        if (!root || root.classList.contains('app-fullscreen-mode')) return;
-        window.toggleFullScreen();
+        // Disabled in Shopify context — auto-fullscreen conflicts with the store nav bar.
     }
 
     function _applyAxisLock() {
