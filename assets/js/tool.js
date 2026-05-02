@@ -1124,7 +1124,59 @@
         _applyAxisLock();
     };
 
-    window.workspaceZoom = (amt) => {
+    window.alignObject = function(dir) {
+        if (!window.canvas) return;
+        var obj = window.canvas.getActiveObject();
+        if (!obj) return;
+        obj.setCoords();
+        var br = obj.getBoundingRect();
+        var cW = APP.canvasW, cH = APP.canvasH;
+        switch (dir) {
+            case 'left':     obj.left += -br.left; break;
+            case 'center-h': obj.left += (cW / 2) - (br.left + br.width / 2); break;
+            case 'right':    obj.left += cW - (br.left + br.width); break;
+            case 'top':      obj.top  += -br.top; break;
+            case 'middle-v': obj.top  += (cH / 2) - (br.top + br.height / 2); break;
+            case 'bottom':   obj.top  += cH - (br.top + br.height); break;
+        }
+        obj.setCoords();
+        window.canvas.requestRenderAll();
+    };
+
+    window.addCustomImage = function(fileOrUrl) {
+        function _place(url, name) {
+            fabric.Image.fromURL(url, function(img) {
+                if (!img) return;
+                var scale = Math.min(1, (APP.canvasW * 0.45) / img.width, (APP.canvasH * 0.45) / img.height);
+                img.set({
+                    name: 'custom',
+                    layerName: name || 'Image',
+                    left: APP.canvasW / 2,
+                    top:  APP.canvasH / 2,
+                    originX: 'center',
+                    originY: 'center',
+                    scaleX: scale,
+                    scaleY: scale,
+                    selectable: true,
+                    evented: true
+                });
+                window.canvas.add(img);
+                var guides = window.canvas.getObjects().find(function(o) { return o.name === 'guides'; });
+                if (guides) window.canvas.bringToFront(guides);
+                window.canvas.setActiveObject(img);
+                window.canvas.requestRenderAll();
+                if (typeof window.refreshLayerPanel === 'function') window.refreshLayerPanel();
+            }, { crossOrigin: 'anonymous' });
+        }
+        if (typeof fileOrUrl === 'string') {
+            _place(fileOrUrl, 'Image');
+        } else {
+            var reader = new FileReader();
+            var name = fileOrUrl.name ? fileOrUrl.name.replace(/\.[^.]+$/, '') : 'Image';
+            reader.onload = function(e) { _place(e.target.result, name); };
+            reader.readAsDataURL(fileOrUrl);
+        }
+    };
         if (amt === 0) APP.currentZoom = 1; else APP.currentZoom += amt;
         APP.currentZoom = Math.max(0.5, Math.min(APP.currentZoom, 3));
         document.getElementById('canvas-wrapper').style.transform = `scale(${APP.currentZoom})`;
