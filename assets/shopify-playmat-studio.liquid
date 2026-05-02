@@ -52,7 +52,10 @@
 
     input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
     input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--brand-hover); cursor: pointer; margin-top: -6px; }
-    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(255,255,255,0.2); border-radius: 6px; }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: linear-gradient(to right, var(--brand-hover) var(--fill-pct, 0%), rgba(104,48,187,0.35) var(--fill-pct, 0%)); border-radius: 6px; transition: filter 0.2s; }
+    input[type=range]:hover::-webkit-slider-runnable-track { filter: drop-shadow(0 0 5px rgba(48,187,173,0.75)); }
+    .axis-lock-btn.active { background: var(--brand-hover) !important; border-color: var(--brand-hover) !important; color: #0b0912 !important; font-weight: 800 !important; }
+    #playmat-tool-root .axis-lock-btn:not(.active):hover:not(:disabled) { background: rgba(255,255,255,0.15) !important; border-color: rgba(255,255,255,0.25) !important; color: #fff !important; }
     
     .color-swatch { width: 100%; height: 40px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; background: none; cursor: pointer; padding: 0; }
     .hidden-field { display: none !important; }
@@ -521,6 +524,14 @@
                     </button>
                 </div>
 
+                <div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px;">
+                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Axis Lock <span class="info-tooltip" data-tip="Lock X: artwork can only move left/right (vertical position frozen). Lock Y: artwork can only move up/down (horizontal position frozen). Click the active button again to unlock.">?</span></label>
+                    <div style="display:flex; gap:8px;">
+                        <button class="action-btn btn-secondary axis-lock-btn" data-axis="x" style="flex:1; margin:0;" onclick="window.setAxisLock('x')">Lock X</button>
+                        <button class="action-btn btn-secondary axis-lock-btn" data-axis="y" style="flex:1; margin:0;" onclick="window.setAxisLock('y')">Lock Y</button>
+                    </div>
+                </div>
+
             </div>
             </div>
 
@@ -855,6 +866,7 @@
         s_filters:         { enhance: false, grayscale: false },
         activePointsUrl:   null,
         _bleedConfirmCallback: null,
+        axisLock: null,
     };
 
     // Keep legacy window aliases so any external code still works
@@ -892,12 +904,12 @@
         //                 raw canvas size       customer-facing label
         "standard":  { w: 24.5, h: 14.5, label: '24" x 14"'  },  // Standard Playmat
         "extended":  { w: 28.5, h: 14.5, label: '28" x 14"'  },  // Extended Playmat
-        "victor":    { w: 24.0, h: 12.0, label: '24" x 12"'  },  // Victor Deskmat
-        "secundus":  { w: 28.0, h: 12.0, label: '28" x 12"'  },  // Secundus Deskmat
-        "primus":    { w: 31.0, h: 12.0, label: '31" x 12"'  },  // Primus Deskmat
-        "tiro":      { w: 10.0, h:  8.0, label: '10" x 8"'   },  // Tiro Mousepad
-        "veteranus": { w: 12.0, h: 10.0, label: '12" x 10"'  },  // Veteranus Mousepad
-        "gladiator": { w: 18.0, h: 12.0, label: '18" x 12"'  },  // Gladiator Mousepad
+        "victor":    { w: 24.5, h: 12.5, label: '24" x 12"'  },  // Victor Deskmat
+        "secundus":  { w: 28.5, h: 12.5, label: '28" x 12"'  },  // Secundus Deskmat
+        "primus":    { w: 31.5, h: 12.5, label: '32" x 12"'  },  // Primus Deskmat
+        "tiro":      { w: 10.7362, h:  8.7677, label: '260 × 210 mm' },  // Tiro Mousepad
+        "veteranus": { w: 12.3110, h: 10.3425, label: '300 × 250 mm' },  // Veteranus Mousepad
+        "gladiator": { w: 16.2480, h: 12.3110, label: '400 × 300 mm' },  // Gladiator Mousepad
         "wide16":    { w: 28.5, h: 16.5, label: '28" x 16"'  },  // Custom 28" x 16" Playmat
     };
 
@@ -1167,10 +1179,25 @@
     };
 
     // ============================================================
+    // Fetch an image with crossOrigin='anonymous' for safe canvas draws.
+    // Returns the loaded Image, or null on failure.
+    // ============================================================
+    async function fetchCorsImage(url) {
+        if (!url) return null;
+        return new Promise(res => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload  = () => res(img);
+            img.onerror = () => res(null);
+            img.src = url;
+        });
+    }
+
+    // ============================================================
     // Shared Riftbound layout drawing helper.
     // Used by both the canvas preview and the print export.
     // ============================================================
-    function drawRiftboundLayout(ctx, img, canvasW, canvasH, hand, format, rbPointsVal) {
+    function drawRiftboundLayout(ctx, img, canvasW, canvasH, hand, format, rbPointsVal, safeRbImg = window.rbPointsImg) {
         // Riftbound overlays are designed at standard playmat resolution (7350×4350).
         // Scale factor maps overlay native px → current canvas px.
         const nativeW  = Math.round(24.5 * 300); // 7350 — standard playmat native width
@@ -1232,8 +1259,8 @@
             ctx.drawImage(img, drawX, drawY, drawW, drawH);
         }
 
-        if (hasPoints && window.rbPointsImg && window.rbPointsImg.src) {
-            ctx.drawImage(window.rbPointsImg, pX, pY, pW, pH);
+        if (hasPoints && safeRbImg && safeRbImg.src) {
+            ctx.drawImage(safeRbImg, pX, pY, pW, pH);
         }
     }
 
@@ -1491,10 +1518,23 @@
     // --- ACCORDION ---
     window.toggleAcc = (id, forceOpen = false) => {
         const target = document.getElementById(id);
-        if (forceOpen) { document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none'); target.style.display = 'block'; return; }
-        const isOpen = target.style.display === 'block';
-        document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none');
-        if (!isOpen) target.style.display = 'block';
+        if (!target) return;
+        if (forceOpen) {
+            target.style.display = 'block';
+            target.classList.add('acc-open');
+            return;
+        }
+        const isOpen = target.classList.contains('acc-open');
+        if (isOpen) {
+            target.classList.remove('acc-open');
+            target.style.display = 'none';
+        } else {
+            target.style.display = 'block';
+            target.classList.add('acc-open');
+            setTimeout(function() {
+                target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 50);
+        }
     };
 
     window.updateLandingVars = () => {
@@ -1579,8 +1619,10 @@
             window.initDesignerVisibility();
         });
     } else {
-        window.updateLandingVars();
-        window.initDesignerVisibility();
+        setTimeout(function() {
+            window.updateLandingVars();
+            window.initDesignerVisibility();
+        }, 0);
     }
 
     // ============================================================
@@ -1864,6 +1906,8 @@
                 targetCanvas.add(img).sendToBack(img);
                 if (isAdv) {
                     window.clearAutoFrameBreak(); window.forceFit(); window.toggleAcc('acc-size', true);
+                    _applyAxisLock();
+                    _autoFullscreenIfDesktop();
                 } else {
                     APP.s_baseArtScale = Math.max(APP.canvasW / img.width, APP.canvasH / img.height);
                     img.scale(APP.s_baseArtScale).set({ left: APP.canvasW / 2, top: APP.canvasH / 2, angle: 0 });
@@ -1950,6 +1994,8 @@
                     targetCanvas.renderAll(); window.updateFilters();
                     if (APP.aiFgImg) window.renderForeground();
                     window.toggleAcc('acc-size', true);
+                    _applyAxisLock();
+                    _autoFullscreenIfDesktop();
                 } else {
                     APP.s_baseArtScale = Math.max(APP.canvasW / newImg.width, APP.canvasH / newImg.height);
                     newImg.scale(APP.s_baseArtScale).set({ left: APP.canvasW/2, top: APP.canvasH/2, angle:0 });
@@ -2045,6 +2091,45 @@
         if (root.classList.contains('app-fullscreen-mode')) { bd.style.display='block'; btn.innerText='EXIT FULL SCREEN'; btn.style.background='var(--danger-red)'; }
         else { bd.style.display='none'; btn.innerText='FULL SCREEN'; btn.style.background='var(--brand-hover)'; }
         setTimeout(() => window.changeSize(), 350);
+    };
+
+    function _autoFullscreenIfDesktop() {
+        if (window.innerWidth <= 900) return;
+        var root = document.getElementById('playmat-tool-root');
+        if (!root || root.classList.contains('app-fullscreen-mode')) return;
+        window.toggleFullScreen();
+    }
+
+    function _applyAxisLock() {
+        var lockX = APP.axisLock === 'y';
+        var lockY = APP.axisLock === 'x';
+        if (!window.canvas) return;
+        window.canvas.getObjects().forEach(function(obj) {
+            if (obj.name === 'art' || obj.name === 'overlay') {
+                obj.set({ lockMovementX: lockX, lockMovementY: lockY });
+            }
+        });
+        window.canvas.requestRenderAll();
+    }
+
+    window.setAxisLock = function(axis) {
+        APP.axisLock = (APP.axisLock === axis) ? null : axis;
+        document.querySelectorAll('.axis-lock-btn').forEach(function(b) {
+            var on = b.dataset.axis === APP.axisLock;
+            b.classList.toggle('active', on);
+            if (on) {
+                b.style.setProperty('background',   '#30BBAD', 'important');
+                b.style.setProperty('border-color', '#30BBAD', 'important');
+                b.style.setProperty('color',        '#0b0912', 'important');
+                b.style.setProperty('font-weight',  '800',     'important');
+            } else {
+                b.style.removeProperty('background');
+                b.style.removeProperty('border-color');
+                b.style.removeProperty('color');
+                b.style.removeProperty('font-weight');
+            }
+        });
+        _applyAxisLock();
     };
 
     window.workspaceZoom = (amt) => {
@@ -2216,7 +2301,7 @@
         } else { isAdv?window.renderLayout():window.renderSimpleLayout(); }
     };
 
-    window.setSolidBackground = (color) => { window.canvas.backgroundColor=String(color); window.canvas.renderAll(); };
+    window.setSolidBackground = (color) => { window.canvas.backgroundColor=String(color); window.canvas.renderAll(); _autoFullscreenIfDesktop(); };
     window.clearArtwork = () => { const a=window.canvas.getObjects().find(o=>o.name==='art'); if(a) { window.canvas.remove(a); window.canvas.renderAll(); window.clearAutoFrameBreak(); } };
 
     window.drawAdvGuides = function(w, h, inches) {
@@ -2238,6 +2323,8 @@
                 window.canvas.getObjects().forEach(o => { if(o.name==='art') window.canvas.remove(o); });
                 window.canvas.add(img).sendToBack(img);
                 window.clearAutoFrameBreak(); window.forceFit(); window.toggleAcc('acc-size', true);
+                _applyAxisLock();
+                _autoFullscreenIfDesktop();
                 window.updateBleedWarnings(window.canvas);
             });
         };
@@ -2420,7 +2507,7 @@
                     // CORS failed — retry without crossOrigin so preview still works
                     const fallbackImg = new Image();
                     fallbackImg.onload = () => { APP.cachedLayoutImg = fallbackImg; APP.cachedLayoutUrl = APP.activeLayoutUrl; drawFn(fallbackImg); };
-                    fallbackImg.onerror = () => { console.error('Failed to load layout image:', APP.activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "Something went wrong loading the game zone. Please try again in a few minutes.", "error"); };
+                    fallbackImg.onerror = () => { console.error('Failed to load layout image:', APP.activeLayoutUrl); window.showAppAlert("Zone Failed to Load", "Something went wrong loading the game zone. Please try again in a few minutes. If the issue persists, contact support.", "error"); };
                     fallbackImg.src = APP.activeLayoutUrl;
                     return;
                 }
@@ -2606,12 +2693,16 @@
 
         // 1. Draw art directly at print resolution
         if (art) {
-            const el   = art.getElement();
+            const el = art.getElement();
+            if (el instanceof HTMLImageElement && (!el.complete || el.naturalWidth === 0)) {
+                if (g) { g.visible = wasVisible; activeCanvas.renderAll(); }
+                throw new Error('Your artwork image failed to load. Please re-upload and try again.');
+            }
             const srcW = (el && el.naturalWidth)  || el.width  || art.width;
             const srcH = (el && el.naturalHeight) || el.height || art.height;
             const pW   = srcW * art.scaleX * scale;
             const pH   = srcH * art.scaleY * scale;
-            const pCx  = art.left * scale;   // left/top = centre point (originX/Y:'center')
+            const pCx  = art.left * scale;
             const pCy  = art.top  * scale;
             mCtx.save();
             if (art.customFilterStr) mCtx.filter = art.customFilterStr;
@@ -2624,54 +2715,104 @@
             mCtx.filter = 'none';
         }
 
-        // 2. Draw non-art objects (text, shapes) via Fabric zoom with art hidden
-        const extras = activeCanvas.getObjects().filter(o => o.name !== 'art' && o.name !== 'guides');
-        if (extras.length > 0) {
+        // 2. Draw non-art objects (text, shapes) via Fabric zoom with art + overlay hidden
+        const overlayObj = isAdv ? activeCanvas.getObjects().find(o => o.name === 'overlay') : null;
+        const extras = activeCanvas.getObjects().filter(o => o.name !== 'art' && o.name !== 'guides' && o.name !== 'overlay');
+        if (isAdv && (extras.length > 0 || overlayObj)) {
             if (art) art.visible = false;
+            if (overlayObj) overlayObj.visible = false;
+            const savedBg = activeCanvas.backgroundColor;
+            activeCanvas.backgroundColor = '';
             activeCanvas.setDimensions({width:printW,height:printH}); activeCanvas.setZoom(scale); activeCanvas.renderAll();
             mCtx.drawImage(activeCanvas.getElement(), 0, 0);
+            activeCanvas.backgroundColor = savedBg;
             activeCanvas.setDimensions({width:origW,height:origH}); activeCanvas.setZoom(origZoom);
-            if (art) { art.visible = true; activeCanvas.renderAll(); }
+            if (art) art.visible = true;
+            if (overlayObj) overlayObj.visible = true;
+            activeCanvas.renderAll();
+        } else if (!isAdv) {
+            const simpleExtras = activeCanvas.getObjects().filter(o => o.name !== 'art' && o.name !== 'guides');
+            if (simpleExtras.length > 0) {
+                if (art) art.visible = false;
+                activeCanvas.setDimensions({width:printW,height:printH}); activeCanvas.setZoom(scale); activeCanvas.renderAll();
+                mCtx.drawImage(activeCanvas.getElement(), 0, 0);
+                activeCanvas.setDimensions({width:origW,height:origH}); activeCanvas.setZoom(origZoom);
+                if (art) { art.visible = true; activeCanvas.renderAll(); }
+            }
+        }
+
+        // 3. Draw custom overlay directly at print resolution
+        if (isAdv && overlayObj) {
+            const el = overlayObj.getElement();
+            if (el) {
+                const ow = overlayObj.getScaledWidth()  * scale;
+                const oh = overlayObj.getScaledHeight() * scale;
+                const ox = overlayObj.left * scale;
+                const oy = overlayObj.top  * scale;
+                mCtx.save();
+                mCtx.globalAlpha = typeof overlayObj.opacity === 'number' ? overlayObj.opacity : 1;
+                mCtx.translate(ox, oy);
+                mCtx.rotate((overlayObj.angle || 0) * Math.PI / 180);
+                if (overlayObj.flipX) mCtx.scale(-1, 1);
+                if (overlayObj.flipY) mCtx.scale(1, -1);
+                mCtx.drawImage(el, -ow/2, -oh/2, ow, oh);
+                mCtx.restore();
+                mCtx.globalAlpha = 1;
+            }
         }
 
         // Draw layout overlay — only if the user has actively selected a layout in this session.
-        // Guard against stale cachedLayoutImg persisting from a previous session without restart.
+        // CORS guard: re-fetch with crossOrigin to prevent canvas taint on export.
         const activeUrl = isAdv ? APP.activeLayoutUrl : APP.s_activeLayoutUrl;
         if (layoutImg && activeUrl !== null && activeUrl !== undefined) {
-            const tCanvas=document.createElement('canvas'); tCanvas.width=printW; tCanvas.height=printH;
-            const tCtx=tCanvas.getContext('2d');
-            if (isRiftbound) {
-                // Clip to safe area in print pixel space.
-                // At 300dpi: safe inset = 225px (0.75" × 300).
-                // Scale factor: printW maps to the product's native canvas width.
-                const nativePrintW = Math.round(SIZE_DB[sizeSel]?.w * 300) || Math.round(24.5 * 300);
-                const ps = printW / nativePrintW;
-                const px = 225*ps, py = 225*ps, pw = 6900*ps, ph = 3900*ps;
-                tCtx.save();
-                tCtx.rect(px, py, pw, ph);
-                tCtx.clip();
-                drawRiftboundLayout(tCtx, layoutImg, printW, printH, handVal, formatVal, rbPointsVal);
-                tCtx.globalCompositeOperation='source-in';
-                const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
-                applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
-                tCtx.restore();
-            } else {
-                tCtx.drawImage(layoutImg,0,0,printW,printH);
-                tCtx.globalCompositeOperation='source-in';
-                const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
-                applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+            let safeLayoutImg = layoutImg;
+            if (layoutImg.crossOrigin !== 'anonymous') {
+                safeLayoutImg = await fetchCorsImage(activeUrl);
             }
 
-            if (isAdv && APP.erasedPaths.length>0) {
-                tCtx.globalCompositeOperation='destination-out';
-                APP.erasedPaths.forEach(path => {
-                    tCtx.lineWidth=path.size*scale; tCtx.lineCap=path.shape; tCtx.lineJoin=path.shape==='round'?'round':'miter';
-                    tCtx.beginPath(); tCtx.moveTo(path.points[0].x*scale,path.points[0].y*scale);
-                    path.points.forEach(pt=>tCtx.lineTo(pt.x*scale,pt.y*scale)); tCtx.stroke();
-                });
+            let safeRbImg = window.rbPointsImg;
+            if (isRiftbound && rbPointsVal !== 'none' && window.rbPointsImg
+                    && window.rbPointsImg.crossOrigin !== 'anonymous' && APP.activePointsUrl) {
+                safeRbImg = await fetchCorsImage(APP.activePointsUrl);
             }
-            mCtx.save(); mCtx.globalAlpha=isAdv?(document.getElementById('op-in').value||1.0):1.0;
-            mCtx.drawImage(tCanvas,0,0,printW,printH); mCtx.restore();
+
+            if (safeLayoutImg) {
+                const tCanvas=document.createElement('canvas'); tCanvas.width=printW; tCanvas.height=printH;
+                const tCtx=tCanvas.getContext('2d');
+                if (isRiftbound) {
+                    const nativePrintW = Math.round(SIZE_DB[sizeSel]?.w * 300) || Math.round(24.5 * 300);
+                    const ps = printW / nativePrintW;
+                    const px = 225*ps, py = 225*ps, pw = 6900*ps, ph = 3900*ps;
+                    tCtx.save();
+                    tCtx.rect(px, py, pw, ph);
+                    tCtx.clip();
+                    drawRiftboundLayout(tCtx, safeLayoutImg, printW, printH, handVal, formatVal, rbPointsVal, safeRbImg);
+                    if (!APP.layoutPreservesColors) {
+                        tCtx.globalCompositeOperation='source-in';
+                        const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
+                        applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+                    }
+                    tCtx.restore();
+                } else {
+                    tCtx.drawImage(safeLayoutImg,0,0,printW,printH);
+                    if (!APP.layoutPreservesColors) {
+                        tCtx.globalCompositeOperation='source-in';
+                        const fillMode = isAdv ? document.getElementById('mode-sel').value : 'solid';
+                        applyGradientOrSolidFill(tCtx, printW, printH, fillMode, layoutColor);
+                    }
+                }
+
+                if (isAdv && APP.erasedPaths.length>0) {
+                    tCtx.globalCompositeOperation='destination-out';
+                    APP.erasedPaths.forEach(path => {
+                        tCtx.lineWidth=path.size*scale; tCtx.lineCap=path.shape; tCtx.lineJoin=path.shape==='round'?'round':'miter';
+                        tCtx.beginPath(); tCtx.moveTo(path.points[0].x*scale,path.points[0].y*scale);
+                        path.points.forEach(pt=>tCtx.lineTo(pt.x*scale,pt.y*scale)); tCtx.stroke();
+                    });
+                }
+                mCtx.save(); mCtx.globalAlpha=isAdv?(document.getElementById('op-in').value||1.0):1.0;
+                mCtx.drawImage(tCanvas,0,0,printW,printH); mCtx.restore();
+            }
         }
 
         // Draw recolor layer
