@@ -1177,6 +1177,8 @@
             reader.readAsDataURL(fileOrUrl);
         }
     };
+
+    window.workspaceZoom = (amt) => {
         if (amt === 0) APP.currentZoom = 1; else APP.currentZoom += amt;
         APP.currentZoom = Math.max(0.5, Math.min(APP.currentZoom, 3));
         document.getElementById('canvas-wrapper').style.transform = `scale(${APP.currentZoom})`;
