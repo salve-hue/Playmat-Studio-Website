@@ -1885,11 +1885,38 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					var objs = window.canvas.getObjects()
 						.filter(function(o) { return o.name !== 'guides'; })
 						.slice().reverse();
-					if (objs.length === 0) {
+					var hasGameLayout = window.APP && window.APP.activeLayoutUrl != null;
+					if (objs.length === 0 && !hasGameLayout) {
 						list.innerHTML = '<p class="layer-empty">No layers yet.</p>';
 						return;
 					}
 					list.innerHTML = '';
+
+					// Synthetic row for the game layout (drawn on layout-canvas, not a Fabric object)
+					if (hasGameLayout) {
+						var lCanvas = document.getElementById('layout-canvas');
+						var glVis = !lCanvas || lCanvas.style.display !== 'none';
+						var synRow = document.createElement('div');
+						synRow.className = 'layer-row';
+						synRow.innerHTML =
+							'<span class="layer-drag-handle" style="opacity:0.3;cursor:default;">⠿</span>' +
+							'<span class="layer-icon">🃏</span>' +
+							'<span class="layer-name">Game Layout</span>' +
+							'<button class="layer-vis-btn" title="' + (glVis ? 'Hide' : 'Show') + '">' + (glVis ? '👁' : '🚫') + '</button>' +
+							'<button class="layer-del-btn" title="Remove">✕</button>';
+						synRow.querySelector('.layer-vis-btn').addEventListener('click', function(e) {
+							e.stopPropagation();
+							if (lCanvas) lCanvas.style.display = lCanvas.style.display === 'none' ? '' : 'none';
+							window.refreshLayerPanel();
+						});
+						synRow.querySelector('.layer-del-btn').addEventListener('click', function(e) {
+							e.stopPropagation();
+							var gameSel = document.getElementById('game-sel');
+							if (gameSel) { gameSel.value = ''; gameSel.dispatchEvent(new Event('change')); }
+						});
+						list.appendChild(synRow);
+					}
+
 					var active = window.canvas.getActiveObject();
 					objs.forEach(function(obj) {
 						var row = document.createElement('div');
@@ -1976,6 +2003,16 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 						setTimeout(window.refreshLayerPanel, 50);
 					});
 				}
+
+				// Patch renderLayout so the layer panel updates whenever a game layout is applied/cleared
+				(function patchRenderLayout() {
+					if (!window.renderLayout) { setTimeout(patchRenderLayout, 200); return; }
+					var _origRL = window.renderLayout;
+					window.renderLayout = function() {
+						_origRL.apply(this, arguments);
+						if (typeof window.refreshLayerPanel === 'function') window.refreshLayerPanel();
+					};
+				})();
 
 				// ── Landing drag-drop zone ───────────────────────────────────
 				var dropZone = document.getElementById('landing-drop-zone');
