@@ -1669,7 +1669,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=29"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=30"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────
@@ -1958,15 +1958,24 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					});
 				};
 
-				// Sync layer panel when canvas objects change
-				setTimeout(function() {
-					if (!window.canvas) return;
-					window.canvas.on('object:added',   window.refreshLayerPanel);
-					window.canvas.on('object:removed', window.refreshLayerPanel);
+				// Sync layer panel when canvas objects change.
+				// Retry until window.canvas is ready (initCanvas runs async after load).
+				(function wireLayerEvents() {
+					if (!window.canvas) { setTimeout(wireLayerEvents, 200); return; }
+					window.canvas.on('object:added',      window.refreshLayerPanel);
+					window.canvas.on('object:removed',    window.refreshLayerPanel);
 					window.canvas.on('selection:created', window.refreshLayerPanel);
-					window.canvas.on('selection:cleared',  window.refreshLayerPanel);
+					window.canvas.on('selection:cleared', window.refreshLayerPanel);
 					window.refreshLayerPanel();
-				}, 800);
+				})();
+
+				// Also refresh when the user opens the Layers accordion
+				var accLayersBtn = document.querySelector('[data-acc="acc-layers"]');
+				if (accLayersBtn) {
+					accLayersBtn.addEventListener('click', function() {
+						setTimeout(window.refreshLayerPanel, 50);
+					});
+				}
 
 				// ── Landing drag-drop zone ───────────────────────────────────
 				var dropZone = document.getElementById('landing-drop-zone');

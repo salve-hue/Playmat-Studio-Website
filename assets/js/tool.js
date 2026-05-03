@@ -1141,6 +1141,7 @@
         }
         obj.setCoords();
         window.canvas.requestRenderAll();
+        if (typeof window.updateBleedWarnings === 'function') window.updateBleedWarnings(window.canvas);
     };
 
     window.addCustomImage = function(fileOrUrl) {
