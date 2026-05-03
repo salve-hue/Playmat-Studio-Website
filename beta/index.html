@@ -1718,12 +1718,14 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					return;
 				}
 
-				// Step 1 → 2: reveal upload bar when a size is chosen
+				// Step 1 → 2: reveal upload bar and drop zone when a size is chosen
 				var _origSelect = window.selectMatSize;
 				window.selectMatSize = function(sizeKey, btn) {
 					_origSelect(sizeKey, btn);
 					var bar = document.getElementById('landing-upload-bar');
 					bar.classList.add('visible');
+					var dz = document.getElementById('landing-drop-zone');
+					if (dz) dz.classList.add('dz-ready');
 					setTimeout(function() {
 						bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 					}, 80);
@@ -1968,14 +1970,6 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 				// ── Landing drag-drop zone ───────────────────────────────────
 				var dropZone = document.getElementById('landing-drop-zone');
-				// Show drop zone alongside upload bar after mat size selected
-				var _origSelectForDrop = window.selectMatSize;
-				if (typeof _origSelectForDrop === 'function') {
-					window.selectMatSize = function(sizeKey, btn) {
-						_origSelectForDrop(sizeKey, btn);
-						if (dropZone) dropZone.classList.add('dz-ready');
-					};
-				}
 				if (dropZone) {
 					dropZone.addEventListener('dragover', function(e) {
 						e.preventDefault();
