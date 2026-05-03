@@ -1913,12 +1913,15 @@
             if (overlayObj) overlayObj.visible = false;
             const savedBg = activeCanvas.backgroundColor;
             activeCanvas.backgroundColor = '';
+            const savedActiveObj = activeCanvas.getActiveObject();
+            if (savedActiveObj) activeCanvas.discardActiveObject();
             activeCanvas.setDimensions({width:printW,height:printH}); activeCanvas.setZoom(scale); activeCanvas.renderAll();
             mCtx.drawImage(activeCanvas.getElement(), 0, 0);
             activeCanvas.backgroundColor = savedBg;
             activeCanvas.setDimensions({width:origW,height:origH}); activeCanvas.setZoom(origZoom);
             if (art) art.visible = true;
             if (overlayObj) overlayObj.visible = true;
+            if (savedActiveObj) activeCanvas.setActiveObject(savedActiveObj);
             activeCanvas.renderAll();
         }
 
