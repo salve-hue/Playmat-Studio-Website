@@ -262,7 +262,7 @@
 				font-size: var(--fs-lg);
 				font-weight: 600;
 				color: rgba(255,255,255,0.7);
-				margin: 32px 0 28px;
+				margin: 52px 0 28px;
 				letter-spacing: -0.5px;
 				text-align: center;
 				font-family: 'Plus Jakarta Sans', sans-serif;
@@ -353,22 +353,24 @@
 			.size-group--deskmat .mat-size-btn:hover .msb-icon rect { stroke: rgba(196,149,42,0.7); }
 
 			/* ── Upload bar: step 2, fades in after size selected ───────── */
-			#landing-upload-bar {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 12px;
-				justify-content: center;
-				margin-top: 28px;
+			/* ── Upload swap overlay ────────────────────────────────────── */
+			#landing-swap-zone {
+				position: relative;
 				width: 100%;
-				max-width: 560px;
-				opacity: 0;
-				transform: translateY(10px);
-				transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
-				pointer-events: none;
 			}
-			#landing-upload-bar.visible {
+			#landing-upload-section {
+				position: absolute;
+				inset: 0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.4s ease;
+			}
+			#landing-upload-section.upload-visible {
 				opacity: 1;
-				transform: translateY(0);
 				pointer-events: auto;
 			}
 			@keyframes uploadBtnGlow {
@@ -376,10 +378,33 @@
 				60%  { box-shadow: 0 0 0 8px rgba(48,187,173,0); }
 				100% { box-shadow: 0 0 0 0 rgba(48,187,173,0); }
 			}
-			#landing-upload-bar.visible .action-btn {
-				animation: uploadBtnGlow 1.1s ease-out 0.55s 2;
+			#landing-upload-section.upload-visible .action-btn {
+				animation: uploadBtnGlow 1.1s ease-out 0.4s 2;
+			}
+			#landing-upload-bar {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				justify-content: center;
+				width: 100%;
+				max-width: 560px;
+				margin-bottom: 14px;
 			}
 			#landing-upload-bar .action-btn { flex: 1; margin: 0; }
+			#landing-back-btn {
+				margin-top: 16px;
+				background: none;
+				border: none;
+				color: rgba(255,255,255,0.35);
+				font-size: 12px;
+				font-family: 'Plus Jakarta Sans', sans-serif;
+				cursor: pointer;
+				padding: 4px 8px;
+				border-radius: 4px;
+				transition: color 0.2s;
+				letter-spacing: 0.3px;
+			}
+			#landing-back-btn:hover { color: rgba(255,255,255,0.75); }
 
 			/* ── Editor layout (behind the overlay) ─────────────────────── */
 			#landing-ui { display: flex; flex-direction: column; align-items: center; }
@@ -400,8 +425,6 @@
 			}
 			/* ── Landing drag-drop zone ─────────────────────────────────── */
 			#landing-drop-zone {
-				display: none;
-				margin-top: 14px;
 				width: 100%;
 				max-width: 560px;
 				border: 2px dashed rgba(255,255,255,0.18);
@@ -413,15 +436,7 @@
 				font-family: 'Plus Jakarta Sans', sans-serif;
 				cursor: default;
 				box-sizing: border-box;
-				opacity: 0;
-				transform: translateY(8px);
-				transition: opacity 0.4s ease 0.35s, transform 0.4s ease 0.35s,
-				            border-color 0.2s, background 0.2s, color 0.2s;
-			}
-			#landing-drop-zone.dz-ready { display: block; }
-			#landing-drop-zone.dz-ready.dz-visible {
-				opacity: 1;
-				transform: translateY(0);
+				transition: border-color 0.2s, background 0.2s, color 0.2s;
 			}
 			#landing-drop-zone.dz-over {
 				border-color: var(--brand-hover);
@@ -437,9 +452,6 @@
 				opacity: 0;
 				transform: translateY(-10px);
 				pointer-events: none;
-			}
-			#beta-landing .size-selector-wrap.size-sel-gone {
-				display: none;
 			}
 
 			/* ── Layers panel ────────────────────────────────────────────── */
@@ -940,6 +952,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				<div id="beta-landing-inner">
 					<p id="beta-landing-heading">Choose your mat size to get started</p>
 
+					<div id="landing-swap-zone">
 					<div class="size-selector-wrap">
 
 						<div class="size-group size-group--playmat">
@@ -1001,12 +1014,17 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					</div><!-- /.size-selector-wrap -->
 
-					<div id="landing-upload-bar">
-						<button class="action-btn" id="landing-upload-btn">&#128193; Upload File</button>
-						<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; Paste URL</button>
-						<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; Solid Color</button>
+					<div id="landing-upload-section">
+						<div id="landing-upload-bar">
+							<button class="action-btn" id="landing-upload-btn">&#128193; Upload File</button>
+							<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; Paste URL</button>
+							<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; Solid Color</button>
+						</div>
+						<div id="landing-drop-zone">&#128229; or drag &amp; drop an image here</div>
+						<button id="landing-back-btn">&#8592; Change Size</button>
 					</div>
-					<div id="landing-drop-zone">&#128229; or drag &amp; drop an image here</div>
+
+					</div><!-- /#landing-swap-zone -->
 					<p id="beta-landing-tagline">Your Playmat Starts Here.</p>
 				</div><!-- /#beta-landing-inner -->
 				<footer id="beta-landing-footer">&#169; 2026 Playmat Studio &nbsp;&middot;&nbsp; <a href="#" id="footer-changelog-link" style="color:inherit; opacity:0.7; text-decoration:none; border-bottom:1px solid currentColor; padding-bottom:1px;">What's New</a></footer>
@@ -1738,39 +1756,16 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					return;
 				}
 
-				// Step 1 → 2: swap size selector for upload options with a crossfade
+				// Step 1 → 2: fade size grid out; upload section overlays the same space
 				var _origSelect = window.selectMatSize;
 				window.selectMatSize = function(sizeKey, btn) {
 					_origSelect(sizeKey, btn);
-
-					// Fade the size grid out
 					var sizeWrap = document.querySelector('#beta-landing .size-selector-wrap');
-					if (sizeWrap) {
-						sizeWrap.classList.add('size-sel-exit');
-						setTimeout(function() {
-							sizeWrap.classList.add('size-sel-gone');
-							// Upload bar fades in where the grid was (has its own 0.15s delay)
-							var bar = document.getElementById('landing-upload-bar');
-							bar.classList.add('visible');
-							// Drop zone fades in after buttons (has its own 0.35s delay)
-							var dz = document.getElementById('landing-drop-zone');
-							if (dz) {
-								dz.classList.add('dz-ready');
-								void dz.offsetWidth; // force reflow so transition fires
-								dz.classList.add('dz-visible');
-							}
-						}, 300);
-					} else {
-						// Fallback if selector not found
-						var bar = document.getElementById('landing-upload-bar');
-						bar.classList.add('visible');
-						var dz = document.getElementById('landing-drop-zone');
-						if (dz) {
-							dz.classList.add('dz-ready');
-							void dz.offsetWidth;
-							dz.classList.add('dz-visible');
-						}
-					}
+					if (sizeWrap) sizeWrap.classList.add('size-sel-exit');
+					setTimeout(function() {
+						var sec = document.getElementById('landing-upload-section');
+						if (sec) sec.classList.add('upload-visible');
+					}, 280);
 				};
 
 				// Step 2 → 3: enter the editor.
@@ -1836,6 +1831,20 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 							if (picker) picker.click();
 						}, 400);
 					}, 100);
+				});
+			}
+
+			// ── Back / Change Size button ────────────────────────────────
+			var landingBackBtn = document.getElementById('landing-back-btn');
+			if (landingBackBtn) {
+				landingBackBtn.addEventListener('click', function() {
+					var sec = document.getElementById('landing-upload-section');
+					var sizeWrap = document.querySelector('#beta-landing .size-selector-wrap');
+					if (sec) sec.classList.remove('upload-visible');
+					// Stagger the size grid return so it waits for upload section to fade
+					setTimeout(function() {
+						if (sizeWrap) sizeWrap.classList.remove('size-sel-exit');
+					}, 150);
 				});
 			}
 
