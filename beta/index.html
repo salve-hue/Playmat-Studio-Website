@@ -363,7 +363,7 @@
 				max-width: 560px;
 				opacity: 0;
 				transform: translateY(10px);
-				transition: opacity 0.4s ease, transform 0.4s ease;
+				transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
 				pointer-events: none;
 			}
 			#landing-upload-bar.visible {
@@ -377,7 +377,7 @@
 				100% { box-shadow: 0 0 0 0 rgba(48,187,173,0); }
 			}
 			#landing-upload-bar.visible .action-btn {
-				animation: uploadBtnGlow 1.1s ease-out 0.45s 2;
+				animation: uploadBtnGlow 1.1s ease-out 0.55s 2;
 			}
 			#landing-upload-bar .action-btn { flex: 1; margin: 0; }
 
@@ -411,15 +411,35 @@
 				color: rgba(255,255,255,0.4);
 				font-size: 13px;
 				font-family: 'Plus Jakarta Sans', sans-serif;
-				transition: border-color 0.2s, background 0.2s, color 0.2s;
 				cursor: default;
 				box-sizing: border-box;
+				opacity: 0;
+				transform: translateY(8px);
+				transition: opacity 0.4s ease 0.35s, transform 0.4s ease 0.35s,
+				            border-color 0.2s, background 0.2s, color 0.2s;
 			}
 			#landing-drop-zone.dz-ready { display: block; }
+			#landing-drop-zone.dz-ready.dz-visible {
+				opacity: 1;
+				transform: translateY(0);
+			}
 			#landing-drop-zone.dz-over {
 				border-color: var(--brand-hover);
 				background: rgba(48,187,173,0.07);
 				color: var(--brand-hover);
+			}
+
+			/* ── Size selector swap animation ───────────────────────────── */
+			#beta-landing .size-selector-wrap {
+				transition: opacity 0.3s ease, transform 0.3s ease;
+			}
+			#beta-landing .size-selector-wrap.size-sel-exit {
+				opacity: 0;
+				transform: translateY(-10px);
+				pointer-events: none;
+			}
+			#beta-landing .size-selector-wrap.size-sel-gone {
+				display: none;
 			}
 
 			/* ── Layers panel ────────────────────────────────────────────── */
@@ -1718,17 +1738,39 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					return;
 				}
 
-				// Step 1 → 2: reveal upload bar and drop zone when a size is chosen
+				// Step 1 → 2: swap size selector for upload options with a crossfade
 				var _origSelect = window.selectMatSize;
 				window.selectMatSize = function(sizeKey, btn) {
 					_origSelect(sizeKey, btn);
-					var bar = document.getElementById('landing-upload-bar');
-					bar.classList.add('visible');
-					var dz = document.getElementById('landing-drop-zone');
-					if (dz) dz.classList.add('dz-ready');
-					setTimeout(function() {
-						bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-					}, 80);
+
+					// Fade the size grid out
+					var sizeWrap = document.querySelector('#beta-landing .size-selector-wrap');
+					if (sizeWrap) {
+						sizeWrap.classList.add('size-sel-exit');
+						setTimeout(function() {
+							sizeWrap.classList.add('size-sel-gone');
+							// Upload bar fades in where the grid was (has its own 0.15s delay)
+							var bar = document.getElementById('landing-upload-bar');
+							bar.classList.add('visible');
+							// Drop zone fades in after buttons (has its own 0.35s delay)
+							var dz = document.getElementById('landing-drop-zone');
+							if (dz) {
+								dz.classList.add('dz-ready');
+								void dz.offsetWidth; // force reflow so transition fires
+								dz.classList.add('dz-visible');
+							}
+						}, 300);
+					} else {
+						// Fallback if selector not found
+						var bar = document.getElementById('landing-upload-bar');
+						bar.classList.add('visible');
+						var dz = document.getElementById('landing-drop-zone');
+						if (dz) {
+							dz.classList.add('dz-ready');
+							void dz.offsetWidth;
+							dz.classList.add('dz-visible');
+						}
+					}
 				};
 
 				// Step 2 → 3: enter the editor.
