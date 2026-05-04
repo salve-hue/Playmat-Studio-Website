@@ -262,7 +262,7 @@
 				font-size: var(--fs-lg);
 				font-weight: 600;
 				color: rgba(255,255,255,0.7);
-				margin: 32px 0 28px;
+				margin: 52px 0 28px;
 				letter-spacing: -0.5px;
 				text-align: center;
 				font-family: 'Plus Jakarta Sans', sans-serif;
@@ -353,22 +353,24 @@
 			.size-group--deskmat .mat-size-btn:hover .msb-icon rect { stroke: rgba(196,149,42,0.7); }
 
 			/* ── Upload bar: step 2, fades in after size selected ───────── */
-			#landing-upload-bar {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 12px;
-				justify-content: center;
-				margin-top: 28px;
+			/* ── Upload swap overlay ────────────────────────────────────── */
+			#landing-swap-zone {
+				position: relative;
 				width: 100%;
-				max-width: 560px;
-				opacity: 0;
-				transform: translateY(10px);
-				transition: opacity 0.4s ease, transform 0.4s ease;
-				pointer-events: none;
 			}
-			#landing-upload-bar.visible {
+			#landing-upload-section {
+				position: absolute;
+				inset: 0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.4s ease;
+			}
+			#landing-upload-section.upload-visible {
 				opacity: 1;
-				transform: translateY(0);
 				pointer-events: auto;
 			}
 			@keyframes uploadBtnGlow {
@@ -376,10 +378,37 @@
 				60%  { box-shadow: 0 0 0 8px rgba(48,187,173,0); }
 				100% { box-shadow: 0 0 0 0 rgba(48,187,173,0); }
 			}
-			#landing-upload-bar.visible .action-btn {
-				animation: uploadBtnGlow 1.1s ease-out 0.45s 2;
+			#landing-upload-section.upload-visible .action-btn {
+				animation: uploadBtnGlow 1.1s ease-out 0.4s 2;
+			}
+			#landing-upload-bar {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				justify-content: center;
+				width: 100%;
+				max-width: 560px;
+				margin-bottom: 14px;
 			}
 			#landing-upload-bar .action-btn { flex: 1; margin: 0; }
+			#landing-back-btn {
+				margin-top: 20px;
+				background: rgba(255,255,255,0.07);
+				border: 1px solid rgba(255,255,255,0.18);
+				color: rgba(255,255,255,0.65);
+				font-size: 13px;
+				font-family: 'Plus Jakarta Sans', sans-serif;
+				cursor: pointer;
+				padding: 8px 18px;
+				border-radius: 6px;
+				transition: background 0.2s, border-color 0.2s, color 0.2s;
+				letter-spacing: 0.3px;
+			}
+			#landing-back-btn:hover {
+				background: rgba(255,255,255,0.13);
+				border-color: rgba(255,255,255,0.35);
+				color: #fff;
+			}
 
 			/* ── Editor layout (behind the overlay) ─────────────────────── */
 			#landing-ui { display: flex; flex-direction: column; align-items: center; }
@@ -398,6 +427,65 @@
 				border-color: rgba(255,255,255,0.25) !important;
 				color: #fff !important;
 			}
+			/* ── Landing drag-drop zone ─────────────────────────────────── */
+			#landing-drop-zone {
+				width: 100%;
+				max-width: 560px;
+				border: 2px dashed rgba(255,255,255,0.18);
+				border-radius: 10px;
+				padding: 18px 20px;
+				text-align: center;
+				color: rgba(255,255,255,0.4);
+				font-size: 13px;
+				font-family: 'Plus Jakarta Sans', sans-serif;
+				cursor: default;
+				box-sizing: border-box;
+				transition: border-color 0.2s, background 0.2s, color 0.2s;
+			}
+			#landing-drop-zone.dz-over {
+				border-color: var(--brand-hover);
+				background: rgba(48,187,173,0.07);
+				color: var(--brand-hover);
+			}
+
+			/* ── Size selector swap animation ───────────────────────────── */
+			#beta-landing .size-selector-wrap {
+				transition: opacity 0.3s ease, transform 0.3s ease;
+			}
+			#beta-landing .size-selector-wrap.size-sel-exit {
+				opacity: 0;
+				transform: translateY(-10px);
+				pointer-events: none;
+			}
+
+			/* ── Layers panel ────────────────────────────────────────────── */
+			.layer-row {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 7px 10px;
+				border-radius: 6px;
+				background: rgba(255,255,255,0.04);
+				border: 1px solid rgba(255,255,255,0.07);
+				margin-bottom: 5px;
+				cursor: pointer;
+				user-select: none;
+				transition: background 0.15s;
+			}
+			.layer-row:hover { background: rgba(255,255,255,0.08); }
+			.layer-row.layer-row-active { border-color: var(--brand-hover); background: rgba(48,187,173,0.08); }
+			.layer-row.layer-drag-over { border-color: var(--brand-hover); border-style: dashed; }
+			.layer-drag-handle { color: rgba(255,255,255,0.3); font-size: 16px; cursor: grab; flex-shrink: 0; }
+			.layer-icon { font-size: 14px; flex-shrink: 0; }
+			.layer-name { flex: 1; font-size: 12px; color: var(--brand-text-pri); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+			.layer-vis-btn, .layer-del-btn {
+				background: none; border: none; cursor: pointer; padding: 2px 4px;
+				font-size: 13px; opacity: 0.6; transition: opacity 0.15s; flex-shrink: 0;
+				line-height: 1;
+			}
+			.layer-vis-btn:hover, .layer-del-btn:hover { opacity: 1; }
+			.layer-empty { color: rgba(255,255,255,0.3); font-size: 11px; text-align: center; padding: 16px 0; }
+
 			/* ── Info bar: static footer of the tool, never moves with canvas ── */
 			#adv-info-bar {
 				flex-shrink: 0 !important;
@@ -868,6 +956,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				<div id="beta-landing-inner">
 					<p id="beta-landing-heading">Choose your mat size to get started</p>
 
+					<div id="landing-swap-zone">
 					<div class="size-selector-wrap">
 
 						<div class="size-group size-group--playmat">
@@ -929,11 +1018,17 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 					</div><!-- /.size-selector-wrap -->
 
-					<div id="landing-upload-bar">
-						<button class="action-btn" id="landing-upload-btn">&#128193; Upload File</button>
-						<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; Paste URL</button>
-						<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; Solid Color</button>
+					<div id="landing-upload-section">
+						<div id="landing-upload-bar">
+							<button class="action-btn" id="landing-upload-btn">&#128193; Upload File</button>
+							<button class="action-btn btn-secondary" id="landing-url-btn">&#128279; Paste URL</button>
+							<button class="action-btn btn-secondary" id="landing-color-btn">&#127912; Solid Color</button>
+						</div>
+						<div id="landing-drop-zone">&#128229; or drag &amp; drop an image here</div>
+						<button id="landing-back-btn">&#8592; Change Size</button>
 					</div>
+
+					</div><!-- /#landing-swap-zone -->
 					<p id="beta-landing-tagline">Your Playmat Starts Here.</p>
 				</div><!-- /#beta-landing-inner -->
 				<footer id="beta-landing-footer">&#169; 2026 Playmat Studio &nbsp;&middot;&nbsp; <a href="#" id="footer-changelog-link" style="color:inherit; opacity:0.7; text-decoration:none; border-bottom:1px solid currentColor; padding-bottom:1px;">What's New</a></footer>
@@ -1240,6 +1335,18 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					                            <button class="action-btn btn-secondary axis-lock-btn" data-axis="y" style="flex:1; margin:0;" onclick="window.setAxisLock('y')">Lock Y</button>
 					                        </div>
 					                    </div>
+
+					                    <div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px;">
+					                        <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Align to Canvas</label>
+					                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+					                            <button class="action-btn btn-secondary" style="margin:0; padding:7px 4px; font-size:12px;" title="Align left" onclick="window.alignObject('left')">&#8676; Left</button>
+					                            <button class="action-btn btn-secondary" style="margin:0; padding:7px 4px; font-size:12px;" title="Center horizontally" onclick="window.alignObject('center-h')">&#8596; Center</button>
+					                            <button class="action-btn btn-secondary" style="margin:0; padding:7px 4px; font-size:12px;" title="Align right" onclick="window.alignObject('right')">Right &#8677;</button>
+					                            <button class="action-btn btn-secondary" style="margin:0; padding:7px 4px; font-size:12px;" title="Align top" onclick="window.alignObject('top')">&#8673; Top</button>
+					                            <button class="action-btn btn-secondary" style="margin:0; padding:7px 4px; font-size:12px;" title="Center vertically" onclick="window.alignObject('middle-v')">&#8597; Middle</button>
+					                            <button class="action-btn btn-secondary" style="margin:0; padding:7px 4px; font-size:12px;" title="Align bottom" onclick="window.alignObject('bottom')">&#8675; Bottom</button>
+					                        </div>
+					                    </div>
 					                </div>
 
 					                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
@@ -1525,6 +1632,22 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					            </div>
 
 					            <div class="acc-card">
+					            <button class="acc-btn" data-acc="acc-layers">Layers &amp; Images <span>▼</span></button>
+					            <div id="acc-layers" class="acc-content">
+					                <div style="margin-bottom:12px;">
+					                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Add Custom Image</label>
+					                    <p style="font-size:11px; color:var(--brand-text-sec); margin:0 0 10px; line-height:1.5;">Upload logos, QR codes, or any other image to place freely on your mat.</p>
+					                    <button class="action-btn btn-secondary" id="custom-img-btn" style="margin:0;">&#128228; Upload Custom Image</button>
+					                    <input type="file" id="custom-img-input" accept="image/*" style="display:none;">
+					                </div>
+					                <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+					                    <label style="font-size:11px; color:var(--brand-text-sec); display:block; margin-bottom:8px; font-weight:bold; text-transform:uppercase;">Layer Order <span style="font-weight:normal; text-transform:none;">(drag to reorder)</span></label>
+					                    <div id="layer-list"><p class="layer-empty">No layers yet.</p></div>
+					                </div>
+					            </div>
+					            </div>
+
+					            <div class="acc-card">
 					            <button class="acc-btn" data-acc="acc-export">Export <span>▼</span></button>
 					            <div id="acc-export" class="acc-content">
 					                <div class="action-row-3" style="margin-top:10px;">
@@ -1588,7 +1711,7 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 
 		</div>
 
-		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=28"></script>
+		<script data-cfasync="false" src="https://playmatstudio.com/assets/js/tool.js?v=31"></script>
 		<script data-cfasync="false">
 		(function() {
 			// ── Ensure tool initializes in the background ────────────────
@@ -1637,15 +1760,16 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 					return;
 				}
 
-				// Step 1 → 2: reveal upload bar when a size is chosen
+				// Step 1 → 2: fade size grid out; upload section overlays the same space
 				var _origSelect = window.selectMatSize;
 				window.selectMatSize = function(sizeKey, btn) {
 					_origSelect(sizeKey, btn);
-					var bar = document.getElementById('landing-upload-bar');
-					bar.classList.add('visible');
+					var sizeWrap = document.querySelector('#beta-landing .size-selector-wrap');
+					if (sizeWrap) sizeWrap.classList.add('size-sel-exit');
 					setTimeout(function() {
-						bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-					}, 80);
+						var sec = document.getElementById('landing-upload-section');
+						if (sec) sec.classList.add('upload-visible');
+					}, 280);
 				};
 
 				// Step 2 → 3: enter the editor.
@@ -1714,6 +1838,20 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				});
 			}
 
+			// ── Back / Change Size button ────────────────────────────────
+			var landingBackBtn = document.getElementById('landing-back-btn');
+			if (landingBackBtn) {
+				landingBackBtn.addEventListener('click', function() {
+					var sec = document.getElementById('landing-upload-section');
+					var sizeWrap = document.querySelector('#beta-landing .size-selector-wrap');
+					if (sec) sec.classList.remove('upload-visible');
+					// Stagger the size grid return so it waits for upload section to fade
+					setTimeout(function() {
+						if (sizeWrap) sizeWrap.classList.remove('size-sel-exit');
+					}, 150);
+				});
+			}
+
 			// ── Size button tooltips (2-second hover delay) ──────────────
 			(function() {
 				var tip = document.getElementById('mat-tooltip');
@@ -1776,6 +1914,189 @@ STUDIO"  d="m532.2 1259.3l128.8-57.7 191.8 45-26.5 144.1q-31.9 15.1-59.9 31.5-28
 				setTimeout(function() {
 					if (typeof window.toggleAcc === 'function') window.toggleAcc('acc-size', true);
 				}, 500);
+
+				// ── Custom image upload ──────────────────────────────────────
+				var customImgBtn   = document.getElementById('custom-img-btn');
+				var customImgInput = document.getElementById('custom-img-input');
+				if (customImgBtn && customImgInput) {
+					customImgBtn.addEventListener('click', function() { customImgInput.click(); });
+					customImgInput.addEventListener('change', function() {
+						var file = this.files[0];
+						if (file && typeof window.addCustomImage === 'function') {
+							window.addCustomImage(file);
+							this.value = '';
+						}
+					});
+				}
+
+				// ── Layer panel ──────────────────────────────────────────────
+				var LAYER_LABELS = { art: 'Artwork', overlay: 'Game Layout', custom: 'Custom Image' };
+				var LAYER_ICONS  = { art: '🖼', overlay: '🃏', custom: '⭐' };
+				var _dragSrcRow  = null;
+
+				window.refreshLayerPanel = function() {
+					var list = document.getElementById('layer-list');
+					if (!list || !window.canvas) return;
+					var objs = window.canvas.getObjects()
+						.filter(function(o) { return o.name !== 'guides'; })
+						.slice().reverse();
+					var hasGameLayout = window.APP && window.APP.activeLayoutUrl != null;
+					if (objs.length === 0 && !hasGameLayout) {
+						list.innerHTML = '<p class="layer-empty">No layers yet.</p>';
+						return;
+					}
+					list.innerHTML = '';
+
+					// Synthetic row for the game layout (drawn on layout-canvas, not a Fabric object)
+					if (hasGameLayout) {
+						var lCanvas = document.getElementById('layout-canvas');
+						var glVis = !lCanvas || lCanvas.style.display !== 'none';
+						var synRow = document.createElement('div');
+						synRow.className = 'layer-row';
+						synRow.innerHTML =
+							'<span class="layer-drag-handle" style="opacity:0.3;cursor:default;">⠿</span>' +
+							'<span class="layer-icon">🃏</span>' +
+							'<span class="layer-name">Game Layout</span>' +
+							'<button class="layer-vis-btn" title="' + (glVis ? 'Hide' : 'Show') + '">' + (glVis ? '👁' : '🚫') + '</button>' +
+							'<button class="layer-del-btn" title="Remove">✕</button>';
+						synRow.querySelector('.layer-vis-btn').addEventListener('click', function(e) {
+							e.stopPropagation();
+							if (lCanvas) lCanvas.style.display = lCanvas.style.display === 'none' ? '' : 'none';
+							window.refreshLayerPanel();
+						});
+						synRow.querySelector('.layer-del-btn').addEventListener('click', function(e) {
+							e.stopPropagation();
+							var gameSel = document.getElementById('game-sel');
+							if (gameSel) { gameSel.value = ''; gameSel.dispatchEvent(new Event('change')); }
+						});
+						list.appendChild(synRow);
+					}
+
+					var active = window.canvas.getActiveObject();
+					objs.forEach(function(obj) {
+						var row = document.createElement('div');
+						row.className = 'layer-row' + (obj === active ? ' layer-row-active' : '');
+						row.draggable = true;
+						row._fabObj = obj;
+						var label = obj.layerName || LAYER_LABELS[obj.name] || 'Layer';
+						var icon  = LAYER_ICONS[obj.name] || '📄';
+						var vis   = obj.visible !== false;
+						row.innerHTML =
+							'<span class="layer-drag-handle">⠿</span>' +
+							'<span class="layer-icon">' + icon + '</span>' +
+							'<span class="layer-name">' + label + '</span>' +
+							'<button class="layer-vis-btn" title="' + (vis ? 'Hide' : 'Show') + '">' + (vis ? '👁' : '🚫') + '</button>' +
+							'<button class="layer-del-btn" title="Delete">✕</button>';
+
+						row.addEventListener('click', function(e) {
+							if (e.target.classList.contains('layer-vis-btn') || e.target.classList.contains('layer-del-btn')) return;
+							window.canvas.setActiveObject(obj);
+							window.canvas.requestRenderAll();
+							window.refreshLayerPanel();
+						});
+						row.querySelector('.layer-vis-btn').addEventListener('click', function(e) {
+							e.stopPropagation();
+							obj.set('visible', !obj.visible);
+							window.canvas.requestRenderAll();
+							window.refreshLayerPanel();
+						});
+						row.querySelector('.layer-del-btn').addEventListener('click', function(e) {
+							e.stopPropagation();
+							window.canvas.remove(obj);
+							window.canvas.requestRenderAll();
+							window.refreshLayerPanel();
+						});
+
+						// Drag-to-reorder
+						row.addEventListener('dragstart', function(e) {
+							_dragSrcRow = row;
+							e.dataTransfer.effectAllowed = 'move';
+							setTimeout(function() { row.style.opacity = '0.4'; }, 0);
+						});
+						row.addEventListener('dragend', function() {
+							row.style.opacity = '';
+							list.querySelectorAll('.layer-drag-over').forEach(function(r) { r.classList.remove('layer-drag-over'); });
+						});
+						row.addEventListener('dragover', function(e) {
+							e.preventDefault();
+							if (row !== _dragSrcRow) row.classList.add('layer-drag-over');
+						});
+						row.addEventListener('dragleave', function() { row.classList.remove('layer-drag-over'); });
+						row.addEventListener('drop', function(e) {
+							e.preventDefault();
+							row.classList.remove('layer-drag-over');
+							if (!_dragSrcRow || _dragSrcRow === row) return;
+							var srcObj = _dragSrcRow._fabObj;
+							var dstObj = row._fabObj;
+							var allObjs = window.canvas.getObjects();
+							window.canvas.moveTo(srcObj, allObjs.indexOf(dstObj));
+							var guides = window.canvas.getObjects().find(function(o) { return o.name === 'guides'; });
+							if (guides) window.canvas.bringToFront(guides);
+							window.canvas.requestRenderAll();
+							window.refreshLayerPanel();
+						});
+
+						list.appendChild(row);
+					});
+				};
+
+				// Sync layer panel when canvas objects change.
+				// Retry until window.canvas is ready (initCanvas runs async after load).
+				(function wireLayerEvents() {
+					if (!window.canvas) { setTimeout(wireLayerEvents, 200); return; }
+					window.canvas.on('object:added',      window.refreshLayerPanel);
+					window.canvas.on('object:removed',    window.refreshLayerPanel);
+					window.canvas.on('selection:created', window.refreshLayerPanel);
+					window.canvas.on('selection:cleared', window.refreshLayerPanel);
+					window.refreshLayerPanel();
+				})();
+
+				// Also refresh when the user opens the Layers accordion
+				var accLayersBtn = document.querySelector('[data-acc="acc-layers"]');
+				if (accLayersBtn) {
+					accLayersBtn.addEventListener('click', function() {
+						setTimeout(window.refreshLayerPanel, 50);
+					});
+				}
+
+				// Patch renderLayout so the layer panel updates whenever a game layout is applied/cleared
+				(function patchRenderLayout() {
+					if (!window.renderLayout) { setTimeout(patchRenderLayout, 200); return; }
+					var _origRL = window.renderLayout;
+					window.renderLayout = function() {
+						_origRL.apply(this, arguments);
+						if (typeof window.refreshLayerPanel === 'function') window.refreshLayerPanel();
+					};
+				})();
+
+				// ── Landing drag-drop zone ───────────────────────────────────
+				var dropZone = document.getElementById('landing-drop-zone');
+				if (dropZone) {
+					dropZone.addEventListener('dragover', function(e) {
+						e.preventDefault();
+						dropZone.classList.add('dz-over');
+					});
+					dropZone.addEventListener('dragleave', function() {
+						dropZone.classList.remove('dz-over');
+					});
+					dropZone.addEventListener('drop', function(e) {
+						e.preventDefault();
+						dropZone.classList.remove('dz-over');
+						var file = e.dataTransfer.files[0];
+						if (!file || !file.type.startsWith('image/')) return;
+						// Enter editor then add the dropped image as artwork
+						if (window.innerWidth <= 900 && typeof window.toggleFullScreen === 'function') {
+							window.toggleFullScreen();
+						} else if (typeof window.toggleFullScreen === 'function') {
+							window.toggleFullScreen();
+						}
+						setTimeout(function() {
+							if (typeof window.handleUpload === 'function') {
+								window.handleUpload({ files: [file] });
+							}
+						}, 300);
+					});
+				}
 			});
 		})();
 		</script>
